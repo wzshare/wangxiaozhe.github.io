@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="终端配色Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。 于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。 输入：1$ gedit ~/.bashrc 找到：1234if [ &quot;$color_prompt&quot; = yes ]; then    PS1=&apos;$&amp;#123;debian_chroot">
+<meta name="description" content="终端配色Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。 于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。 输入：1$ gedit ~/.bashrc">
 <meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ubuntu使用中的一些问题">
 <meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2015/06/28/Ubuntu使用中的一些问题/index.html">
 <meta property="og:site_name" content="Duriaaaan&#39;s Blog">
-<meta property="og:description" content="终端配色Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。 于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。 输入：1$ gedit ~/.bashrc 找到：1234if [ &quot;$color_prompt&quot; = yes ]; then    PS1=&apos;$&amp;#123;debian_chroot">
+<meta property="og:description" content="终端配色Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。 于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。 输入：1$ gedit ~/.bashrc">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-03-15T15:41:18.000Z">
+<meta property="og:updated_time" content="2018-03-15T15:53:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ubuntu使用中的一些问题">
-<meta name="twitter:description" content="终端配色Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。 于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。 输入：1$ gedit ~/.bashrc 找到：1234if [ &quot;$color_prompt&quot; = yes ]; then    PS1=&apos;$&amp;#123;debian_chroot">
+<meta name="twitter:description" content="终端配色Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。 于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。 输入：1$ gedit ~/.bashrc">
 
 
 
@@ -355,6 +355,7 @@
         <h1 id="终端配色"><a href="#终端配色" class="headerlink" title="终端配色"></a>终端配色</h1><p>Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。</p>
 <p>于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。</p>
 <p>输入：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> gedit ~/.bashrc</span></span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
 <p>找到：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if [ "<span class="formula">$color_prompt" = yes ]; then</span></span><br><span class="line"><span class="formula">    PS1='$</span>&#123;debian_chroot:+(<span class="formula">$debian_chroot)&#125;<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[01;31m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">u</span></span>@<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00;33m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">h</span></span><span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span>:<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[01;34m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">w</span></span><span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">$</span></span> '</span></span><br><span class="line"><span class="formula">else</span></span><br><span class="line"><span class="formula">    PS1='$</span>&#123;debian_chroot:+(<span class="formula">$debian_chroot)&#125;<span class="tag">\<span class="name">u</span></span>@<span class="tag">\<span class="name">h</span></span>:<span class="tag">\<span class="name">w</span></span><span class="tag">\<span class="name">$</span></span> '</span></span><br></pre></td></tr></table></figure></p>
 <p>把<code>else</code>后面<code>PS1</code>修改为:</p>
 <figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PS1='<span class="formula">$&#123;debian_chroot:+($</span>debian_chroot)&#125;<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">u</span></span>@<span class="tag">\<span class="name">h</span></span><span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span>:<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">w</span></span><span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">$</span></span> <span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[01;33m<span class="tag">\<span class="name">]</span></span>'</span><br></pre></td></tr></table></figure>
@@ -392,10 +393,10 @@ make: *** [LINUX] 错误 2
 <pre><code>sudo modprobe -v mt7601Usta
 </code></pre></li>
 </ol>
-<h1 id="Ubuntu安装无线wifi补充（解决联网死机问题）"><a href="#Ubuntu安装无线wifi补充（解决联网死机问题）" class="headerlink" title="Ubuntu安装无线wifi补充（解决联网死机问题）"></a>Ubuntu安装无线wifi补充（解决联网死机问题）</h1><blockquote>
+<h1 id="解决联网死机问题"><a href="#解决联网死机问题" class="headerlink" title="解决联网死机问题"></a>解决联网死机问题</h1><blockquote>
 <p><strong>声明：</strong>作者环境为Ubuntu 14.04 和 windows 8 双系统，在Ubuntu中安装了mt7601的驱动并使用360WiFi发现一联网就死机。但用同样方法在另一台电脑，环境为windows XP 和 wubi安装的Ubuntu 14.04，并没有出现问题。</p>
 </blockquote>
-<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><p>针对死机问题，Google了一番后，有人讨论是官方驱动比较旧，不能适应较高版本内核的Linux。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>针对死机问题，Google了一番后，有人讨论是官方驱动比较旧，不能适应较高版本内核的Linux。</p>
 <h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>在Github上有人解决了这个问题，具体见 <strong>porjo</strong> 的项目<a href="https://github.com/porjo/mt7601">mt7601</a>。以下为<strong>README.md</strong>中文简单简绍：</p>
 <p> 作者测试了3.x版本以上的Linux内核：</p>
 <ul>
@@ -408,18 +409,15 @@ make: *** [LINUX] 错误 2
 </ul>
 <p><strong>使用方法</strong>为：</p>
 <ol>
-<li>从Github克隆： <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="keyword">clone</span> <span class="title">https</span>://github.com/porjo/mt7601.git</span><br></pre></td></tr></table></figure>
+<li><p>从Github克隆：</p>
+ <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="keyword">clone</span> <span class="title">https</span>://github.com/porjo/mt7601.git</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<ol>
-<li>运行以下代码： <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> mt7601/src</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> make</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mkdir -p /etc/Wireless/RT2870STA/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cp RT2870STA.dat /etc/Wireless/RT2870STA/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> insmod os/linux/mt7601Usta.ko</span></span><br></pre></td></tr></table></figure>
+<li><p>运行以下代码：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> mt7601/src</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> make</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mkdir -p /etc/Wireless/RT2870STA/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cp RT2870STA.dat /etc/Wireless/RT2870STA/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> insmod os/linux/mt7601Usta.ko</span></span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<ol>
 <li><p>如果以上运行没有问题，那么你可以输入<code>lsmod</code>能看到 <em>mt7601Usta</em>；输入<code>ip link</code>可以看到新的网络接口 <em>ra0</em>。</p>
 </li>
-<li><p>所有都正常，可以运行<code>make install</code>安装，安装完成后就不会出现死机问题。</p>
-</li>
+<li>所有都正常，可以运行<code>make install</code>安装，安装完成后就不会出现死机问题。</li>
 </ol>
 <h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>来自<a href="http://stepgame.net/showtext.php?textid=44" target="_blank" rel="noopener">StepGame.net</a>（仅为引用）</p>
 <ul>
@@ -607,7 +605,7 @@ make: *** [LINUX] 错误 2
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#终端配色"><span class="nav-number">1.</span> <span class="nav-text">终端配色</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tips"><span class="nav-number">1.1.</span> <span class="nav-text">Tips:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu系统安装360wifi"><span class="nav-number">2.</span> <span class="nav-text">Ubuntu系统安装360wifi</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">2.1.</span> <span class="nav-text">步骤</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu安装无线wifi补充（解决联网死机问题）"><span class="nav-number">3.</span> <span class="nav-text">Ubuntu安装无线wifi补充（解决联网死机问题）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题："><span class="nav-number">3.1.</span> <span class="nav-text">问题：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法一"><span class="nav-number">3.2.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法二"><span class="nav-number">3.3.</span> <span class="nav-text">方法二</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#终端配色"><span class="nav-number">1.</span> <span class="nav-text">终端配色</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tips"><span class="nav-number">1.1.</span> <span class="nav-text">Tips:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu系统安装360wifi"><span class="nav-number">2.</span> <span class="nav-text">Ubuntu系统安装360wifi</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">2.1.</span> <span class="nav-text">步骤</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决联网死机问题"><span class="nav-number">3.</span> <span class="nav-text">解决联网死机问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">3.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法一"><span class="nav-number">3.2.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法二"><span class="nav-number">3.3.</span> <span class="nav-text">方法二</span></a></li></ol></li></ol></div>
             
 
           </div>

@@ -329,17 +329,15 @@
 
       
         
-          
-            <h1 id="功能描述"><a href="#功能描述" class="headerlink" title="功能描述"></a>功能描述</h1><p>每天10:30从网站抓取网页内容，提取需要的数据保存在本地。</p>
+          <h1 id="功能描述"><a href="#功能描述" class="headerlink" title="功能描述"></a>功能描述</h1><p>每天10:30从网站抓取网页内容，提取需要的数据保存在本地。</p>
 <p>网络请求使用<code>urllib.request</code>，网页内容解析使用<code>BeautifulSoup</code>，定时任务使用命令<code>crontab</code>。</p>
-<h1 id="crontab"><a href="#crontab" class="headerlink" title="crontab"></a>crontab</h1><p><code>crontab</code>是一个守护进程（也就是不间断运行的进程），它根据调度计划执行命令。<br>Mac在休眠状态下，<code>crontab</code>能正常运行。</p>
-<p>命令格式为:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">* * * * * command</span><br><span class="line"><span class="comment">// M H D m d command</span></span><br></pre></td></tr></table></figure></p>
-<p>基本操作：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">crontab -e  <span class="comment">//编辑</span></span><br><span class="line">crontab -l  <span class="comment">//列出所有cron</span></span><br><span class="line">crontab -r  <span class="comment">//删除</span></span><br></pre></td></tr></table></figure></p>
-<p>举例:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> crontab -e</span></span><br><span class="line">0 8 * * * say hello</span><br><span class="line"><span class="meta">#</span><span class="bash"> 每天 08:00 说 hello</span></span><br></pre></td></tr></table></figure></p>
-<p>注意：<br><em>python命令需要完整的python path，当然也可以添加crontab的<code>$PATH</code>。</em></p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> date</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://www.bjjs.gov.cn/bjjs/fwgl/fdcjy/fwjy/index.shtml"</span></span><br><span class="line">content = urllib.request.urlopen(url).read()</span><br><span class="line">soup = BeautifulSoup(content, <span class="string">"html5lib"</span>)</span><br><span class="line">tables = soup.findAll(<span class="string">'table'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tablesOfHome</span><span class="params">(index)</span>:</span></span><br><span class="line">    arr = list()</span><br><span class="line">    tab = tables[index]</span><br><span class="line">    <span class="keyword">for</span> tr <span class="keyword">in</span> tab.findAll(<span class="string">'tr'</span>):</span><br><span class="line">        <span class="keyword">for</span> td <span class="keyword">in</span> tr.findAll(<span class="string">'td'</span>):</span><br><span class="line">            arr.append(td.getText().strip())</span><br><span class="line">    <span class="keyword">return</span> arr</span><br><span class="line"></span><br><span class="line">onlineHome = tablesOfHome(<span class="number">14</span>) <span class="comment">#可售住宅套数</span></span><br><span class="line">newHome = tablesOfHome(<span class="number">15</span>)    <span class="comment">#新发布住宅套数</span></span><br><span class="line">dealHome = tablesOfHome(<span class="number">17</span>)   <span class="comment">#住宅签约套数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'temp.txt'</span>, <span class="string">'a'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    print(<span class="string">'%s  %-10d  %-7d  %-8d'</span> % (date.today(), int(onlineHome[<span class="number">6</span>]), int(newHome[<span class="number">6</span>]), int(dealHome[<span class="number">6</span>])), file = f)</span><br></pre></td></tr></table></figure>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/12/网络抓取房屋交易信息/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -456,18 +454,14 @@
 
       
         
-          
-            <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
+          <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/04/hello-world/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -606,94 +600,16 @@
 
       
         
-          
-            <h1 id="终端配色"><a href="#终端配色" class="headerlink" title="终端配色"></a>终端配色</h1><p>Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。</p>
+          <h1 id="终端配色"><a href="#终端配色" class="headerlink" title="终端配色"></a>终端配色</h1><p>Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。</p>
 <p>于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。</p>
 <p>输入：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> gedit ~/.bashrc</span></span><br></pre></td></tr></table></figure></p>
-<p>找到：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if [ "<span class="formula">$color_prompt" = yes ]; then</span></span><br><span class="line"><span class="formula">    PS1='$</span>&#123;debian_chroot:+(<span class="formula">$debian_chroot)&#125;<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[01;31m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">u</span></span>@<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00;33m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">h</span></span><span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span>:<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[01;34m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">w</span></span><span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">$</span></span> '</span></span><br><span class="line"><span class="formula">else</span></span><br><span class="line"><span class="formula">    PS1='$</span>&#123;debian_chroot:+(<span class="formula">$debian_chroot)&#125;<span class="tag">\<span class="name">u</span></span>@<span class="tag">\<span class="name">h</span></span>:<span class="tag">\<span class="name">w</span></span><span class="tag">\<span class="name">$</span></span> '</span></span><br></pre></td></tr></table></figure></p>
-<p>把<code>else</code>后面<code>PS1</code>修改为:</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PS1='<span class="formula">$&#123;debian_chroot:+($</span>debian_chroot)&#125;<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">u</span></span>@<span class="tag">\<span class="name">h</span></span><span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span>:<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">w</span></span><span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">$</span></span> <span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[01;33m<span class="tag">\<span class="name">]</span></span>'</span><br></pre></td></tr></table></figure>
-<p>这样只有命令变为了黄色。</p>
-<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips:"></a>Tips:</h2><p>代码设置如下：</p>
-<p>样式<br><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">00 </span>-- Normal (no <span class="keyword">color</span>, no bold)</span><br><span class="line"><span class="symbol">01 </span>– Bold</span><br></pre></td></tr></table></figure></p>
-<p>文字颜色<br><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">30 </span>-- Black</span><br><span class="line"><span class="symbol">31 </span>-- Red</span><br><span class="line"><span class="symbol">32 </span>-- Green</span><br><span class="line"><span class="symbol">33 </span>-- Yellow</span><br><span class="line"><span class="symbol">34 </span>-- Blue</span><br><span class="line"><span class="symbol">35 </span>-- Magenta</span><br><span class="line"><span class="symbol">36 </span>-- Cyan</span><br><span class="line"><span class="symbol">37 </span>-- White</span><br></pre></td></tr></table></figure></p>
-<p>背景颜色<br><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">40 </span>-- Black</span><br><span class="line"><span class="symbol">41 </span>-- Red</span><br><span class="line"><span class="symbol">42 </span>-- Green</span><br><span class="line"><span class="symbol">43 </span>-- Yellow</span><br><span class="line"><span class="symbol">44 </span>-- Blue</span><br><span class="line"><span class="symbol">45 </span>-- Magenta</span><br><span class="line"><span class="symbol">46 </span>-- Cyan</span><br><span class="line"><span class="symbol">47 </span>–- White</span><br></pre></td></tr></table></figure></p>
-<h1 id="Ubuntu系统安装360wifi"><a href="#Ubuntu系统安装360wifi" class="headerlink" title="Ubuntu系统安装360wifi"></a>Ubuntu系统安装360wifi</h1><blockquote>
-<p><em>本操作都是在Ubuntu 14.04系统中进行的，并且经过了验证，其他linux系统操作类似，可以作为参考。</em></p>
-</blockquote>
-<p>360WiFi，小度WiFi等其实都是一个无线网卡，在linux下可以直接当做无线网卡用，在terminal中通过命令<code>lsusb</code>查看360WiFi的芯片，发现使用的是Mediatek Ralink MT7601芯片，其实小度WiFi也是。</p>
-<p>如果<code>lsusb</code>命令下出现了：<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Bus </span><span class="number">001</span> Device <span class="number">006</span>: ID <span class="number">148</span>f:<span class="number">760</span>b Ralink Technology, Corp.</span><br></pre></td></tr></table></figure></p>
-<p>说明你的WiFi使用的是Mediatek Ralink MT7601芯片。</p>
-<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ol>
-<li><p>在Mediatek官网下载MT7601U USB驱动源码包。<br><a href="http://www.mediatek.com/en/downloads/mt7601u-usb/" target="_blank" rel="noopener">http://www.mediatek.com/en/downloads/mt7601u-usb/</a></p>
-</li>
-<li><p>右键单击下载的安装包(DPO_MT7601U_LinuxSTA_3.0.0.4_20130913.tar.bz2)，选择提取到这里；</p>
-</li>
-<li><p>修改common/rtusb_dev_id.c文件，在<br><code>{USB_DEVICE(0x148f,0x7601)}, /* MT 6370 */</code><br>下面加上：<br><code>{USB_DEVICE(0x2955,0x0001)}, /* XiaoDu Wifi */</code><br><code>{USB_DEVICE(0x2955,0x1001)}, /* XiaoDu Wifi */</code><br><code>{USB_DEVICE(0x148f,0x760b)}, /* 360 Wifi */</code></p>
-</li>
-<li><p>假如你提取到的目录为dowmload， 打开erminal (Ctrl-Alt-T) 并且运行以下的代码<br>Code:</p>
-<pre><code>cd Downloads/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913
-make
-sudo make install
-</code></pre></li>
-<li><p>如果出现错误</p>
-<pre><code>make[2]: *** [/home/mikew/Downloads/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913/os/linux/../../os/linux/rt_linux.o] 错误 1
-make[1]: *** [_module_/home/mikew/Downloads/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913/os/linux] 错误 2
-make[1]: 离开目录“/usr/src/kernels/3.13.9-200.fc20.x86_64”
-make: *** [LINUX] 错误 2
-</code></pre><p> 可以修改<code>rt_linux.c</code>的1121行和1122行，<code>pOSFSInfo-&gt;fsgid = current_fsgid();</code>全部替换为<code>pOSFSInfo-&gt;fsgid = *(int *)&amp;current_fsgid();</code></p>
-</li>
-<li><p>如果以上没有问题，再次输入下面的代码<br>Code:</p>
-<pre><code>sudo modprobe -v mt7601Usta
-</code></pre></li>
-</ol>
-<h1 id="Ubuntu安装无线wifi补充（解决联网死机问题）"><a href="#Ubuntu安装无线wifi补充（解决联网死机问题）" class="headerlink" title="Ubuntu安装无线wifi补充（解决联网死机问题）"></a>Ubuntu安装无线wifi补充（解决联网死机问题）</h1><blockquote>
-<p><strong>声明：</strong>作者环境为Ubuntu 14.04 和 windows 8 双系统，在Ubuntu中安装了mt7601的驱动并使用360WiFi发现一联网就死机。但用同样方法在另一台电脑，环境为windows XP 和 wubi安装的Ubuntu 14.04，并没有出现问题。</p>
-</blockquote>
-<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><p>针对死机问题，Google了一番后，有人讨论是官方驱动比较旧，不能适应较高版本内核的Linux。</p>
-<h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>在Github上有人解决了这个问题，具体见 <strong>porjo</strong> 的项目<a href="https://github.com/porjo/mt7601">mt7601</a>。以下为<strong>README.md</strong>中文简单简绍：</p>
-<p> 作者测试了3.x版本以上的Linux内核：</p>
-<ul>
-<li>3.15.10-200.fc20.x86_64</li>
-<li>3.16.1-301.fc21.x86_64</li>
-<li>3.16.1-301.fc21.i686</li>
-<li>3.17.0-0.rc2.git3.1.fc22.i686</li>
-<li>3.17.0-0.rc2.git3.1.fc22.x86_64</li>
-<li>3.12.26-1.20140808git4ab8abb.rpfr20.armv6hl.bcm2708</li>
-</ul>
-<p><strong>使用方法</strong>为：</p>
-<ol>
-<li>从Github克隆： <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="keyword">clone</span> <span class="title">https</span>://github.com/porjo/mt7601.git</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol>
-<li>运行以下代码： <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> mt7601/src</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> make</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mkdir -p /etc/Wireless/RT2870STA/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cp RT2870STA.dat /etc/Wireless/RT2870STA/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> insmod os/linux/mt7601Usta.ko</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol>
-<li><p>如果以上运行没有问题，那么你可以输入<code>lsmod</code>能看到 <em>mt7601Usta</em>；输入<code>ip link</code>可以看到新的网络接口 <em>ra0</em>。</p>
-</li>
-<li><p>所有都正常，可以运行<code>make install</code>安装，安装完成后就不会出现死机问题。</p>
-</li>
-</ol>
-<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>来自<a href="http://stepgame.net/showtext.php?textid=44" target="_blank" rel="noopener">StepGame.net</a>（仅为引用）</p>
-<ul>
-<li><p>mtk官网上的驱动安装后会死机，使用ppa安装补丁版解决死机问题：</p>
-<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo<span class="built_in"> add-apt-repository </span>ppa:thopiekar/mt7601</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>然后</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="builtin-name">get</span> update</span><br><span class="line">apt-<span class="builtin-name">get</span> install mt7601-sta-dkms</span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<blockquote>
-<p>补丁源码：<a href="https://github.com/porjo/mt7601">https://github.com/porjo/mt7601</a><br>补丁PPA源：<a href="https://code.launchpad.net/~thopiekar/+archive/ubuntu/mt7601" target="_blank" rel="noopener">https://code.launchpad.net/~thopiekar/+archive/ubuntu/mt7601</a></p>
-</blockquote>
-<p>这个方法是<strong>thopiekar</strong>针对Ubuntu的整理，源代码还是来自方法一中<strong>porjo</strong>的 <a href="https://github.com/porjo/mt7601">mt7601</a>。</p>
-<blockquote>
-<p><strong>thopiekar</strong>的项目：<a href="https://code.launchpad.net/~thopiekar/+archive/ubuntu/mt7601" target="_blank" rel="noopener">MT7601 STA driver</a></p>
-</blockquote>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2015/06/28/Ubuntu使用中的一些问题/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
