@@ -79,13 +79,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Duriaaaan&#39;s Blog">
-<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/index.html">
+<meta name="description" content="前言retain 和 release 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。 Autorelease 有时是一个”神器”，只要用[obj autorelease] ，很多 bug 迎刃而解。 Autorelease 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？ 本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你所不知道的Autorelease">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/03/21/你所不知道的Autorelease/index.html">
 <meta property="og:site_name" content="Duriaaaan&#39;s Blog">
+<meta property="og:description" content="前言retain 和 release 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。 Autorelease 有时是一个”神器”，只要用[obj autorelease] ，很多 bug 迎刃而解。 Autorelease 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？ 本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-03-21T14:58:19.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Duriaaaan&#39;s Blog">
+<meta name="twitter:title" content="你所不知道的Autorelease">
+<meta name="twitter:description" content="前言retain 和 release 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。 Autorelease 有时是一个”神器”，只要用[obj autorelease] ，很多 bug 迎刃而解。 Autorelease 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？ 本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习">
 
 
 
@@ -115,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/"/>
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2018/03/21/你所不知道的Autorelease/"/>
 
 
 
 
 
-  <title>Duriaaaan's Blog</title>
+  <title>你所不知道的Autorelease | Duriaaaan's Blog</title>
   
 
 
@@ -140,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -244,9 +247,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -276,9 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/21/你所不知道的Autorelease/" itemprop="url">你所不知道的Autorelease</a></h1>
+          <h1 class="post-title" itemprop="name headline">你所不知道的Autorelease</h1>
         
 
         <div class="post-meta">
@@ -328,9 +329,7 @@
       
 
       
-        
-          
-            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>retain</code> 和 <code>release</code> 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>retain</code> 和 <code>release</code> 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。</p>
 <p><code>Autorelease</code> 有时是一个”神器”，只要用<code>[obj autorelease]</code> ，很多 bug 迎刃而解。</p>
 <p><code>Autorelease</code> 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？</p>
 <p>本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习笔记。</p>
@@ -384,8 +383,6 @@
 <li><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmAutoreleasePools.html" target="_blank" rel="noopener">Using Autorelease Pool Blocks</a></li>
 </ol>
 
-          
-        
       
     </div>
     
@@ -402,137 +399,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2018/03/12/网络抓取房屋交易信息/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Durian Wang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Duriaaaan's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/12/网络抓取房屋交易信息/" itemprop="url">网络抓取房屋交易信息</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-12T21:22:53+08:00">
-                2018-03-12
-              </time>
+              <a href="/2018/03/12/网络抓取房屋交易信息/" rel="next" title="网络抓取房屋交易信息">
+                <i class="fa fa-chevron-left"></i> 网络抓取房屋交易信息
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <h1 id="功能描述"><a href="#功能描述" class="headerlink" title="功能描述"></a>功能描述</h1><p>每天10:30从网站抓取网页内容，提取需要的数据保存在本地。</p>
-<p>网络请求使用<code>urllib.request</code>，网页内容解析使用<code>BeautifulSoup</code>，定时任务使用命令<code>crontab</code>。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/03/12/网络抓取房屋交易信息/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -542,282 +430,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2018/03/04/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Durian Wang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Duriaaaan's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/04/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-04T16:28:19+08:00">
-                2018-03-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/03/04/hello-world/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2015/06/28/Ubuntu使用中的一些问题/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Durian Wang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Duriaaaan's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/06/28/Ubuntu使用中的一些问题/" itemprop="url">Ubuntu使用中的一些问题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-06-28T15:33:57+08:00">
-                2015-06-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="终端配色"><a href="#终端配色" class="headerlink" title="终端配色"></a>终端配色</h1><p>Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。</p>
-<p>于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。</p>
-<p>输入：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> gedit ~/.bashrc</span></span><br></pre></td></tr></table></figure></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2015/06/28/Ubuntu使用中的一些问题/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -825,6 +442,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -845,8 +466,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -906,6 +536,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Autorelease对象什么时候释放？"><span class="nav-number">2.</span> <span class="nav-text">Autorelease对象什么时候释放？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#autoreleasepool"><span class="nav-number">3.</span> <span class="nav-text">autoreleasepool</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#释放"><span class="nav-number">4.</span> <span class="nav-text">释放</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">5.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特别"><span class="nav-number">6.</span> <span class="nav-text">特别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1046,6 +692,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
