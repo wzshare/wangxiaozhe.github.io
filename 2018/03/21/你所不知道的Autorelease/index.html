@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="前言retain 和 release 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。 Autorelease 有时是一个”神器”，只要用[obj autorelease] ，很多 bug 迎刃而解。 Autorelease 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？ 本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习">
+<meta name="description" content="前言retain 和 release 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。Autorelease 有时是一个”神器”，只要用[obj autorelease] ，很多 bug 迎刃而解。Autorelease 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？ 本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习笔记">
 <meta property="og:type" content="article">
 <meta property="og:title" content="你所不知道的Autorelease">
 <meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/03/21/你所不知道的Autorelease/index.html">
 <meta property="og:site_name" content="Duriaaaan&#39;s Blog">
-<meta property="og:description" content="前言retain 和 release 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。 Autorelease 有时是一个”神器”，只要用[obj autorelease] ，很多 bug 迎刃而解。 Autorelease 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？ 本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习">
+<meta property="og:description" content="前言retain 和 release 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。Autorelease 有时是一个”神器”，只要用[obj autorelease] ，很多 bug 迎刃而解。Autorelease 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？ 本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习笔记">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-03-21T14:58:19.000Z">
+<meta property="og:updated_time" content="2018-03-21T15:01:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="你所不知道的Autorelease">
-<meta name="twitter:description" content="前言retain 和 release 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。 Autorelease 有时是一个”神器”，只要用[obj autorelease] ，很多 bug 迎刃而解。 Autorelease 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？ 本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习">
+<meta name="twitter:description" content="前言retain 和 release 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。Autorelease 有时是一个”神器”，只要用[obj autorelease] ，很多 bug 迎刃而解。Autorelease 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？ 本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习笔记">
 
 
 
@@ -329,10 +329,9 @@
       
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>retain</code> 和 <code>release</code> 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。</p>
-<p><code>Autorelease</code> 有时是一个”神器”，只要用<code>[obj autorelease]</code> ，很多 bug 迎刃而解。</p>
-<p><code>Autorelease</code> 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>retain</code> 和 <code>release</code> 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。<br><code>Autorelease</code> 有时是一个”神器”，只要用<code>[obj autorelease]</code> ，很多 bug 迎刃而解。<br><code>Autorelease</code> 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？</p>
 <p>本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习笔记。</p>
+<a id="more"></a>
 <blockquote>
 <p>在苹果一些新的硬件设备上，autoreleasepool 和 runloop 的表现发生了变化，这一点需要详细查资料。</p>
 </blockquote>

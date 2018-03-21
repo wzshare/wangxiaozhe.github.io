@@ -329,62 +329,15 @@
 
       
         
-          
-            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>retain</code> 和 <code>release</code> 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。</p>
-<p><code>Autorelease</code> 有时是一个”神器”，只要用<code>[obj autorelease]</code> ，很多 bug 迎刃而解。</p>
-<p><code>Autorelease</code> 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？</p>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>retain</code> 和 <code>release</code> 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。<br><code>Autorelease</code> 有时是一个”神器”，只要用<code>[obj autorelease]</code> ，很多 bug 迎刃而解。<br><code>Autorelease</code> 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？</p>
 <p>本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习笔记。</p>
-<blockquote>
-<p>在苹果一些新的硬件设备上，autoreleasepool 和 runloop 的表现发生了变化，这一点需要详细查资料。</p>
-</blockquote>
-<h1 id="Autorelease对象什么时候释放？"><a href="#Autorelease对象什么时候释放？" class="headerlink" title="Autorelease对象什么时候释放？"></a>Autorelease对象什么时候释放？</h1><p>表面上看答案是：“当前作用域大括号结束时释放”。</p>
-<p>本质上是：在没有手加 <code>Autorelease Pool</code> 的情况下，<code>Autorelease</code> 对象是在当前的 <code>runloop</code> 迭代结束时释放的，而它能够释放的原因是系统在每个 <code>runloop</code> 迭代中都加入了自动释放池 <strong>Push</strong> 和 <strong>Pop</strong>。</p>
-<blockquote>
-<p><strong>RunLoop:</strong><br>Each NSThread object, including the application’s main thread, has an NSRunLoop object automatically created for it as needed.</p>
-</blockquote>
-<p>在主线程的 <code>NSRunLoop</code> 对象（在系统级别的其他线程中应该也是如此，比如通过 <code>dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)</code> 获取到的线程）的每个 <code>event loop</code> 开始前，系统会自动创建一个 <code>autoreleasepool</code> ，并在 <code>event loop</code> 结束时 <strong>drain</strong> 。</p>
-<p><code>autoreleasepool</code> 是与线程紧密相关的，每一个 <code>autoreleasepool</code> 只对应一个线程。</p>
-<h1 id="autoreleasepool"><a href="#autoreleasepool" class="headerlink" title="autoreleasepool"></a>autoreleasepool</h1><p>编译器会将 <code>@autoreleasepool{}</code> 改写成：</p>
-<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> *<span class="keyword">context</span> = objc_autoreleasePoolPush();</span><br><span class="line"><span class="comment">// &#123;&#125;中的代码</span></span><br><span class="line">objc_autoreleasePoolPop(<span class="keyword">context</span>);</span><br></pre></td></tr></table></figure>
-<p>这两个函数都是对 <code>AutoreleasePoolPage</code> 的简单封装</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AutoreleasePoolPage</span> &#123;</span></span><br><span class="line">    <span class="keyword">magic_t</span> <span class="keyword">const</span> magic;</span><br><span class="line">    id *next;</span><br><span class="line">    <span class="keyword">pthread_t</span> <span class="keyword">const</span> thread;</span><br><span class="line">    AutoreleasePoolPage * <span class="keyword">const</span> parent;</span><br><span class="line">    AutoreleasePoolPage *child;</span><br><span class="line">    <span class="keyword">uint32_t</span> <span class="keyword">const</span> depth;</span><br><span class="line">    <span class="keyword">uint32_t</span> hiwat;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>AutoreleasePool</code> 并没有单独的结构，而是由若干个<code>AutoreleasePoolPage</code>以 <strong>双向链表</strong> 的形式组合而成（分别对应结构中的parent指针和child指针）</li>
-<li><code>AutoreleasePool</code> 是按线程一一对应的（结构中的thread指针指向当前线程）</li>
-<li><code>AutoreleasePoolPage</code> 每个对象会开辟4096字节内存（也就是虚拟内存一页的大小），除了上面的实例变量所占空间，剩下的空间全部用来储存 <code>autorelease</code> 对象的地址</li>
-<li>上面的 <code>id *next</code> 指针作为游标指向栈顶最新add进来的autorelease对象的下一个位置</li>
-<li>一个 <code>AutoreleasePoolPage</code> 的空间被占满时，会新建一个 <code>AutoreleasePoolPage</code> 对象，连接链表，后来的autorelease对象在新的page加入</li>
-</ul>
-<p>向一个对象发送 <code>autorelease</code> 消息，就是将这个对象加入到当前 <code>AutoreleasePoolPage</code> 的栈顶next指针指向的位置</p>
-<h1 id="释放"><a href="#释放" class="headerlink" title="释放"></a>释放</h1><p>每当进行一次 <code>objc_autoreleasePoolPush</code> 调用时，runtime向当前的 <code>AutoreleasePoolPage</code> 中add进一个哨兵对象，值为0（也就是个nil）</p>
-<p><code>objc_autoreleasePoolPush</code> 的返回值正是这个哨兵对象的地址，被 <code>objc_autoreleasePoolPop(哨兵对象)</code> 作为入参，于是：</p>
-<ol>
-<li>根据传入的哨兵对象地址找到哨兵对象所处的page</li>
-<li>在当前page中，将晚于哨兵对象插入的所有autorelease对象都发送一次 <code>release</code> 消息，并向回移动next指针到正确位置</li>
-<li>从最新加入的对象一直向前清理，可以向前跨越若干个page，直到哨兵所在的page</li>
-</ol>
-<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p><code>Apple</code> 官方文档 “Using Autorelease Pool Blocks” 中提到了三个场景需要使用 <code>@autoreleasepool</code>。</p>
-<blockquote>
-<p>three occasions when you might use your own autorelease pool blocks:<br>If you are writing a program that is not based on a UI framework, such as a command-line tool.<br>If you write a loop that creates many temporary objects.<br>If you spawn a secondary thread</p>
-</blockquote>
-<ol>
-<li>写非UI框架项目时</li>
-<li>在一个循环中创建大量的临时对象</li>
-<li>大量使用辅助线程</li>
-</ol>
-<p>所以，如下代码会产生很大的内存占用，甚至导致内存警告。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">100000</span>; i++) &#123;</span><br><span class="line">    <span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@"pic"</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在for循环中大量创建临时变量时，需要用@autoreleasepool来优化：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">100000</span>;i++) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@"pic"</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="特别"><a href="#特别" class="headerlink" title="特别"></a>特别</h1><p>使用容器的block版本的枚举器时，内部会自动添加一个AutoreleasePool：</p>
-<figure class="highlight hy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[array enumerateObjectsUsingBlock:^(<span class="name"><span class="builtin-name">id</span></span> obj, NSUInteger idx, BOOL *stop) &#123;</span><br><span class="line">    // 这里被一个局部@autoreleasepool包围着</span><br><span class="line">&#125;]<span class="comment">;</span></span><br></pre></td></tr></table></figure>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="http://blog.sunnyxx.com/2014/10/15/behind-autorelease/" target="_blank" rel="noopener">黑幕背后的Autorelease</a></li>
-<li><a href="http://blog.leichunfeng.com/blog/2015/05/31/objective-c-autorelease-pool-implementation-principle/" target="_blank" rel="noopener">Objective-C Autorelease Pool 的实现原理</a></li>
-<li><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmAutoreleasePools.html" target="_blank" rel="noopener">Using Autorelease Pool Blocks</a></li>
-</ol>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/21/你所不知道的Autorelease/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
