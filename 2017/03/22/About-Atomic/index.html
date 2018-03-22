@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言本文从atomic 和 nonatomic 的区别说起，又叙述了一下@synchronized的作用。atomic 和 nonatomic 属性表示变量的原子性，nonatomic 表示不保证线程安全，但其实atomic也不能一定保证线程安全。具体看一下编译器对atomic 和 nonatomic 做了什么。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从atomic说起">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2017/03/22/About-Atomic/index.html">
+<meta property="og:site_name" content="Duriaaaan&#39;s Blog">
+<meta property="og:description" content="前言本文从atomic 和 nonatomic 的区别说起，又叙述了一下@synchronized的作用。atomic 和 nonatomic 属性表示变量的原子性，nonatomic 表示不保证线程安全，但其实atomic也不能一定保证线程安全。具体看一下编译器对atomic 和 nonatomic 做了什么。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-03-22T15:43:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从atomic说起">
+<meta name="twitter:description" content="前言本文从atomic 和 nonatomic 的区别说起，又叙述了一下@synchronized的作用。atomic 和 nonatomic 属性表示变量的原子性，nonatomic 表示不保证线程安全，但其实atomic也不能一定保证线程安全。具体看一下编译器对atomic 和 nonatomic 做了什么。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2017/03/22/About-Atomic/"/>
+
+
+
+
+
+  <title>从atomic说起 | Duriaaaan's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Duriaaaan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2017/03/22/About-Atomic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AprSnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Duriaaaan's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从atomic说起</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-22T23:11:29+08:00">
+                2017-03-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文从<code>atomic</code> 和 <code>nonatomic</code> 的区别说起，又叙述了一下<code>@synchronized</code>的作用。<br><code>atomic</code> 和 <code>nonatomic</code> 属性表示变量的原子性，<code>nonatomic</code> 表示不保证线程安全，但其实<code>atomic</code>也不能一定保证线程安全。<br>具体看一下编译器对<code>atomic</code> 和 <code>nonatomic</code> 做了什么。</p>
+<a id="more"></a>
+<h1 id="nonatomic"><a href="#nonatomic" class="headerlink" title="nonatomic"></a>nonatomic</h1><p>如果一个属性为 <code>nonatomic</code> 时，默认的<code>setter</code> 和 <code>getter</code> 如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">retain</span>) <span class="built_in">UITextField</span> *userName;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">UITextField</span> *) userName &#123;</span><br><span class="line">    <span class="keyword">return</span> userName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>) setUserName:(<span class="built_in">UITextField</span> *)userName_ &#123;</span><br><span class="line">    [userName_ <span class="keyword">retain</span>];</span><br><span class="line">    [userName release];</span><br><span class="line">    userName = userName_;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="atomic"><a href="#atomic" class="headerlink" title="atomic"></a>atomic</h1><p>如果一个属性为 <code>nonatomic</code> 时，默认的<code>setter</code> 和 <code>getter</code> 如下:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span>(<span class="keyword">retain</span>) <span class="built_in">UITextField</span> *userName;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">UITextField</span> *) userName &#123;</span><br><span class="line">    <span class="built_in">UITextField</span> *retval = <span class="literal">nil</span>;</span><br><span class="line">    <span class="keyword">@synchronized</span>(<span class="keyword">self</span>) &#123;</span><br><span class="line">        retval = [[userName <span class="keyword">retain</span>] autorelease];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> retval;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>) setUserName:(<span class="built_in">UITextField</span> *)userName_ &#123;</span><br><span class="line">    <span class="keyword">@synchronized</span>(<span class="keyword">self</span>) &#123;</span><br><span class="line">      [userName_ <span class="keyword">retain</span>];</span><br><span class="line">      [userName release];</span><br><span class="line">      userName = userName_;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出相对于 <code>nonatomic</code> ，此时的 <code>setter</code> 和 <code>getter</code> 中多了一个 <code>@synchronized(self)</code>。</p>
+<p><code>@synchronized</code> 的作用是创建一个互斥锁，保证此时没有其它线程对 self 对象进行修改，其实这样子只保证了<code>getter</code>和<code>setter</code>存取方法的线程安全，并不能保证整个对象是线程安全的。</p>
+<p>比如，线程A对一个变量write后，线程B再对同一个变量write，之后线程A对此变量read，这样子线程A会read到线程B的数据，显然是不安全的。</p>
+<p>那么<code>@synchronized</code> 具体又是做什么的？</p>
+<h1 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h1><p>编译器遇到<code>@synchronized block</code></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@synchronized</span>(<span class="keyword">self</span>) &#123;</span><br><span class="line">    <span class="comment">// code</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>会转化为如下的代码，</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  objc_sync_enter(<span class="name">self</span>)</span><br><span class="line">  // code</span><br><span class="line">  objc_sync_exit(<span class="name">self</span>)<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，这里有两个函数 <code>objc_sync_enter</code> , <code>objc_sync_exit</code>，通过源码<code>objc4-680</code>来查看这两个函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">objc_sync_enter</span><span class="params">(id obj)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = OBJC_SYNC_SUCCESS;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (obj) &#123;</span><br><span class="line">        SyncData* data = id2data(obj, ACQUIRE);</span><br><span class="line">        assert(data);</span><br><span class="line">        data-&gt;mutex.lock();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// @synchronized(nil) does nothing</span></span><br><span class="line">        <span class="keyword">if</span> (DebugNilSync) &#123;</span><br><span class="line">            _objc_inform(<span class="string">"NIL SYNC DEBUG: @synchronized(nil); set a breakpoint on objc_sync_nil to debug"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        objc_sync_nil();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">objc_sync_exit</span><span class="params">(id obj)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = OBJC_SYNC_SUCCESS;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (obj) &#123;</span><br><span class="line">        SyncData* data = id2data(obj, RELEASE); </span><br><span class="line">        <span class="keyword">if</span> (!data) &#123;</span><br><span class="line">            result = OBJC_SYNC_NOT_OWNING_THREAD_ERROR;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">bool</span> okay = data-&gt;mutex.tryUnlock();</span><br><span class="line">            <span class="keyword">if</span> (!okay) &#123;</span><br><span class="line">                result = OBJC_SYNC_NOT_OWNING_THREAD_ERROR;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// @synchronized(nil) does nothing</span></span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从源码可以看出，有一个互斥锁<code>data-&gt;mutex.lock()</code>, <code>data-&gt;mutex.tryUnlock()</code> 来保证线程安全。</p>
+<p>同时<code>@synchronized(nil)</code>是不起任何作用的。</p>
+<p>继续看源码，发现<code>mutex</code>是一个递归锁，</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">SyncData</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">SyncData</span>* <span class="title">nextData</span>;</span></span><br><span class="line">    DisguisedPtr&lt;objc_object&gt; object;</span><br><span class="line">    <span class="keyword">int32_t</span> threadCount;  <span class="comment">// number of THREADS using this block</span></span><br><span class="line">    <span class="keyword">recursive_mutex_t</span> mutex;</span><br><span class="line">&#125; SyncData;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">recursive_mutex_t</span> = recursive_mutex_tt&lt;DEBUG&gt;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">recursive_mutex_tt</span> :</span> <span class="keyword">nocopy_t</span> &#123;</span><br><span class="line">    <span class="keyword">pthread_mutex_t</span> mLock;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以<code>@synchronized(self)</code>最终的效果如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">pthread_mutex_t</span> *self_mutex = LOOK_UP_MUTEX(self);</span><br><span class="line">    pthread_mutex_lock(self_mutex);</span><br><span class="line">    <span class="comment">// code</span></span><br><span class="line">    pthread_mutex_unlock(self_mutex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>递归锁也意味着如下代码没有问题：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@synchronized</span> (obj) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"1st sync"</span>);</span><br><span class="line">    <span class="keyword">@synchronized</span> (obj) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"2nd sync"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><ul>
+<li>你调用 <code>sychronized</code> 的每个对象，<code>Objective-C runtime</code> 都会为其分配一个递归锁并存储在哈希表中。</li>
+<li>如果在 <code>sychronized</code> 内部对象被释放或被设为 nil 看起来都 OK。不过这没在文档中说明，所以我不会再生产代码中依赖这条。</li>
+<li>注意不要向你的 <code>sychronized block</code> 传入 nil！这将会从代码中移走线程安全。你可以通过在 <code>objc_sync_nil</code> 上加断点来查看是否发生了这样的事情。</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://stackoverflow.com/questions/1215330/how-does-synchronized-lock-unlock-in-objective-c/6047218#6047218" target="_blank" rel="noopener">How does @synchronized lock/unlock in Objective-C</a></li>
+<li><a href="http://rykap.com/objective-c/2015/05/09/synchronized/" target="_blank" rel="noopener">More than you want to know about @synchronized</a></li>
+<li><a href="http://mrpeak.cn/blog/synchronized/" target="_blank" rel="noopener">正确使用@synchronized</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/06/Pointers-And-Arrays-In-C/" rel="next" title="C语言中指针和数组是否相等">
+                <i class="fa fa-chevron-left"></i> C语言中指针和数组是否相等
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/12/Get-Home-Info/" rel="prev" title="网络抓取房屋交易信息">
+                网络抓取房屋交易信息 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">AprSnow</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nonatomic"><span class="nav-number">2.</span> <span class="nav-text">nonatomic</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#atomic"><span class="nav-number">3.</span> <span class="nav-text">atomic</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#synchronized"><span class="nav-number">4.</span> <span class="nav-text">synchronized</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AprSnow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
