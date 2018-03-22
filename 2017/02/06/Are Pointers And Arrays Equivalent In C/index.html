@@ -82,14 +82,17 @@
 <meta name="description" content="这是一个简单的问题，但总是被忽略。特此翻译了一篇博客，讲的很清楚。这里是博客的原地址Are pointers and arrays equivalent in C?">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C语言中指针和数组是否相等">
-<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2017/02/06/C语言中指针和数组是否相等/index.html">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2017/02/06/Are Pointers And Arrays Equivalent In C/index.html">
 <meta property="og:site_name" content="Duriaaaan&#39;s Blog">
 <meta property="og:description" content="这是一个简单的问题，但总是被忽略。特此翻译了一篇博客，讲的很清楚。这里是博客的原地址Are pointers and arrays equivalent in C?">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-03-21T15:23:32.000Z">
+<meta property="og:image" content="https://github.com/images/2017022301.jpg">
+<meta property="og:image" content="https://github.com/images/2017022302.png">
+<meta property="og:updated_time" content="2018-03-22T13:44:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C语言中指针和数组是否相等">
 <meta name="twitter:description" content="这是一个简单的问题，但总是被忽略。特此翻译了一篇博客，讲的很清楚。这里是博客的原地址Are pointers and arrays equivalent in C?">
+<meta name="twitter:image" content="https://github.com/images/2017022301.jpg">
 
 
 
@@ -119,7 +122,7 @@
 
 
 
-  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2017/02/06/C语言中指针和数组是否相等/"/>
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2017/02/06/Are Pointers And Arrays Equivalent In C/"/>
 
 
 
@@ -262,10 +265,10 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2017/02/06/C语言中指针和数组是否相等/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2017/02/06/Are Pointers And Arrays Equivalent In C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Durian Wang">
+      <meta itemprop="name" content="AprSnow">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
@@ -344,10 +347,10 @@
 <p>给<code>a</code>赋值时发生了什么？与给<code>b</code>赋值有什么不同？看一下编译器的分解是有用的：<br>（Visual C++ 2005，x86，Windows XP）<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> a = array_place[<span class="number">7</span>];</span><br><span class="line"></span><br><span class="line"><span class="number">0041137</span>E  mov  al,byte ptr [_array_place+<span class="number">7</span> (<span class="number">417007</span>h)]</span><br><span class="line"><span class="number">00411383</span>  mov  byte ptr [a],al</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> b = ptr_place[<span class="number">7</span>];</span><br><span class="line"></span><br><span class="line"><span class="number">00411386</span>  mov  eax,dword ptr [_ptr_place (<span class="number">417064</span>h)]</span><br><span class="line"><span class="number">0041138B</span>  mov  cl,byte ptr [eax+<span class="number">7</span>]</span><br><span class="line"><span class="number">0041138</span>E  mov  byte ptr [b],cl</span><br></pre></td></tr></table></figure></p>
 <p>C语言中数组的语义指示数组名作为数组第一个元素的地址。因此，在给<code>a</code>赋值的过程中，数组的第8个字符被偏移为<code>array_place[7]</code>的值，移动结果地址的内容到寄存器<code>al</code>，然后再赋给<code>a</code>。</p>
 <p>另一方面，指针的语义是十分不同的。指针仅仅是一个固定值，持有另一个内部变量的地址。因此，计算字符串第8个字符的偏移，CPU首先复制指针的值给一个寄存器，然后增加寄存器。这多出一个指令。</p>
-<h1 id="一个图形化的解释"><a href="#一个图形化的解释" class="headerlink" title="一个图形化的解释"></a>一个图形化的解释</h1>
+<h1 id="一个图形化的解释"><a href="#一个图形化的解释" class="headerlink" title="一个图形化的解释"></a>一个图形化的解释</h1><p><img src="/images/2017022301.jpg" alt=""></p>
 <p>右边那一列是内存地址，每个格子是内存中存储的内容。如图展示的是<code>array_place</code>的第一个单词。<br>注意到<code>array_place</code>是内存地址<code>0x417000</code>的一个简单标签，因此访问<code>array_place[7]</code>就是访问内存地址<code>0x417007</code>。如我们所看到的，编译器仅仅用<code>0x417007</code>代替<code>array_place[7]</code>，不需要地址的计算。</p>
 <p>而指针的工作方式是不同的：</p>
-
+<p><img src="/images/2017022302.png" alt=""></p>
 <p><code>ptr_place</code>仅仅是一个变量，变量的值是一个地址。这个地址是一个字符串所在内存位置的第一个字符的地址，比较访问<code>pointer_place[7]</code>的分解列表能够很清楚理解编译为何如此生成编码。</p>
 <h1 id="C语言的变量名仅仅是一个标签"><a href="#C语言的变量名仅仅是一个标签" class="headerlink" title="C语言的变量名仅仅是一个标签"></a>C语言的变量名仅仅是一个标签</h1><p>没有黑过编译器的程序员经常忽视指针，C语言的变量仅仅是内存空间的一个方便的数字字母组成的笔名。如果我们正在写代码，我们应该仅仅创建内存空间的标签，然后访问这些标签，代替硬编码内存值，后者是由编译器来做的。</p>
 <p>实际上地址不是绝对的硬编码，因为存在载入和重分配。但这在我们的讨论之外，这里就不展开细节了。</p>
@@ -387,7 +390,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/06/28/Ubuntu使用中的一些问题/" rel="next" title="Ubuntu使用中的一些问题">
+              <a href="/2015/06/28/Some Troulbe In Ubuntu/" rel="next" title="Ubuntu使用中的一些问题">
                 <i class="fa fa-chevron-left"></i> Ubuntu使用中的一些问题
               </a>
             
@@ -397,7 +400,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/03/12/网络抓取房屋交易信息/" rel="prev" title="网络抓取房屋交易信息">
+              <a href="/2018/03/12/Get Home Info/" rel="prev" title="网络抓取房屋交易信息">
                 网络抓取房屋交易信息 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -465,7 +468,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name">Durian Wang</p>
+              <p class="site-author-name" itemprop="name">AprSnow</p>
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
@@ -555,7 +558,7 @@
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Durian Wang</span>
+  <span class="author" itemprop="copyrightHolder">AprSnow</span>
 
   
 </div>
