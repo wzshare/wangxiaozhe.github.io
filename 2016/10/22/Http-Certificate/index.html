@@ -333,8 +333,8 @@
 <p>苹果针对ATS逐渐收紧了政策，最近看了一些https的资料，自建证书主要用到openssl。根据苹果的政策，自建证书应该是通不过审核的（不确定）。本文主要介绍了如何自建证书和iOS用自建证书验证https。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="创建用私钥签名的证书"><a href="#创建用私钥签名的证书" class="headerlink" title="创建用私钥签名的证书"></a>创建用私钥签名的证书</h1><h2 id="生成私钥"><a href="#生成私钥" class="headerlink" title="生成私钥"></a>生成私钥</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> openssl genrsa -out private.key 2048</span><br></pre></td></tr></table></figure>
-<h2 id="生成证书请求"><a href="#生成证书请求" class="headerlink" title="生成证书请求"></a>生成证书请求</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> openssl req -new -key private.key -out server.csr</span><br></pre></td></tr></table></figure>
+<h1 id="创建用私钥签名的证书"><a href="#创建用私钥签名的证书" class="headerlink" title="创建用私钥签名的证书"></a>创建用私钥签名的证书</h1><h2 id="生成私钥"><a href="#生成私钥" class="headerlink" title="生成私钥"></a>生成私钥</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openssl genrsa -out private.key 2048</span></span><br></pre></td></tr></table></figure>
+<h2 id="生成证书请求"><a href="#生成证书请求" class="headerlink" title="生成证书请求"></a>生成证书请求</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openssl req -new -key private.key -out server.csr</span></span><br></pre></td></tr></table></figure>
 <p>这一步需要填写证书信息，如<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Country Name (2 letter code) [AU]:CN</span><br><span class="line">State <span class="keyword">or</span> Province Name (full name) [Some-State]:</span><br><span class="line">Locality Name (eg, city) []:</span><br><span class="line">Organization Name (eg, company) [Internet Widgits Pty Ltd]:</span><br><span class="line">Organizational Unit Name (eg, section) []:</span><br><span class="line">Common Name (e.g.<span class="built_in"> server </span>FQDN <span class="keyword">or</span> YOUR name) []:</span><br><span class="line">Email<span class="built_in"> Address </span>[]:</span><br></pre></td></tr></table></figure></p>
 <blockquote>
 <p>其中，Common Name 填写证书绑定的域名，否则证书不能通过信任验证。</p>
@@ -408,8 +408,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/02/06/Pointers-And-Arrays-In-C/" rel="prev" title="C语言中指针和数组是否相等">
-                C语言中指针和数组是否相等 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/11/30/QQ-SDK-Error/" rel="prev" title="关于QQ互联SDK不支持i386的解决办法">
+                关于QQ互联SDK不支持i386的解决办法 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -487,7 +487,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

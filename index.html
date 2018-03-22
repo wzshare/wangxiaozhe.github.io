@@ -635,6 +635,151 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2016/11/30/QQ-SDK-Error/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AprSnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Duriaaaan's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/11/30/QQ-SDK-Error/" itemprop="url">关于QQ互联SDK不支持i386的解决办法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-30T22:10:38+08:00">
+                2016-11-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>使用2016-05-17更新的QQ互联SDK在使用模拟器运行是会出现以下报错：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Undefined symbols <span class="keyword">for</span> architecture i386:</span><br><span class="line">  <span class="string">"_OBJC_CLASS_$_QQApiInterface"</span>, referenced <span class="keyword">from</span>:</span><br><span class="line">      objc-<span class="built_in">class</span>-<span class="keyword">ref</span> <span class="keyword">in</span> ShareSDKManage.o</span><br><span class="line">      objc-<span class="built_in">class</span>-<span class="keyword">ref</span> <span class="keyword">in</span> UserLoginViewController.o</span><br><span class="line">  <span class="string">"_OBJC_CLASS_$_TencentOAuth"</span>, referenced <span class="keyword">from</span>:</span><br><span class="line">      objc-<span class="built_in">class</span>-<span class="keyword">ref</span> <span class="keyword">in</span> ShareSDKManage.o</span><br><span class="line">ld: symbol(s) <span class="keyword">not</span> found <span class="keyword">for</span> architecture i386</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>包括使用ShareSDK、友盟社会化分享SDK等集成QQ互联的SDK。</p>
+</blockquote>
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>这是因为QQ互联的<a href="http://qzonestyle.gtimg.cn/qzone/vas/opensns/res/doc/iOS_SDK_V3.1.0.zip" target="_blank" rel="noopener">iOS_SDK_V3.1.0</a>版本不支持i386.</p>
+<p><img src="/images/2016102201.jpg" alt="iOS_SDK_V3.1.0"></p>
+<h1 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h1><ul>
+<li>方法1</li>
+</ul>
+<p>不要在iphone5及以下的模拟器测试，可以在支持64位模拟器比如iphone5s及以上测试。不影响真机。<br>同时，在TARGETS里面的设置如下：</p>
+<p><img src="/images/2016102202.jpg" alt="Xcode设置"></p>
+<ul>
+<li>方法2</li>
+</ul>
+<p>使用<code>lipo</code>命令从旧库分离出i386部分，再合并到新库中去。</p>
+<blockquote>
+<p>这么做可能引起一些未知的风险，需要谨慎执行。<br>由于公司的项目因为历史原因问题，不适合采用方法1，因此在充分考虑之后选择方法2.</p>
+</blockquote>
+<p>查看库支持架构：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lipo -info TencentOpenAPI</span><br></pre></td></tr></table></figure></p>
+<p>可以看到没有i386：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Architectures <span class="keyword">in</span> the fat <span class="string">file:</span> TencentOpenAPI <span class="string">are:</span> armv7 x86_64 arm64</span><br></pre></td></tr></table></figure></p>
+<p>接下来，从旧库中抽离i386：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lipo TencentOpenAPI -thin i386 -output TencentOpenAPI-i386</span><br></pre></td></tr></table></figure></p>
+<p>把新生成的<code>TencentOpenAPI-i386</code>合并到新库中去：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ipo -create TencentOpenAPI TencentOpenAPI-i386 -output TencentOpenAPI-new</span><br></pre></td></tr></table></figure></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://bbs.mob.com/thread-22262-1-1.html" target="_blank" rel="noopener">关于最新版的腾讯的SDK不支持i386的问题解决方案</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2016/10/22/Http-Certificate/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1066,7 +1211,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
