@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="苹果针对ATS逐渐收紧了政策，最近看了一些https的资料，自建证书主要用到openssl。根据苹果的政策，自建证书应该是通不过审核的（不确定）。本文主要介绍了如何自建证书和iOS用自建证书验证https。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTPS自建证书">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2016/10/22/Http-Certificate/index.html">
+<meta property="og:site_name" content="Duriaaaan&#39;s Blog">
+<meta property="og:description" content="苹果针对ATS逐渐收紧了政策，最近看了一些https的资料，自建证书主要用到openssl。根据苹果的政策，自建证书应该是通不过审核的（不确定）。本文主要介绍了如何自建证书和iOS用自建证书验证https。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-03-22T14:06:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTPS自建证书">
+<meta name="twitter:description" content="苹果针对ATS逐渐收紧了政策，最近看了一些https的资料，自建证书主要用到openssl。根据苹果的政策，自建证书应该是通不过审核的（不确定）。本文主要介绍了如何自建证书和iOS用自建证书验证https。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2016/10/22/Http-Certificate/"/>
+
+
+
+
+
+  <title>HTTPS自建证书 | Duriaaaan's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Duriaaaan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2016/10/22/Http-Certificate/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AprSnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Duriaaaan's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HTTPS自建证书</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-10-22T21:58:25+08:00">
+                2016-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>苹果针对ATS逐渐收紧了政策，最近看了一些https的资料，自建证书主要用到openssl。根据苹果的政策，自建证书应该是通不过审核的（不确定）。本文主要介绍了如何自建证书和iOS用自建证书验证https。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="创建用私钥签名的证书"><a href="#创建用私钥签名的证书" class="headerlink" title="创建用私钥签名的证书"></a>创建用私钥签名的证书</h1><h2 id="生成私钥"><a href="#生成私钥" class="headerlink" title="生成私钥"></a>生成私钥</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> openssl genrsa -out private.key 2048</span><br></pre></td></tr></table></figure>
+<h2 id="生成证书请求"><a href="#生成证书请求" class="headerlink" title="生成证书请求"></a>生成证书请求</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> openssl req -new -key private.key -out server.csr</span><br></pre></td></tr></table></figure>
+<p>这一步需要填写证书信息，如<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Country Name (2 letter code) [AU]:CN</span><br><span class="line">State <span class="keyword">or</span> Province Name (full name) [Some-State]:</span><br><span class="line">Locality Name (eg, city) []:</span><br><span class="line">Organization Name (eg, company) [Internet Widgits Pty Ltd]:</span><br><span class="line">Organizational Unit Name (eg, section) []:</span><br><span class="line">Common Name (e.g.<span class="built_in"> server </span>FQDN <span class="keyword">or</span> YOUR name) []:</span><br><span class="line">Email<span class="built_in"> Address </span>[]:</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>其中，Common Name 填写证书绑定的域名，否则证书不能通过信任验证。</p>
+</blockquote>
+<h2 id="生成服务器的私钥"><a href="#生成服务器的私钥" class="headerlink" title="生成服务器的私钥"></a>生成服务器的私钥</h2><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rsa -<span class="keyword">in</span> <span class="keyword">private</span>.<span class="keyword">key</span> -out server.<span class="keyword">key</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用私钥生成服务器证书"><a href="#使用私钥生成服务器证书" class="headerlink" title="使用私钥生成服务器证书"></a>使用私钥生成服务器证书</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openssl x509 -req -<span class="keyword">in</span> server.csr -out server.crt -outform pem -signkey server.key -days 365 -sha256</span></span><br></pre></td></tr></table></figure>
+<h1 id="openssl测试"><a href="#openssl测试" class="headerlink" title="openssl测试"></a>openssl测试</h1><h2 id="窗口1启动server"><a href="#窗口1启动server" class="headerlink" title="窗口1启动server"></a>窗口1启动server</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openssl s_server -accept 10001 -key server.key -cert server.crt -tls1_2</span></span><br></pre></td></tr></table></figure>
+<h2 id="窗口2启动客户端"><a href="#窗口2启动客户端" class="headerlink" title="窗口2启动客户端"></a>窗口2启动客户端</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openssl s_client -connect localhost:10001</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="使用CA签名证书"><a href="#使用CA签名证书" class="headerlink" title="使用CA签名证书"></a>使用CA签名证书</h1><h2 id="创建目录"><a href="#创建目录" class="headerlink" title="创建目录"></a>创建目录</h2><p>创建一个目录，并且将生成CA证书的脚本CA.sh复制到这个目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir ca</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ca</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cp /usr/<span class="built_in">local</span>/ssl/misc/CA.sh CA.sh</span></span><br></pre></td></tr></table></figure>
+<h2 id="创建CA私钥和证书"><a href="#创建CA私钥和证书" class="headerlink" title="创建CA私钥和证书"></a>创建CA私钥和证书</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./<span class="keyword">CA</span>.<span class="keyword">sh</span> -newca</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>CA.sh会使用/usr/local/ssl/openssl.cnf中的配置来创建</p>
+</blockquote>
+<h2 id="使用CA根证书签名"><a href="#使用CA根证书签名" class="headerlink" title="使用CA根证书签名"></a>使用CA根证书签名</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 生成私钥</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> openssl genrsa -out private.key 2048</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 生成证书请求</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> openssl req -new -key private.key -out server.csr</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 生成服务器的私钥</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> openssl rsa -<span class="keyword">in</span> private.key -out server.key</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用CA进行签名，生成server.crt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cp server.csr newreq.pem</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ./CA.sh -sign</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mv newcert.pem server.crt</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 或者上面三步都不需要，直接使用下面一步</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> openssl ca -<span class="keyword">in</span> server.csr -out server.crt</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="ATS要求"><a href="#ATS要求" class="headerlink" title="ATS要求"></a>ATS要求</h1><h2 id="私钥加密算法"><a href="#私钥加密算法" class="headerlink" title="私钥加密算法"></a>私钥加密算法</h2><ul>
+<li>2048位RSA 以上</li>
+<li>256位ECC 以上</li>
+</ul>
+<h2 id="私钥签名证书算法"><a href="#私钥签名证书算法" class="headerlink" title="私钥签名证书算法"></a>私钥签名证书算法</h2><ul>
+<li>SHA256 以上</li>
+</ul>
+<h2 id="安全协议"><a href="#安全协议" class="headerlink" title="安全协议"></a>安全协议</h2><ul>
+<li>TLS1.2</li>
+</ul>
+<h2 id="证书格式"><a href="#证书格式" class="headerlink" title="证书格式"></a>证书格式</h2><ul>
+<li>X.509</li>
+</ul>
+<hr>
+<h1 id="iOS使用自签名证书"><a href="#iOS使用自签名证书" class="headerlink" title="iOS使用自签名证书"></a>iOS使用自签名证书</h1><h2 id="生成cer"><a href="#生成cer" class="headerlink" title="生成cer"></a>生成cer</h2><p>iOS客户端支持的证书是DER格式的，直接将服务端的证书导出成DER格式。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openssl  x509  -inform PEM  -outform DER -<span class="keyword">in</span> server.crt -out server.cer</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="NSURLSession验证"><a href="#NSURLSession验证" class="headerlink" title="NSURLSession验证"></a>NSURLSession验证</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//导入客户端证书</span></span><br><span class="line"><span class="built_in">NSString</span> *cerPath = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@""</span> ofType:<span class="string">@"cer"</span>];</span><br><span class="line"><span class="built_in">NSData</span> *data = [<span class="built_in">NSData</span> dataWithContentsOfFile:cerPath];</span><br><span class="line">SecCertificateRef certificate = SecCertificateCreateWithData(<span class="literal">NULL</span>, (__bridge <span class="built_in">CFDataRef</span>) data);</span><br><span class="line"><span class="keyword">self</span>.trustedCertificates = @[(__bridge_transfer <span class="keyword">id</span>)certificate];</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)connection:(<span class="built_in">NSURLConnection</span> *)connection willSendRequestForAuthenticationChallenge:(<span class="built_in">NSURLAuthenticationChallenge</span> *)challenge</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//1)获取trust object</span></span><br><span class="line">    SecTrustRef trust = challenge.protectionSpace.serverTrust;</span><br><span class="line">    SecTrustResultType result;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//注意：这里将之前导入的证书设置成下面验证的Trust Object的anchor certificate</span></span><br><span class="line">    SecTrustSetAnchorCertificates(trust, (__bridge <span class="built_in">CFArrayRef</span>)<span class="keyword">self</span>.trustedCertificates);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//2)SecTrustEvaluate会查找前面SecTrustSetAnchorCertificates设置的证书或者系统默认提供的证书，对trust进行验证</span></span><br><span class="line">    OSStatus status = SecTrustEvaluate(trust, &amp;result);</span><br><span class="line">    <span class="keyword">if</span> (status == errSecSuccess &amp;&amp;</span><br><span class="line">        (result == kSecTrustResultProceed ||</span><br><span class="line">         result == kSecTrustResultUnspecified))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//3)验证成功，生成NSURLCredential凭证cred，告知challenge的sender使用这个凭证来继续连接</span></span><br><span class="line">        <span class="built_in">NSURLCredential</span> *cred = [<span class="built_in">NSURLCredential</span> credentialForTrust:trust];</span><br><span class="line">        [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//5)验证失败，取消这次验证流程</span></span><br><span class="line">        [challenge.sender cancelAuthenticationChallenge:challenge];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://www.liuchungui.com/blog/2015/09/25/zi-jian-zheng-shu-pei-zhi-httpsfu-wu-qi/" target="_blank" rel="noopener">自建证书配置HTTPS服务器</a></li>
+<li><a href="http://blog.csdn.net/gx_1983/article/details/47866537" target="_blank" rel="noopener">openssl自签名证书生成与单双向验证</a></li>
+<li><a href="http://oncenote.com/2014/10/21/Security-1-HTTPS/" target="_blank" rel="noopener">iOS安全系列之一：HTTPS</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/06/28/Troulbe-In-Ubuntu/" rel="next" title="Ubuntu使用中的一些问题">
+                <i class="fa fa-chevron-left"></i> Ubuntu使用中的一些问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/06/Pointers-And-Arrays-In-C/" rel="prev" title="C语言中指针和数组是否相等">
+                C语言中指针和数组是否相等 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">AprSnow</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#创建用私钥签名的证书"><span class="nav-number">1.</span> <span class="nav-text">创建用私钥签名的证书</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成私钥"><span class="nav-number">1.1.</span> <span class="nav-text">生成私钥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成证书请求"><span class="nav-number">1.2.</span> <span class="nav-text">生成证书请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成服务器的私钥"><span class="nav-number">1.3.</span> <span class="nav-text">生成服务器的私钥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用私钥生成服务器证书"><span class="nav-number">1.4.</span> <span class="nav-text">使用私钥生成服务器证书</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#openssl测试"><span class="nav-number">2.</span> <span class="nav-text">openssl测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#窗口1启动server"><span class="nav-number">2.1.</span> <span class="nav-text">窗口1启动server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#窗口2启动客户端"><span class="nav-number">2.2.</span> <span class="nav-text">窗口2启动客户端</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用CA签名证书"><span class="nav-number">3.</span> <span class="nav-text">使用CA签名证书</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建目录"><span class="nav-number">3.1.</span> <span class="nav-text">创建目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建CA私钥和证书"><span class="nav-number">3.2.</span> <span class="nav-text">创建CA私钥和证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用CA根证书签名"><span class="nav-number">3.3.</span> <span class="nav-text">使用CA根证书签名</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ATS要求"><span class="nav-number">4.</span> <span class="nav-text">ATS要求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#私钥加密算法"><span class="nav-number">4.1.</span> <span class="nav-text">私钥加密算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#私钥签名证书算法"><span class="nav-number">4.2.</span> <span class="nav-text">私钥签名证书算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安全协议"><span class="nav-number">4.3.</span> <span class="nav-text">安全协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#证书格式"><span class="nav-number">4.4.</span> <span class="nav-text">证书格式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS使用自签名证书"><span class="nav-number">5.</span> <span class="nav-text">iOS使用自签名证书</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成cer"><span class="nav-number">5.1.</span> <span class="nav-text">生成cer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSURLSession验证"><span class="nav-number">5.2.</span> <span class="nav-text">NSURLSession验证</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AprSnow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

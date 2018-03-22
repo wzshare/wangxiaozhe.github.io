@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="终端配色Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。 于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。 输入：1$ gedit ~/.bashrc">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu使用中的一些问题">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2015/06/28/Troulbe-In-Ubuntu/index.html">
+<meta property="og:site_name" content="Duriaaaan&#39;s Blog">
+<meta property="og:description" content="终端配色Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。 于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。 输入：1$ gedit ~/.bashrc">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-03-15T15:53:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ubuntu使用中的一些问题">
+<meta name="twitter:description" content="终端配色Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。 于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。 输入：1$ gedit ~/.bashrc">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2015/06/28/Troulbe-In-Ubuntu/"/>
+
+
+
+
+
+  <title>Ubuntu使用中的一些问题 | Duriaaaan's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Duriaaaan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2015/06/28/Troulbe-In-Ubuntu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AprSnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Duriaaaan's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ubuntu使用中的一些问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-06-28T15:33:57+08:00">
+                2015-06-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="终端配色"><a href="#终端配色" class="headerlink" title="终端配色"></a>终端配色</h1><p>Ubunt 14.04的终端默认配色是紫底白字，主要是命令和前面的路径等都是白色，时间久了肯定会不容易分清。</p>
+<p>于是google了一下自由配色，发现很多方法不是特别好，摸索了一阵后我自己找到了一个简单的办法。</p>
+<p>输入：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> gedit ~/.bashrc</span></span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>找到：<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if [ "<span class="formula">$color_prompt" = yes ]; then</span></span><br><span class="line"><span class="formula">    PS1='$</span>&#123;debian_chroot:+(<span class="formula">$debian_chroot)&#125;<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[01;31m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">u</span></span>@<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00;33m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">h</span></span><span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span>:<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[01;34m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">w</span></span><span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">$</span></span> '</span></span><br><span class="line"><span class="formula">else</span></span><br><span class="line"><span class="formula">    PS1='$</span>&#123;debian_chroot:+(<span class="formula">$debian_chroot)&#125;<span class="tag">\<span class="name">u</span></span>@<span class="tag">\<span class="name">h</span></span>:<span class="tag">\<span class="name">w</span></span><span class="tag">\<span class="name">$</span></span> '</span></span><br></pre></td></tr></table></figure></p>
+<p>把<code>else</code>后面<code>PS1</code>修改为:</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PS1='<span class="formula">$&#123;debian_chroot:+($</span>debian_chroot)&#125;<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">u</span></span>@<span class="tag">\<span class="name">h</span></span><span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span>:<span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">w</span></span><span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[00m<span class="tag">\<span class="name">]</span></span><span class="tag">\<span class="name">$</span></span> <span class="tag">\<span class="name">[</span></span><span class="tag">\</span>033[01;33m<span class="tag">\<span class="name">]</span></span>'</span><br></pre></td></tr></table></figure>
+<p>这样只有命令变为了黄色。</p>
+<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips:"></a>Tips:</h2><p>代码设置如下：</p>
+<p>样式<br><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">00 </span>-- Normal (no <span class="keyword">color</span>, no bold)</span><br><span class="line"><span class="symbol">01 </span>– Bold</span><br></pre></td></tr></table></figure></p>
+<p>文字颜色<br><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">30 </span>-- Black</span><br><span class="line"><span class="symbol">31 </span>-- Red</span><br><span class="line"><span class="symbol">32 </span>-- Green</span><br><span class="line"><span class="symbol">33 </span>-- Yellow</span><br><span class="line"><span class="symbol">34 </span>-- Blue</span><br><span class="line"><span class="symbol">35 </span>-- Magenta</span><br><span class="line"><span class="symbol">36 </span>-- Cyan</span><br><span class="line"><span class="symbol">37 </span>-- White</span><br></pre></td></tr></table></figure></p>
+<p>背景颜色<br><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">40 </span>-- Black</span><br><span class="line"><span class="symbol">41 </span>-- Red</span><br><span class="line"><span class="symbol">42 </span>-- Green</span><br><span class="line"><span class="symbol">43 </span>-- Yellow</span><br><span class="line"><span class="symbol">44 </span>-- Blue</span><br><span class="line"><span class="symbol">45 </span>-- Magenta</span><br><span class="line"><span class="symbol">46 </span>-- Cyan</span><br><span class="line"><span class="symbol">47 </span>–- White</span><br></pre></td></tr></table></figure></p>
+<h1 id="Ubuntu系统安装360wifi"><a href="#Ubuntu系统安装360wifi" class="headerlink" title="Ubuntu系统安装360wifi"></a>Ubuntu系统安装360wifi</h1><blockquote>
+<p><em>本操作都是在Ubuntu 14.04系统中进行的，并且经过了验证，其他linux系统操作类似，可以作为参考。</em></p>
+</blockquote>
+<p>360WiFi，小度WiFi等其实都是一个无线网卡，在linux下可以直接当做无线网卡用，在terminal中通过命令<code>lsusb</code>查看360WiFi的芯片，发现使用的是Mediatek Ralink MT7601芯片，其实小度WiFi也是。</p>
+<p>如果<code>lsusb</code>命令下出现了：<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Bus </span><span class="number">001</span> Device <span class="number">006</span>: ID <span class="number">148</span>f:<span class="number">760</span>b Ralink Technology, Corp.</span><br></pre></td></tr></table></figure></p>
+<p>说明你的WiFi使用的是Mediatek Ralink MT7601芯片。</p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ol>
+<li><p>在Mediatek官网下载MT7601U USB驱动源码包。<br><a href="http://www.mediatek.com/en/downloads/mt7601u-usb/" target="_blank" rel="noopener">http://www.mediatek.com/en/downloads/mt7601u-usb/</a></p>
+</li>
+<li><p>右键单击下载的安装包(DPO_MT7601U_LinuxSTA_3.0.0.4_20130913.tar.bz2)，选择提取到这里；</p>
+</li>
+<li><p>修改common/rtusb_dev_id.c文件，在<br><code>{USB_DEVICE(0x148f,0x7601)}, /* MT 6370 */</code><br>下面加上：<br><code>{USB_DEVICE(0x2955,0x0001)}, /* XiaoDu Wifi */</code><br><code>{USB_DEVICE(0x2955,0x1001)}, /* XiaoDu Wifi */</code><br><code>{USB_DEVICE(0x148f,0x760b)}, /* 360 Wifi */</code></p>
+</li>
+<li><p>假如你提取到的目录为dowmload， 打开erminal (Ctrl-Alt-T) 并且运行以下的代码<br>Code:</p>
+<pre><code>cd Downloads/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913
+make
+sudo make install
+</code></pre></li>
+<li><p>如果出现错误</p>
+<pre><code>make[2]: *** [/home/mikew/Downloads/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913/os/linux/../../os/linux/rt_linux.o] 错误 1
+make[1]: *** [_module_/home/mikew/Downloads/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913/os/linux] 错误 2
+make[1]: 离开目录“/usr/src/kernels/3.13.9-200.fc20.x86_64”
+make: *** [LINUX] 错误 2
+</code></pre><p> 可以修改<code>rt_linux.c</code>的1121行和1122行，<code>pOSFSInfo-&gt;fsgid = current_fsgid();</code>全部替换为<code>pOSFSInfo-&gt;fsgid = *(int *)&amp;current_fsgid();</code></p>
+</li>
+<li><p>如果以上没有问题，再次输入下面的代码<br>Code:</p>
+<pre><code>sudo modprobe -v mt7601Usta
+</code></pre></li>
+</ol>
+<h1 id="解决联网死机问题"><a href="#解决联网死机问题" class="headerlink" title="解决联网死机问题"></a>解决联网死机问题</h1><blockquote>
+<p><strong>声明：</strong>作者环境为Ubuntu 14.04 和 windows 8 双系统，在Ubuntu中安装了mt7601的驱动并使用360WiFi发现一联网就死机。但用同样方法在另一台电脑，环境为windows XP 和 wubi安装的Ubuntu 14.04，并没有出现问题。</p>
+</blockquote>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>针对死机问题，Google了一番后，有人讨论是官方驱动比较旧，不能适应较高版本内核的Linux。</p>
+<h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>在Github上有人解决了这个问题，具体见 <strong>porjo</strong> 的项目<a href="https://github.com/porjo/mt7601">mt7601</a>。以下为<strong>README.md</strong>中文简单简绍：</p>
+<p> 作者测试了3.x版本以上的Linux内核：</p>
+<ul>
+<li>3.15.10-200.fc20.x86_64</li>
+<li>3.16.1-301.fc21.x86_64</li>
+<li>3.16.1-301.fc21.i686</li>
+<li>3.17.0-0.rc2.git3.1.fc22.i686</li>
+<li>3.17.0-0.rc2.git3.1.fc22.x86_64</li>
+<li>3.12.26-1.20140808git4ab8abb.rpfr20.armv6hl.bcm2708</li>
+</ul>
+<p><strong>使用方法</strong>为：</p>
+<ol>
+<li><p>从Github克隆：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> https://github.com/porjo/mt7601.git</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行以下代码：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> mt7601/src</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> make</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mkdir -p /etc/Wireless/RT2870STA/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cp RT2870STA.dat /etc/Wireless/RT2870STA/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> insmod os/linux/mt7601Usta.ko</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果以上运行没有问题，那么你可以输入<code>lsmod</code>能看到 <em>mt7601Usta</em>；输入<code>ip link</code>可以看到新的网络接口 <em>ra0</em>。</p>
+</li>
+<li>所有都正常，可以运行<code>make install</code>安装，安装完成后就不会出现死机问题。</li>
+</ol>
+<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>来自<a href="http://stepgame.net/showtext.php?textid=44" target="_blank" rel="noopener">StepGame.net</a>（仅为引用）</p>
+<ul>
+<li><p>mtk官网上的驱动安装后会死机，使用ppa安装补丁版解决死机问题：</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo<span class="built_in"> add-apt-repository </span>ppa:thopiekar/mt7601</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="builtin-name">get</span> update</span><br><span class="line">apt-<span class="builtin-name">get</span> install mt7601-sta-dkms</span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>补丁源码：<a href="https://github.com/porjo/mt7601">https://github.com/porjo/mt7601</a><br>补丁PPA源：<a href="https://code.launchpad.net/~thopiekar/+archive/ubuntu/mt7601" target="_blank" rel="noopener">https://code.launchpad.net/~thopiekar/+archive/ubuntu/mt7601</a></p>
+</blockquote>
+<p>这个方法是<strong>thopiekar</strong>针对Ubuntu的整理，源代码还是来自方法一中<strong>porjo</strong>的 <a href="https://github.com/porjo/mt7601">mt7601</a>。</p>
+<blockquote>
+<p><strong>thopiekar</strong>的项目：<a href="https://code.launchpad.net/~thopiekar/+archive/ubuntu/mt7601" target="_blank" rel="noopener">MT7601 STA driver</a></p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/01/01/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/22/Http-Certificate/" rel="prev" title="HTTPS自建证书">
+                HTTPS自建证书 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">AprSnow</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#终端配色"><span class="nav-number">1.</span> <span class="nav-text">终端配色</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tips"><span class="nav-number">1.1.</span> <span class="nav-text">Tips:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu系统安装360wifi"><span class="nav-number">2.</span> <span class="nav-text">Ubuntu系统安装360wifi</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">2.1.</span> <span class="nav-text">步骤</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决联网死机问题"><span class="nav-number">3.</span> <span class="nav-text">解决联网死机问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">3.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法一"><span class="nav-number">3.2.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法二"><span class="nav-number">3.3.</span> <span class="nav-text">方法二</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AprSnow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
