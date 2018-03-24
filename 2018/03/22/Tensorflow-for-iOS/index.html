@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="从Pod中引入tensorflow库tensorflow对 python 和 Android 的支持较好，但是在 iOS 项目中使用比较麻烦。">
+<meta name="description" content="前言本文介绍了构建支持iOS的tensorflow静态库。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Building the TensorFlow iOS libraries from source">
 <meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/03/22/Tensorflow-for-iOS/index.html">
 <meta property="og:site_name" content="Duriaaaan&#39;s Blog">
-<meta property="og:description" content="从Pod中引入tensorflow库tensorflow对 python 和 Android 的支持较好，但是在 iOS 项目中使用比较麻烦。">
+<meta property="og:description" content="前言本文介绍了构建支持iOS的tensorflow静态库。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-03-22T15:42:40.000Z">
+<meta property="og:updated_time" content="2018-03-24T15:17:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Building the TensorFlow iOS libraries from source">
-<meta name="twitter:description" content="从Pod中引入tensorflow库tensorflow对 python 和 Android 的支持较好，但是在 iOS 项目中使用比较麻烦。">
+<meta name="twitter:description" content="前言本文介绍了构建支持iOS的tensorflow静态库。">
 
 
 
@@ -329,8 +329,9 @@
       
 
       
-        <h1 id="从Pod中引入tensorflow库"><a href="#从Pod中引入tensorflow库" class="headerlink" title="从Pod中引入tensorflow库"></a>从Pod中引入tensorflow库</h1><p><code>tensorflow</code>对 <strong>python</strong> 和 <strong>Android</strong> 的支持较好，但是在 <strong>iOS</strong> 项目中使用比较麻烦。</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文介绍了构建支持iOS的tensorflow静态库。</p>
 <a id="more"></a>
+<h1 id="从Pod中引入tensorflow库"><a href="#从Pod中引入tensorflow库" class="headerlink" title="从Pod中引入tensorflow库"></a>从Pod中引入tensorflow库</h1><p><code>tensorflow</code>对 <strong>python</strong> 和 <strong>Android</strong> 的支持较好，但是在 <strong>iOS</strong> 项目中使用比较麻烦。</p>
 <p>cocoapods 中在 <a href="https://cocoapods.org/pods/TensorFlow-experimental" target="_blank" rel="noopener">TensorFlow-experimental</a> 提供了一个<code>tensorflow_experimental.framework</code>，当前版本为<code>1.1.1</code>。</p>
 <p><code>TensorFlow-experimental</code>在 cocoapods 中的最新release时间为<code>May, 2017</code>（2018-03-20查看）。</p>
 <p>通过 <code>Pod</code> 可以快速引入 <code>tensorflow</code> 库。</p>
@@ -524,7 +525,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -579,7 +580,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#从Pod中引入tensorflow库"><span class="nav-number">1.</span> <span class="nav-text">从Pod中引入tensorflow库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#从source中build支持iOS的tensorflow库"><span class="nav-number">2.</span> <span class="nav-text">从source中build支持iOS的tensorflow库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Before-you-start"><span class="nav-number">3.</span> <span class="nav-text">Before you start</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Building-on-Mac"><span class="nav-number">4.</span> <span class="nav-text">Building on Mac</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#快速编译"><span class="nav-number">5.</span> <span class="nav-text">快速编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建自己的App"><span class="nav-number">6.</span> <span class="nav-text">创建自己的App</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#添加库"><span class="nav-number">6.1.</span> <span class="nav-text">添加库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加-Library-Search-Paths"><span class="nav-number">6.2.</span> <span class="nav-text">添加 Library Search Paths</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加头文件路径"><span class="nav-number">6.3.</span> <span class="nav-text">添加头文件路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Other-Linker-Flags"><span class="nav-number">6.4.</span> <span class="nav-text">Other Linker Flags</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-支持"><span class="nav-number">6.5.</span> <span class="nav-text">C++支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bitcode"><span class="nav-number">6.6.</span> <span class="nav-text">Bitcode</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#从Pod中引入tensorflow库"><span class="nav-number">2.</span> <span class="nav-text">从Pod中引入tensorflow库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#从source中build支持iOS的tensorflow库"><span class="nav-number">3.</span> <span class="nav-text">从source中build支持iOS的tensorflow库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Before-you-start"><span class="nav-number">4.</span> <span class="nav-text">Before you start</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Building-on-Mac"><span class="nav-number">5.</span> <span class="nav-text">Building on Mac</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#快速编译"><span class="nav-number">6.</span> <span class="nav-text">快速编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建自己的App"><span class="nav-number">7.</span> <span class="nav-text">创建自己的App</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#添加库"><span class="nav-number">7.1.</span> <span class="nav-text">添加库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加-Library-Search-Paths"><span class="nav-number">7.2.</span> <span class="nav-text">添加 Library Search Paths</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加头文件路径"><span class="nav-number">7.3.</span> <span class="nav-text">添加头文件路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Other-Linker-Flags"><span class="nav-number">7.4.</span> <span class="nav-text">Other Linker Flags</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-支持"><span class="nav-number">7.5.</span> <span class="nav-text">C++支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bitcode"><span class="nav-number">7.6.</span> <span class="nav-text">Bitcode</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
