@@ -334,7 +334,7 @@
       
         <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>使用2016-05-17更新的QQ互联SDK在使用模拟器运行是会出现以下报错：</p>
 <a id="more"></a>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Undefined symbols <span class="keyword">for</span> architecture i386:</span><br><span class="line">  <span class="string">"_OBJC_CLASS_$_QQApiInterface"</span>, referenced <span class="keyword">from</span>:</span><br><span class="line">      objc-<span class="built_in">class</span>-<span class="keyword">ref</span> <span class="keyword">in</span> ShareSDKManage.o</span><br><span class="line">      objc-<span class="built_in">class</span>-<span class="keyword">ref</span> <span class="keyword">in</span> UserLoginViewController.o</span><br><span class="line">  <span class="string">"_OBJC_CLASS_$_TencentOAuth"</span>, referenced <span class="keyword">from</span>:</span><br><span class="line">      objc-<span class="built_in">class</span>-<span class="keyword">ref</span> <span class="keyword">in</span> ShareSDKManage.o</span><br><span class="line">ld: symbol(s) <span class="keyword">not</span> found <span class="keyword">for</span> architecture i386</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Undefined symbols for architecture i386:</span><br><span class="line">  &quot;_OBJC_CLASS_$_QQApiInterface&quot;, referenced from:</span><br><span class="line">      objc-class-ref in ShareSDKManage.o</span><br><span class="line">      objc-class-ref in UserLoginViewController.o</span><br><span class="line">  &quot;_OBJC_CLASS_$_TencentOAuth&quot;, referenced from:</span><br><span class="line">      objc-class-ref in ShareSDKManage.o</span><br><span class="line">ld: symbol(s) not found for architecture i386</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>包括使用ShareSDK、友盟社会化分享SDK等集成QQ互联的SDK。</p>
 </blockquote>
@@ -353,7 +353,7 @@
 <p>这么做可能引起一些未知的风险，需要谨慎执行。<br>由于公司的项目因为历史原因问题，不适合采用方法1，因此在充分考虑之后选择方法2.</p>
 </blockquote>
 <p>查看库支持架构：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lipo -info TencentOpenAPI</span><br></pre></td></tr></table></figure></p>
-<p>可以看到没有i386：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Architectures <span class="keyword">in</span> the fat <span class="string">file:</span> TencentOpenAPI <span class="string">are:</span> armv7 x86_64 arm64</span><br></pre></td></tr></table></figure></p>
+<p>可以看到没有i386：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Architectures in the fat file: TencentOpenAPI are: armv7 x86_64 arm64</span><br></pre></td></tr></table></figure></p>
 <p>接下来，从旧库中抽离i386：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lipo TencentOpenAPI -thin i386 -output TencentOpenAPI-i386</span><br></pre></td></tr></table></figure></p>
 <p>把新生成的<code>TencentOpenAPI-i386</code>合并到新库中去：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ipo -create TencentOpenAPI TencentOpenAPI-i386 -output TencentOpenAPI-new</span><br></pre></td></tr></table></figure></p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
@@ -472,7 +472,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

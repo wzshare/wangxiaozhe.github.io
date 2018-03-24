@@ -336,7 +336,7 @@
 <p>通过 <code>Pod</code> 可以快速引入 <code>tensorflow</code> 库。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pod <span class="string">'TensorFlow-experimental'</span></span><br></pre></td></tr></table></figure>
 <h1 id="从source中build支持iOS的tensorflow库"><a href="#从source中build支持iOS的tensorflow库" class="headerlink" title="从source中build支持iOS的tensorflow库"></a>从source中build支持iOS的tensorflow库</h1><p>但是在最新的版本（<code>version 1.1.1</code>）中，有一个bug导致如下错误：</p>
-<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Could <span class="keyword">not</span> <span class="keyword">create</span> TensorFlow <span class="keyword">Graph</span>: <span class="keyword">Not</span> found: Op <span class="built_in">type</span> <span class="keyword">not</span> registered 'DecodeWav'.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Could not create TensorFlow Graph: Not found: Op type not registered &apos;DecodeWav&apos;.</span><br></pre></td></tr></table></figure>
 <p>原因是由于在 <code>tensorflow/tensorflow/blob/master/tensorflow/contrib/makefile/tf_op_files.txt</code> 中缺少了 <code>tensorflow/core/ops/audio_ops.cc</code>。</p>
 <p>bug详细可见<a href="https://github.com/tensorflow/tensorflow/issues/15921">here</a>。</p>
 <p>这个 bug 在 <code>2018-02</code> 被修复，所以在当前最新的 <code>tensorflow_experimental.framework</code> 依然存在。</p>
@@ -396,14 +396,14 @@
 </ul>
 <p>库需要通过 <code>TARGET</code> -&gt; <code>Linked Frameworks and Libraries</code> 添加。</p>
 <h2 id="添加-Library-Search-Paths"><a href="#添加-Library-Search-Paths" class="headerlink" title="添加 Library Search Paths"></a>添加 Library Search Paths</h2><p>在 <code>PROJECT</code> -&gt; <code>Build Settings</code> -&gt; <code>Search Paths</code> -&gt; <code>Library Search Paths</code> 中添加静态库的路径。</p>
-<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tensorflow/contrib/makefile/gen/<span class="class"><span class="keyword">lib</span></span></span><br><span class="line">tensorflow/contrib/makefile/gen/protobuf_ios/<span class="class"><span class="keyword">lib</span></span></span><br><span class="line">tensorflow/contrib/makefile/downloads/nsync/builds/lipo.ios.c++<span class="number">11</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tensorflow/contrib/makefile/gen/lib</span><br><span class="line">tensorflow/contrib/makefile/gen/protobuf_ios/lib</span><br><span class="line">tensorflow/contrib/makefile/downloads/nsync/builds/lipo.ios.c++11</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><strong>Tips:</strong><br>要注意必须是相对路径，可以直接用拖文件夹的方式加入。</p>
 </blockquote>
 <h2 id="添加头文件路径"><a href="#添加头文件路径" class="headerlink" title="添加头文件路径"></a>添加头文件路径</h2><p>在 <code>PROJECT</code> -&gt; <code>Build Settings</code> -&gt; <code>Search Paths</code> -&gt; <code>Header Search Paths</code> 中添加头文件路径。</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">the root folder of tensorflow,</span><br><span class="line">tensorflow<span class="regexp">/contrib/</span>makefile<span class="regexp">/downloads/</span>nsync/<span class="keyword">public</span></span><br><span class="line">tensorflow<span class="regexp">/contrib/</span>makefile<span class="regexp">/downloads/</span>protobuf/src</span><br><span class="line">tensorflow<span class="regexp">/contrib/</span>makefile/downloads,</span><br><span class="line">tensorflow<span class="regexp">/contrib/</span>makefile<span class="regexp">/downloads/</span>eigen, and</span><br><span class="line">tensorflow<span class="regexp">/contrib/</span>makefile<span class="regexp">/gen/</span>proto.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">the root folder of tensorflow,</span><br><span class="line">tensorflow/contrib/makefile/downloads/nsync/public</span><br><span class="line">tensorflow/contrib/makefile/downloads/protobuf/src</span><br><span class="line">tensorflow/contrib/makefile/downloads,</span><br><span class="line">tensorflow/contrib/makefile/downloads/eigen, and</span><br><span class="line">tensorflow/contrib/makefile/gen/proto.</span><br></pre></td></tr></table></figure>
 <h2 id="Other-Linker-Flags"><a href="#Other-Linker-Flags" class="headerlink" title="Other Linker Flags"></a>Other Linker Flags</h2><p>在 <code>PROJECT</code> -&gt; <code>Build Settings</code> -&gt; <code>Linking</code> -&gt; <code>Other Linker Flags</code> 中对 <code>TensorFlow</code> 静态库添加 <code>-force_load</code> 标识，如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-force_load</span><br><span class="line"><span class="string">"<span class="variable">$(SRCROOT)</span>/../tensorflow/tensorflow/contrib/makefile/gen/lib/libtensorflow-core.a"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-force_load</span><br><span class="line">&quot;$(SRCROOT)/../tensorflow/tensorflow/contrib/makefile/gen/lib/libtensorflow-core.a&quot;</span><br></pre></td></tr></table></figure>
 <p>使用 <code>-force_load</code> 可以指定要载入的库，避免因为使用 <code>-all_load</code> 导致的链接错误。</p>
 <p>同时，需要移除所有的 <code>-all_load</code>，如果是为了避免 Objective-C 静态库中 <strong>categories</strong> 的问题，可以使用 <code>-ObjC</code>。</p>
 <h2 id="C-支持"><a href="#C-支持" class="headerlink" title="C++支持"></a>C++支持</h2><p>在 <code>PROJECT</code> -&gt; <code>Build Settings</code> -&gt; <code>C++ Language Dialect</code> 中选择 <code>GNU++11</code> 或 <code>GNU++14</code> 。</p>
@@ -524,7 +524,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
