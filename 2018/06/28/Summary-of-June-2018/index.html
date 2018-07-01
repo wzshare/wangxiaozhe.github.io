@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Duriaaaan&#39;s Blog">
 <meta property="og:description" content="Week 24 June 11 to June 17  Algorithm：[Leetcode - easy] 344. Reverse String 123456// takes a string as input and returns the string reversed.func reverseString1(_ s: String) -&amp;gt; String &amp;#123;    ret">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-06-28T15:36:42.000Z">
+<meta property="og:updated_time" content="2018-07-01T14:56:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="六月总结">
 <meta name="twitter:description" content="Week 24 June 11 to June 17  Algorithm：[Leetcode - easy] 344. Reverse String 123456// takes a string as input and returns the string reversed.func reverseString1(_ s: String) -&amp;gt; String &amp;#123;    ret">
@@ -377,6 +377,63 @@
 <li>都会等待他们自己的任务（0）执行完再执行后面的任务（4、5、6）</li>
 </ol>
 <p><code>dispatch_barrier_sync</code> 和 <code>dispatch_barrier_async</code> 的不共同点：<br>在将任务插入到queue的时候，<code>dispatch_barrier_sync</code> 需要等待自己的任务（0）结束之后才会继续程序，然后插入被写在它后面的任务（4、5、6），然后执行后面的任务；而 <code>dispatch_barrier_async</code> 将自己的任务（0）插入到queue之后，不会等待自己的任务结束，它会继续把后面的任务（4、5、6）插入到queue</p>
+<h1 id="Week-26"><a href="#Week-26" class="headerlink" title="Week 26"></a>Week 26</h1><blockquote>
+<p>June 25 to July 01</p>
+</blockquote>
+<h2 id="Algorithm：-2"><a href="#Algorithm：-2" class="headerlink" title="Algorithm："></a>Algorithm：</h2><p>[Leetcode - easy] 263. Ugly Number</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">isUgly</span><span class="params">(<span class="number">_</span> num: Int)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> res = num</span><br><span class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> [<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>] &#123;</span><br><span class="line">        <span class="keyword">while</span> (res &gt; <span class="number">0</span> &amp;&amp; res % p == <span class="number">0</span>) &#123;</span><br><span class="line">            res /= p;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res == <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Review：-2"><a href="#Review：-2" class="headerlink" title="Review："></a>Review：</h2><p>在一次用户的touch交互中，是hit-test决定了Application的整个view层次结构中，到底该由哪个view去接收并处理该事件。</p>
+<ol>
+<li>touch事件发生，创建UIEvent对象</li>
+<li>按照Application的view层次结构，逐层调用每个view的<code>hitTest:withEvent:</code>方法，并传入该event对象，view根据<code>hitTest:withEvent:</code>方法和来决定touch点是否包含在自己的bounds中；</li>
+<li>如果view的bounds包含了touch点，该view会遍历自己的subview，并调用每个subview的<code>pointInside:withEvent:</code>方法来进一步决定touch事件是发生在自己本身，还是自己的subview上。</li>
+<li>重复第二，三步，并筛选出最终接受touch事件的view对象</li>
+</ol>
+<p><code>enabled</code>属性会忽略<code>touch events</code>，并可能改变绘制，比如<code>button.enabled = NO</code>意味着button灰色并且不能响应<code>touches</code>(继承自UIControl)；<code>userInteractionEnabled</code>表示<code>user events</code>是否会被忽略并从<code>event queue</code>中移除，比如<code>button.userInteractionEnabled = NO</code>意味着显示正常，但是不能响应<code>touches</code>(继承自UIView)。</p>
+<h2 id="Tip：-2"><a href="#Tip：-2" class="headerlink" title="Tip："></a>Tip：</h2><p>《Effective Objective-C 2.0》  </p>
+<p>Chapter 7: The System Frameworks<br>系统框架</p>
+<h3 id="Item-47-Familiarize-Yourself-with-the-System-Frameworks"><a href="#Item-47-Familiarize-Yourself-with-the-System-Frameworks" class="headerlink" title="Item 47: Familiarize Yourself with the System Frameworks"></a>Item 47: Familiarize Yourself with the System Frameworks</h3><p>熟悉系统框架，最重要的是<code>Foundation</code>和<code>CoreFoundation</code>，此外还有：  </p>
+<ul>
+<li><code>CFNetwork</code>，提供C语言级别的网络通信能力。</li>
+<li><code>CoreAudio</code>，提供C语言API可用来操作设备上的音频硬件。</li>
+<li><code>AVFoundation</code>，提供Objective-C对象用来回放并录制音频及视频。</li>
+<li><code>CoreData</code>，提供Objective-C接口可将对象放入数据库，便于持久保存。</li>
+<li><code>CoreTest</code>，提供C语言接口可以高效执行文字排版及渲染操作。</li>
+</ul>
+<h3 id="Item-48-Prefer-Block-Enumeration-to-for-Loops"><a href="#Item-48-Prefer-Block-Enumeration-to-for-Loops" class="headerlink" title="Item 48: Prefer Block Enumeration to for Loops"></a>Item 48: Prefer Block Enumeration to for Loops</h3><p>多用块枚举，少用for循环  </p>
+<ul>
+<li>遍历collection有四种方式。最基本的办法是<code>for循环</code>，其次是<code>NSEnumerator</code>遍历法及<code>for in快速遍历法</code>，最新、最先进的方式则是<code>块枚举法 Block Enumeration</code>。</li>
+<li>块枚举法本身就是通过GCD来并发执行遍历操作，无须另行编写代码。而采用其他遍历方式则无法轻易实现。</li>
+<li>若提前知道待遍历的collection含有何种对象，则应修改块签名，指出对象的具体类型。</li>
+</ul>
+<h3 id="Item-49-Use-Toll-Free-Bridging-for-Collections-with-Custom-Memory-Management-Semantics"><a href="#Item-49-Use-Toll-Free-Bridging-for-Collections-with-Custom-Memory-Management-Semantics" class="headerlink" title="Item 49: Use Toll-Free Bridging for Collections with Custom Memory-Management Semantics"></a>Item 49: Use Toll-Free Bridging for Collections with Custom Memory-Management Semantics</h3><p>对自定义其内存管理语义的collection使用无缝桥接<code>toll-free bridging</code>。</p>
+<ul>
+<li>通过无缝桥接技术，可以在Foundation框架中的Objective-C对象与CoreFoundation框架中的C语言数据结构之间来回转换。</li>
+<li>在CoreFoundation层面创建colletion时，可以指定许多回调函数，这些函数表示此colletion应如何处理其元。素。然后，可运用无缝桥接技术，将其转换成具备特殊内存管理语义的<code>Objective-C collection</code>。</li>
+</ul>
+<h3 id="Item-50-Use-NSCache-Instead-of-NSDictionary-for-Caches"><a href="#Item-50-Use-NSCache-Instead-of-NSDictionary-for-Caches" class="headerlink" title="Item 50: Use NSCache Instead of NSDictionary for Caches"></a>Item 50: Use NSCache Instead of NSDictionary for Caches</h3><p>构建缓存时选用NSCache而非NSDictionary</p>
+<ul>
+<li>实现缓存时应选用<code>NSCache</code>而非<code>NSDictionary</code>对象。因为NSCache可以提供优雅的自动删减功能，而且是“线程安全的”，此外，与NSDictionary不同，NSCache不会拷贝key。</li>
+<li>可以给NSCache对象设置上限，用以限制缓存中的对象总个数及“总成本”，而这些尺度则定义了缓存删减其中对象的时机。但是绝对不要把这些尺度当成可靠的<code>hard limit</code>，它们仅对NSCache起指导作用。</li>
+<li>将<code>NSPurgeableData</code>与<code>NSCache</code>搭配使用，可实现自动清除数据的功能，也就是说，当NSPurgeableData对象所占内存为系统所丢弃时，该对象自身也会从缓存中移除。</li>
+<li>如果缓存使用得当，那么应用程序的响应速度就能提高。只有那种“<strong>重新计算起来很费事的</strong>”数据才值得缓存，比如那些需要从网络获取或从磁盘读取的数据。</li>
+</ul>
+<h3 id="Item-51-Keep-initialize-and-load-Implementations-Lean"><a href="#Item-51-Keep-initialize-and-load-Implementations-Lean" class="headerlink" title="Item 51: Keep initialize and load Implementations Lean"></a>Item 51: Keep initialize and load Implementations Lean</h3><p>精简initialize与load的实现代码</p>
+<ul>
+<li>在加载阶段，如果类实现了load方法，那么系统就会调用它。分类里也可以定义此方法，<code>class</code>的load方法要比<code>category</code>中的先调用。与其他方法不同，load方法不参与覆写机制。</li>
+<li>首次使用某个类之前，系统会向其发送i<code>nitialize</code>消息。由于此方法遵从普通的覆写规则，所以通常应该在里面判断当前要初始化的是哪个类。</li>
+<li><code>load</code>与<code>initialize</code>方法都应该实现的精简一些，</li>
+<li>无法在编译期设定的全局常量，可以放在<code>initialize</code>方法里初识化。</li>
+</ul>
+<h3 id="Item-52-Remember-that-NSTimer-Retains-Its-Target"><a href="#Item-52-Remember-that-NSTimer-Retains-Its-Target" class="headerlink" title="Item 52: Remember that NSTimer Retains Its Target"></a>Item 52: Remember that NSTimer Retains Its Target</h3><p>记住NSTimer会保留其目标对象</p>
+<ul>
+<li>NSTimer对象会保留其目标，直到计时器本身失效为止，调用<code>invalidate</code>方法可令计时器失效，另外，一次性的计时器在触发完任务之后也会失效。</li>
+<li>反复执行任务的计时器(<code>repeating timer</code>)，很容易引入保留环，如果这种计时器的目标对象又保留了计时器本身，那肯定会导致保留环。这种环状保留关系，可能是直接发生的，也可能是通过对象图里的其他对象间接发生的。</li>
+<li>可以扩充NSTimer的功能，用Block来打破保留环。不过，除非NSTimer将来在公共接口里提供此功能，否则必须创建分类，将相关实现代码加入其中。</li>
+</ul>
+<h2 id="Share：-2"><a href="#Share：-2" class="headerlink" title="Share："></a>Share：</h2><p><code>__weak</code>与<code>__block</code>区别</p>
+<p><code>__weak</code> 本身是可以避免循环引用的问题的，但是其会导致外部对象释放了之后，<code>block</code> 内部也访问不到这个对象的问题，我们可以通过在 <code>block</code> 内部声明一个 <code>__strong</code> 的变量来指向 <code>weakObj</code>，使外部对象既能在 <code>block</code> 内部保持住，又能避免循环引用的问题。</p>
+<p><code>__block</code> 本身无法避免循环引用的问题，但是我们可以通过在 <code>block</code> 内部手动把 <code>blockObj</code> 赋值为 <code>nil</code> 的方式来避免循环引用的问题。另外一点就是 <code>__block</code> 修饰的变量在 <code>block</code> 内外都是唯一的，要注意这个特性可能带来的隐患。</p>
 
       
     </div>
@@ -541,7 +598,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Week-24"><span class="nav-number">1.</span> <span class="nav-text">Week 24</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Algorithm："><span class="nav-number">1.1.</span> <span class="nav-text">Algorithm：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Review："><span class="nav-number">1.2.</span> <span class="nav-text">Review：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tip："><span class="nav-number">1.3.</span> <span class="nav-text">Tip：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Share："><span class="nav-number">1.4.</span> <span class="nav-text">Share：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Week-25"><span class="nav-number">2.</span> <span class="nav-text">Week 25</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Algorithm：-1"><span class="nav-number">2.1.</span> <span class="nav-text">Algorithm：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Review：-1"><span class="nav-number">2.2.</span> <span class="nav-text">Review：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tip：-1"><span class="nav-number">2.3.</span> <span class="nav-text">Tip：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Share：-1"><span class="nav-number">2.4.</span> <span class="nav-text">Share：</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Week-24"><span class="nav-number">1.</span> <span class="nav-text">Week 24</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Algorithm："><span class="nav-number">1.1.</span> <span class="nav-text">Algorithm：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Review："><span class="nav-number">1.2.</span> <span class="nav-text">Review：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tip："><span class="nav-number">1.3.</span> <span class="nav-text">Tip：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Share："><span class="nav-number">1.4.</span> <span class="nav-text">Share：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Week-25"><span class="nav-number">2.</span> <span class="nav-text">Week 25</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Algorithm：-1"><span class="nav-number">2.1.</span> <span class="nav-text">Algorithm：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Review：-1"><span class="nav-number">2.2.</span> <span class="nav-text">Review：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tip：-1"><span class="nav-number">2.3.</span> <span class="nav-text">Tip：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Share：-1"><span class="nav-number">2.4.</span> <span class="nav-text">Share：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Week-26"><span class="nav-number">3.</span> <span class="nav-text">Week 26</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Algorithm：-2"><span class="nav-number">3.1.</span> <span class="nav-text">Algorithm：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Review：-2"><span class="nav-number">3.2.</span> <span class="nav-text">Review：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tip：-2"><span class="nav-number">3.3.</span> <span class="nav-text">Tip：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Item-47-Familiarize-Yourself-with-the-System-Frameworks"><span class="nav-number">3.3.1.</span> <span class="nav-text">Item 47: Familiarize Yourself with the System Frameworks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Item-48-Prefer-Block-Enumeration-to-for-Loops"><span class="nav-number">3.3.2.</span> <span class="nav-text">Item 48: Prefer Block Enumeration to for Loops</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Item-49-Use-Toll-Free-Bridging-for-Collections-with-Custom-Memory-Management-Semantics"><span class="nav-number">3.3.3.</span> <span class="nav-text">Item 49: Use Toll-Free Bridging for Collections with Custom Memory-Management Semantics</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Item-50-Use-NSCache-Instead-of-NSDictionary-for-Caches"><span class="nav-number">3.3.4.</span> <span class="nav-text">Item 50: Use NSCache Instead of NSDictionary for Caches</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Item-51-Keep-initialize-and-load-Implementations-Lean"><span class="nav-number">3.3.5.</span> <span class="nav-text">Item 51: Keep initialize and load Implementations Lean</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Item-52-Remember-that-NSTimer-Retains-Its-Target"><span class="nav-number">3.3.6.</span> <span class="nav-text">Item 52: Remember that NSTimer Retains Its Target</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Share：-2"><span class="nav-number">3.4.</span> <span class="nav-text">Share：</span></a></li></ol></li></ol></div>
             
 
           </div>
