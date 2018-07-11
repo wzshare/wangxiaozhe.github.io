@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文翻译自What’s Next for Mobile at Airbnb  这是我们关于React Native的系列文章)的第五篇，描述我们在React Native上的经验和我们下一步在Airbnb移动端上的工作。  Exciting Times Ahead在尝试React Native时，我们也同时加快在原生上的努力。今天，我们在产品中有了大量令人惊艳的项目。这些项目的灵感来自于我们在学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Airbnb：移动开发的下个时代">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/06/25/next-for-mobile-at-airbnb/index.html">
+<meta property="og:site_name" content="Duriaaaan&#39;s Blog">
+<meta property="og:description" content="本文翻译自What’s Next for Mobile at Airbnb  这是我们关于React Native的系列文章)的第五篇，描述我们在React Native上的经验和我们下一步在Airbnb移动端上的工作。  Exciting Times Ahead在尝试React Native时，我们也同时加快在原生上的努力。今天，我们在产品中有了大量令人惊艳的项目。这些项目的灵感来自于我们在学习">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://github.com/images/2018071001.png">
+<meta property="og:image" content="https://github.com/images/2018071002.png">
+<meta property="og:updated_time" content="2018-07-11T13:26:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Airbnb：移动开发的下个时代">
+<meta name="twitter:description" content="本文翻译自What’s Next for Mobile at Airbnb  这是我们关于React Native的系列文章)的第五篇，描述我们在React Native上的经验和我们下一步在Airbnb移动端上的工作。  Exciting Times Ahead在尝试React Native时，我们也同时加快在原生上的努力。今天，我们在产品中有了大量令人惊艳的项目。这些项目的灵感来自于我们在学习">
+<meta name="twitter:image" content="https://github.com/images/2018071001.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2018/06/25/next-for-mobile-at-airbnb/"/>
+
+
+
+
+
+  <title>Airbnb：移动开发的下个时代 | Duriaaaan's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Duriaaaan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2018/06/25/next-for-mobile-at-airbnb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AprSnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Duriaaaan's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Airbnb：移动开发的下个时代</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-25T20:11:37+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文翻译自<a href="https://medium.com/airbnb-engineering/whats-next-for-mobile-at-airbnb-5e71618576ab" target="_blank" rel="noopener">What’s Next for Mobile at Airbnb</a></p>
+<blockquote>
+<p>这是我们关于React Native的<a href="[https://medium.com/airbnb-engineering/react-native-at-airbnb-f95aa460be1c](https://medium.com/airbnb-engineering/react-native-at-airbnb-f95aa460be1c">系列文章</a>)的第五篇，描述我们在<code>React Native</code>上的经验和我们下一步在Airbnb移动端上的工作。</p>
+</blockquote>
+<h1 id="Exciting-Times-Ahead"><a href="#Exciting-Times-Ahead" class="headerlink" title="Exciting Times Ahead"></a>Exciting Times Ahead</h1><p>在尝试<code>React Native</code>时，我们也同时加快在原生上的努力。今天，我们在产品中有了大量令人惊艳的项目。这些项目的灵感来自于我们在学习<code>React Native</code>时的经验。</p>
+<a id="more"></a>
+<h2 id="服务驱动渲染（Server-Driven-Rendering）"><a href="#服务驱动渲染（Server-Driven-Rendering）" class="headerlink" title="服务驱动渲染（Server-Driven Rendering）"></a>服务驱动渲染（Server-Driven Rendering）</h2><p>虽然我们不再使用<code>React Native</code>，但我们仍然看到了只写一份产品代码的价值。我们仍然十分依赖我们统一的设计语言系统（design language system , <a href="https://airbnb.design/building-a-visual-language/" target="_blank" rel="noopener">DLS</a>），很多界面在 Android 和 iOS 中看起来是一样的。</p>
+<p>一些团队尝试并开始为强大的<code>server-driven rendering</code>框架达成一致。在这些框架中，server发送数据到设备来描述渲染的组件、界面配置和发生的交互行为。不同移动平台解析数据并渲染原生界面或者完全使用DLS的组件。</p>
+<p>大量使用<code>Server-driven rendering</code>带来了一些挑战，这里是我们的一些解决方案：</p>
+<ul>
+<li>安全更新组件定义的同时保持向后兼容</li>
+<li>对于跨平台组件共享类型定义</li>
+<li>在运行时响应事件，比如按钮点击或用户输入</li>
+<li>保存内部状态时在不同<code>JSON-driven</code>界面之间转换</li>
+<li>不要在build-time时实现全部用户组件的渲染，我们尝试用<a href="https://github.com/airbnb/Lona/">Lona</a>格式来处理。</li>
+</ul>
+<p><code>Server-driven rendering</code>框架已经提供了大量的价值，允许我们直接远程试验或更新功能。</p>
+<h2 id="Epoxy-Components"><a href="#Epoxy-Components" class="headerlink" title="Epoxy Components"></a>Epoxy Components</h2><p>2016年我们开源了Android的 <a href="https://github.com/airbnb/epoxy">Epoxy</a> 。Epoxy 是一个能够使混合 RecyclerViews、 UICollectionViews 和 UITableViews 变得简单的框架。现在，大多数新的界面使用Epoxy。如此做允许我们打破每个界面形成独立的组件，实现懒渲染。现在，我们有了 Android 和 iOS 的 Epoxy。</p>
+<p>iOS上如下：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">BasicRow</span>.epoxyModel(</span><br><span class="line">  content: <span class="type">BasicRow</span>.<span class="type">Content</span>(</span><br><span class="line">    titleText: <span class="string">"Settings"</span>,</span><br><span class="line">    subtitleText: <span class="string">"Optional subtitle"</span>),</span><br><span class="line">  style: .standard,</span><br><span class="line">  dataID: <span class="string">"settings"</span>,</span><br><span class="line">  selectionHandler: &#123; [<span class="keyword">weak</span> <span class="keyword">self</span>] <span class="number">_</span>, <span class="number">_</span>, <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">self</span>?.navigate(to: .settings)</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure></p>
+<p>在 Android 上，我们写了 <a href="https://kotlinlang.org/docs/reference/type-safe-builders.html" target="_blank" rel="noopener">DSLs in Kotlin</a> 来实现组件的易写和类型安全：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">basicRow &#123;</span><br><span class="line">  id(<span class="string">"settings"</span>)</span><br><span class="line">  title(R.string.settings)</span><br><span class="line">  subtitleText(R.string.settings_subtitle)</span><br><span class="line">  onClickListener &#123; navigateTo(SETTINGS) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Epoxy-Diffing"><a href="#Epoxy-Diffing" class="headerlink" title="Epoxy Diffing"></a>Epoxy Diffing</h2><p>在<code>React</code>中，从render返回组件列表，<code>React</code>的性能关键是组件能评判代表你想要绘制的实际界面或网页的数据模型。我们为Epoxy创建了相似的概念。在Epoxy中，你可以在 buildModels 中为所有界面声明模型。配合优雅的Kotlin，DSL从概念上与<code>React</code>非常相似，看起来如下：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> EpoxyController.<span class="title">buildModels</span><span class="params">()</span></span> &#123;</span><br><span class="line">  header &#123;</span><br><span class="line">    id(<span class="string">"marquee"</span>)</span><br><span class="line">    title(R.string.edit_profile)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  inputRow &#123;</span><br><span class="line">    id(<span class="string">"first name"</span>)</span><br><span class="line">    title(R.string.first_name)</span><br><span class="line">    text(firstName)</span><br><span class="line">    onChange &#123;</span><br><span class="line">      firstName = it</span><br><span class="line">      requestModelBuild()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="comment">// Put the rest of your models here...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>你的数据变化的时候，可以调用<code>requestModelBuild()</code>，界面会被重绘制。<br>iOS中代码如下：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">itemModel</span><span class="params">(forDataID dataID: DemoDataID)</span></span> -&gt; <span class="type">EpoxyableModel</span>? &#123;</span><br><span class="line">    <span class="keyword">switch</span> dataID &#123;</span><br><span class="line">    <span class="keyword">case</span> .header:</span><br><span class="line">        <span class="keyword">return</span> <span class="type">DocumentMarquee</span>.epoxyModel(</span><br><span class="line">            content: <span class="type">DocumentMarquee</span>.<span class="type">Content</span>(titleText: <span class="string">"Edit Profile"</span>),</span><br><span class="line">            style: .standard,</span><br><span class="line">            dataID: <span class="type">DemoDataID</span>.header)</span><br><span class="line">    <span class="keyword">case</span> .inputRow:</span><br><span class="line">        <span class="keyword">return</span> <span class="type">InputRow</span>.epoxyModel(</span><br><span class="line">            content: <span class="type">InputRow</span>.<span class="type">Content</span>(</span><br><span class="line">                titleText: <span class="string">"First name"</span>,</span><br><span class="line">                inputText: firstName)</span><br><span class="line">            style: .standard,</span><br><span class="line">            dataID: <span class="type">DemoDataID</span>.inputRow,</span><br><span class="line">            behaviorSetter: &#123; [<span class="keyword">weak</span> <span class="keyword">self</span>] view, content, dataID <span class="keyword">in</span></span><br><span class="line">                view.textDidChangeBlock = &#123; <span class="number">_</span>, inputText <span class="keyword">in</span></span><br><span class="line">                    <span class="keyword">self</span>?.firstName = inputText</span><br><span class="line">                    <span class="keyword">self</span>?.rebuildItemModel(forDataID: .inputRow)</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="A-New-Android-Product-Framework-MvRx"><a href="#A-New-Android-Product-Framework-MvRx" class="headerlink" title="A New Android Product Framework (MvRx)"></a>A New Android Product Framework (MvRx)</h1><p>最近开发中最令人兴奋的是一个新的框架，我们内部称为<code>MvRx</code>。<code>MvRx</code>集中了 Epoxy、Jetpack、RxJava 和 Kotlin 的许多准则，从<code>React</code>到比之前更容易更无缝构建场景。它是一个更灵活的框架，基于我们从<code>React</code>观测到的最好的开发模式。它也是线程安全的，几乎所有都运行在主线程之外，确保滑动和动画流畅。</p>
+<p>目前为止，框架已经在很多场景中使用，几乎消除了处理生命周期的必要。我们目前通过大量的 Android 产品磨练框架，如果继续成功的话未来计划开源。以下是创建一个网络请求功能界面的完整代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">data class <span class="title">SimpleDemoState</span><span class="params">(val listing: Async&lt;Listing&gt; = Uninitialized)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">class <span class="title">SimpleDemoViewModel</span><span class="params">(override val initialState: SimpleDemoState)</span> : MvRxViewModel&lt;SimpleDemoState&gt;<span class="params">()</span> </span>&#123;</span><br><span class="line">    init &#123;</span><br><span class="line">        fetchListing()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> fun <span class="title">fetchListing</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// This automatically fires off a request and maps its response to Async&lt;Listing&gt;</span></span><br><span class="line">        <span class="comment">// which is a sealed class and can be: Unitialized, Loading, Success, and Fail.</span></span><br><span class="line">        <span class="comment">// No need for separate success and failure handlers!</span></span><br><span class="line">        <span class="comment">// This request is also lifecycle-aware. It will survive configuration changes and</span></span><br><span class="line">        <span class="comment">// will never be delivered after onStop.</span></span><br><span class="line">        ListingRequest.forListingId(<span class="number">12345L</span>).execute &#123; copy(listing = it) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class SimpleDemoFragment : MvRxFragment() &#123;</span><br><span class="line">    <span class="comment">// This will automatically subscribe to the ViewModel state and rebuild the epoxy models</span></span><br><span class="line">    <span class="comment">// any time anything changes. Similar to how React's render method runs for every change of</span></span><br><span class="line">    <span class="comment">// props or state.</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> val viewModel by <span class="title">fragmentViewModel</span><span class="params">(SimpleDemoViewModel::class)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    override fun EpoxyController.<span class="title">buildModels</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        val (state) = withState(viewModel)</span><br><span class="line">        <span class="keyword">if</span> (state.listing is Loading) &#123;</span><br><span class="line">            loader()</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// These Epoxy models are not the views themself so calling buildModels is cheap. RecyclerView</span></span><br><span class="line">        <span class="comment">// diffing will be automaticaly done and only the models that changed will re-render.</span></span><br><span class="line">        documentMarquee &#123;</span><br><span class="line">            title(state.listing().name)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// Put the rest of your Epoxy models here...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun EpoxyController.buildFooter() = fixedActionFooter &#123;</span><br><span class="line">        val (state) = withState(viewModel)</span><br><span class="line">        buttonLoading(state is Loading)</span><br><span class="line">        buttonText(state.listing().price)</span><br><span class="line">        buttonOnClickListener &#123; _ -&gt; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>MvRx</code>简单地构建Fragment，可持续话，TTI追踪和大量其他特性。<br>iOS 相似的框架也在早期测试中。</p>
+<h1 id="Iteration-Speed"><a href="#Iteration-Speed" class="headerlink" title="Iteration Speed"></a>Iteration Speed</h1><p>从<code>React Native</code>换回原生之后最明显的一件事情就是迭代速度。从我们的可靠测试中看，从一两秒到等待15分钟是不可接受的。幸运的是，我们能够提供一些必要的安慰。</p>
+<p>我们构建 Android 和 iOS 的基本部件，使你只需编译app的一部分，其中包括一个launcher和所依赖的库。</p>
+<p>在 Android 中，使用<code>gradle product flavors</code>。我们的框架如下：</p>
+<p><img src="/images/2018071001.png" alt=""></p>
+<p>新的中间件能使工程师创建和开发更轻巧的 app。配合<code>IntelliJ module unloading</code>明显改善build和MacBook Pro的IDE性能。</p>
+<p>我们用脚本来创建新测试风格，过去的几个月我们已经创建了超过20个。用新的flavors开发平均比之前快2.5倍，5分钟以上的build的比例下降15倍。</p>
+<p>对于此，我们用了动态生成。</p>
+<p>相似的，在iOS中的框架如下：</p>
+<p><img src="/images/2018071002.png" alt=""></p>
+<p>同样的系统下，build速度快3到8倍</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>很高兴成为一个不惧怕新技术的公司，我们努力保持高质量、速度和开发的经验的增长。最后，React Native是一个优秀的工具，给了我们在移动端开发的更多思考。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/22/Tensorflow-for-iOS/" rel="next" title="Building the TensorFlow iOS libraries from source">
+                <i class="fa fa-chevron-left"></i> Building the TensorFlow iOS libraries from source
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/28/Summary-of-June-2018/" rel="prev" title="六月总结">
+                六月总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">AprSnow</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Exciting-Times-Ahead"><span class="nav-number">1.</span> <span class="nav-text">Exciting Times Ahead</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务驱动渲染（Server-Driven-Rendering）"><span class="nav-number">1.1.</span> <span class="nav-text">服务驱动渲染（Server-Driven Rendering）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Epoxy-Components"><span class="nav-number">1.2.</span> <span class="nav-text">Epoxy Components</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Epoxy-Diffing"><span class="nav-number">1.3.</span> <span class="nav-text">Epoxy Diffing</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#A-New-Android-Product-Framework-MvRx"><span class="nav-number">2.</span> <span class="nav-text">A New Android Product Framework (MvRx)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Iteration-Speed"><span class="nav-number">3.</span> <span class="nav-text">Iteration Speed</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AprSnow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
