@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引子UIAlertView在iOS9之后被Apple废弃了，Apple推荐使用UIAlertController。但是，有时候我们使用UIAlertController时可能不是在一个UIViewController中，而是在一个NSObject中，但是UIAlertController是需要通过UIViewController才能present，那么如何在NSObject中正确使用UIViewC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从NSObject推出UIAlertController">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/07/11/NSObject-present-UIAlertController/index.html">
+<meta property="og:site_name" content="Duriaaaan&#39;s Blog">
+<meta property="og:description" content="引子UIAlertView在iOS9之后被Apple废弃了，Apple推荐使用UIAlertController。但是，有时候我们使用UIAlertController时可能不是在一个UIViewController中，而是在一个NSObject中，但是UIAlertController是需要通过UIViewController才能present，那么如何在NSObject中正确使用UIViewC">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-07-14T06:59:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从NSObject推出UIAlertController">
+<meta name="twitter:description" content="引子UIAlertView在iOS9之后被Apple废弃了，Apple推荐使用UIAlertController。但是，有时候我们使用UIAlertController时可能不是在一个UIViewController中，而是在一个NSObject中，但是UIAlertController是需要通过UIViewController才能present，那么如何在NSObject中正确使用UIViewC">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2018/07/11/NSObject-present-UIAlertController/"/>
+
+
+
+
+
+  <title>从NSObject推出UIAlertController | Duriaaaan's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Duriaaaan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2018/07/11/NSObject-present-UIAlertController/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AprSnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Duriaaaan's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从NSObject推出UIAlertController</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-11T14:38:17+08:00">
+                2018-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p><code>UIAlertView</code>在iOS9之后被Apple废弃了，Apple推荐使用<code>UIAlertController</code>。但是，有时候我们使用<code>UIAlertController</code>时可能不是在一个<code>UIViewController</code>中，而是在一个<code>NSObject</code>中，但是<code>UIAlertController</code>是需要通过<code>UIViewController</code>才能<code>present</code>，那么如何在<code>NSObject</code>中正确使用<code>UIViewController</code>呢？<br>这里我总结了常用的三种方法。</p>
+<a id="more"></a>
+<h1 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h1><p>创建一个带透明<code>UIViewController</code>的<code>UIWindow</code>，在此上面推出<code>UIAlertController</code>。代码如下： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (void)showAlert:(BOOL)animated &#123;</span><br><span class="line">    UIWindow *window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];</span><br><span class="line">    window.rootViewController = [[UIViewController alloc] init];</span><br><span class="line">    </span><br><span class="line">    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@&quot;title&quot; </span><br><span class="line">                                                                             message:@&quot;message&quot; </span><br><span class="line">                                                                      preferredStyle:UIAlertControllerStyleAlert];</span><br><span class="line">    </span><br><span class="line">    [window makeKeyAndVisible];</span><br><span class="line">    [window.rootViewController presentViewController:alertController animated:animated completion:nil];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h1><p>创建一个<code>UIAlertController</code>的<code>category</code>，创建一个 show 方法来推出。代码如下： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;UIAlertController+Window.h&quot;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line"></span><br><span class="line">@interface UIAlertController (Window)</span><br><span class="line"></span><br><span class="line">- (void)show;</span><br><span class="line">- (void)show:(BOOL)animated;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface UIAlertController (Private)</span><br><span class="line"></span><br><span class="line">@property (nonatomic, strong) UIWindow *alertWindow;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation UIAlertController (Private)</span><br><span class="line"></span><br><span class="line">@dynamic alertWindow;</span><br><span class="line"></span><br><span class="line">- (void)setAlertWindow:(UIWindow *)alertWindow &#123;</span><br><span class="line">    objc_setAssociatedObject(self, @selector(alertWindow), alertWindow, OBJC_ASSOCIATION_RETAIN_NONATOMIC);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (UIWindow *)alertWindow &#123;</span><br><span class="line">    return objc_getAssociatedObject(self, @selector(alertWindow));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation UIAlertController (Window)</span><br><span class="line"></span><br><span class="line">- (void)show &#123;</span><br><span class="line">    [self show:YES];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)show:(BOOL)animated &#123;</span><br><span class="line">    self.alertWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];</span><br><span class="line">    self.alertWindow.rootViewController = [[UIViewController alloc] init];</span><br><span class="line"></span><br><span class="line">    id&lt;UIApplicationDelegate&gt; delegate = [UIApplication sharedApplication].delegate;</span><br><span class="line">    // Applications that does not load with UIMainStoryboardFile might not have a window property:</span><br><span class="line">    if ([delegate respondsToSelector:@selector(window)]) &#123;</span><br><span class="line">        // we inherit the main window&apos;s tintColor</span><br><span class="line">        self.alertWindow.tintColor = delegate.window.tintColor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // window level is above the top window (this makes the alert, if it&apos;s a sheet, show over the keyboard)</span><br><span class="line">    UIWindow *topWindow = [UIApplication sharedApplication].windows.lastObject;</span><br><span class="line">    self.alertWindow.windowLevel = topWindow.windowLevel + 1;</span><br><span class="line"></span><br><span class="line">    [self.alertWindow makeKeyAndVisible];</span><br><span class="line">    [self.alertWindow.rootViewController presentViewController:self animated:animated completion:nil];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)viewDidDisappear:(BOOL)animated &#123;</span><br><span class="line">    [super viewDidDisappear:animated];</span><br><span class="line"></span><br><span class="line">    // precaution to insure window gets destroyed</span><br><span class="line">    self.alertWindow.hidden = YES;</span><br><span class="line">    self.alertWindow = nil;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<h1 id="方法三"><a href="#方法三" class="headerlink" title="方法三"></a>方法三</h1><p>创建一个<code>UIViewController</code>的<code>category</code>，实现一个获取当前顶部可见的<code>viewcontroller</code>的方法，然后在上面<code>present</code>。代码如下： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">- (UIViewController *)visibleViewControllerIfExist &#123;</span><br><span class="line">    </span><br><span class="line">    if (self.presentedViewController) &#123;</span><br><span class="line">        return [self.presentedViewController visibleViewControllerIfExist];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if ([self isKindOfClass:[UINavigationController class]]) &#123;</span><br><span class="line">        return [((UINavigationController *)self).topViewController visibleViewControllerIfExist];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if ([self isKindOfClass:[UITabBarController class]]) &#123;</span><br><span class="line">        return [((UITabBarController *)self).selectedViewController visibleViewControllerIfExist];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if ([self isViewLoaded] &amp;&amp; self.view.window) &#123;</span><br><span class="line">        return self;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        NSLog(@&quot;找不到可见的viewController。self = %@, self.view.window = %@&quot;, self, self.view.window);</span><br><span class="line">        return nil;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (UIViewController *)visibleViewController &#123;</span><br><span class="line">    UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;</span><br><span class="line">    UIViewController *visibleViewController = [rootViewController visibleViewControllerIfExist];</span><br><span class="line">    return visibleViewController;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>方法二来自于stackoverflow的问题<a href="https://stackoverflow.com/questions/26554894/how-to-present-uialertcontroller-when-not-in-a-view-controller/30941356#30941356" target="_blank" rel="noopener">How to present UIAlertController when not in a view controller?</a></p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/28/Summary-of-June-2018/" rel="next" title="六月总结">
+                <i class="fa fa-chevron-left"></i> 六月总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">AprSnow</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引子"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法一"><span class="nav-number">2.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法二"><span class="nav-number">3.</span> <span class="nav-text">方法二</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法三"><span class="nav-number">4.</span> <span class="nav-text">方法三</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AprSnow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
