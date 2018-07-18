@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="深入理解RunLoop  #0RunLoop 是一种机制，让线程能随时处理事件但并不退出。RunLoop 实际上就是一个对象，这个对象管理了其需要处理的事件和消息，并提供了一个入口函数来执行 Event Loop 的逻辑。线程执行了入口函数后，就会一直处于这个函数内部 “接受消息 -&amp;gt; 等待 -&amp;gt; 处理” 的循环中，直到这个循环结束。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《深入理解RunLoop》笔记">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/index.html">
+<meta property="og:site_name" content="Duriaaaan&#39;s Blog">
+<meta property="og:description" content="深入理解RunLoop  #0RunLoop 是一种机制，让线程能随时处理事件但并不退出。RunLoop 实际上就是一个对象，这个对象管理了其需要处理的事件和消息，并提供了一个入口函数来执行 Event Loop 的逻辑。线程执行了入口函数后，就会一直处于这个函数内部 “接受消息 -&amp;gt; 等待 -&amp;gt; 处理” 的循环中，直到这个循环结束。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/images/RunLoop_0.png">
+<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/images/RunLoop_1.png">
+<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/images/RunLoop_2.png">
+<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/images/RunLoop_3.png">
+<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/images/RunLoop_4.png">
+<meta property="og:updated_time" content="2018-07-18T14:58:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《深入理解RunLoop》笔记">
+<meta name="twitter:description" content="深入理解RunLoop  #0RunLoop 是一种机制，让线程能随时处理事件但并不退出。RunLoop 实际上就是一个对象，这个对象管理了其需要处理的事件和消息，并提供了一个入口函数来执行 Event Loop 的逻辑。线程执行了入口函数后，就会一直处于这个函数内部 “接受消息 -&amp;gt; 等待 -&amp;gt; 处理” 的循环中，直到这个循环结束。">
+<meta name="twitter:image" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/images/RunLoop_0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/"/>
+
+
+
+
+
+  <title>《深入理解RunLoop》笔记 | Duriaaaan's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Duriaaaan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AprSnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Duriaaaan's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">《深入理解RunLoop》笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-09T16:55:21+08:00">
+                2018-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p><a href="https://blog.ibireme.com/2015/05/18/runloop/" target="_blank" rel="noopener">深入理解RunLoop</a></p>
+</blockquote>
+<h1 id="0"><a href="#0" class="headerlink" title="#0"></a>#0</h1><p><code>RunLoop</code> 是一种机制，让线程能随时处理事件但并不退出。<br><code>RunLoop</code> 实际上就是一个对象，这个对象管理了其需要处理的事件和消息，并提供了一个入口函数来执行 <code>Event Loop</code> 的逻辑。线程执行了入口函数后，就会一直处于这个函数内部 “接受消息 -&gt; 等待 -&gt; 处理” 的循环中，直到这个循环结束。</p>
+<a id="more"></a>
+<h1 id="1"><a href="#1" class="headerlink" title="#1"></a>#1</h1><p>iOS 系统中，提供了两个这样的对象：<code>NSRunLoop</code> 和 <code>CFRunLoopRef</code>。<br><code>CFRunLoopRef</code> 是在 <code>CoreFoundation</code> 框架内的，它提供了纯 C 函数的 API，所有这些 API 都是线程安全的。<br><code>NSRunLoop</code> 是基于 <code>CFRunLoopRef</code> 的封装，提供了面向对象的 API，但是这些 API 不是线程安全的。</p>
+<h1 id="2"><a href="#2" class="headerlink" title="#2"></a>#2</h1><p><code>pthread_t</code> 和 <code>NSThread</code> 是一一对应的，可以通过 <code>pthread_main_thread_np()</code> 或 <code>[NSThread mainThread]</code> 来获取主线程；也可以通过 <code>pthread_self()</code> 或 <code>[NSThread currentThread]</code> 来获取当前线程。<code>CFRunLoop</code> 是基于 <code>pthread</code> 来管理的。</p>
+<p>有两个可以自动获取 <code>RunLoop</code> 的函数：<code>CFRunLoopGetMain()</code> 和 <code>CFRunLoopGetCurrent()</code>。其获取<code>RunLoop</code>的逻辑为：<br>有一个全局的<code>Dictionary</code>用来存放RunLoop，key 是 <code>pthread_t</code>， value 是 <code>CFRunLoopRef</code><br>第一次获取<code>RunLoop</code>时，初始化全局Dic，并先为主线程创建一个<code>RunLoop</code>。<br>从Dic中获取线程的<code>RunLoop</code>，取不到时，创建一个，同时注册一个回调，当线程销毁时，顺便也销毁其对应的 <code>RunLoop</code>。</p>
+<p>线程和 <code>RunLoop</code> 之间是一一对应的，其关系保存在一个全局的 <code>Dictionary</code> 里。线程刚创建时并没有 <code>RunLoop</code>，如果你不主动获取，那它一直都不会有。<code>RunLoop</code> 的创建是发生在第一次获取时，<code>RunLoop</code> 的销毁是发生在线程结束时。你只能在一个线程的内部获取其 <code>RunLoop</code>（主线程除外）。</p>
+<h1 id="3"><a href="#3" class="headerlink" title="#3"></a>#3</h1><p>在 <code>CoreFoundation</code> 里面关于 <code>RunLoop</code> 有5个类:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopRef</span><br><span class="line">CFRunLoopModeRef</span><br><span class="line">CFRunLoopSourceRef</span><br><span class="line">CFRunLoopTimerRef</span><br><span class="line">CFRunLoopObserverRef</span><br></pre></td></tr></table></figure></p>
+<p>关系如下:</p>
+<p><img src="images/RunLoop_0.png" alt=""></p>
+<p>一个 <code>RunLoop</code> 包含若干个 <code>Mode</code>，每个 <code>Mode</code> 又包含若干个 <code>Source/Timer/Observer</code>。每次调用 <code>RunLoop</code> 的主函数时，只能指定其中一个 <code>Mode</code>，这个<code>Mode</code>被称作 <code>CurrentMode</code>。如果需要切换 <code>Mode</code>，只能退出 <code>Loop</code>，再重新指定一个 <code>Mode</code> 进入。这样做主要是为了分隔开不同组的 <code>Source/Timer/Observer</code>，让其互不影响。</p>
+<h1 id="4"><a href="#4" class="headerlink" title="#4"></a>#4</h1><p><code>CFRunLoopSourceRef</code> 是事件产生的地方。<br><code>CFRunLoopTimerRef</code> 是基于时间的触发器，当其加入到 <code>RunLoop</code> 时，<code>RunLoop</code>会注册对应的时间点，当时间点到时，<code>RunLoop</code>会被唤醒以执行那个回调。<br><code>CFRunLoopObserverRef</code> 是观察者，每个 <code>Observer</code> 都包含了一个回调（函数指针），当 <code>RunLoop</code> 的状态发生变化时，观察者就能通过回调接受到这个变化。</p>
+<p><code>Source/Timer/Observer</code> 被统称为 <code>mode item</code>，一个 <code>item</code> 可以被同时加入多个 <code>mode</code>。但一个 <code>item</code> 被重复加入同一个 <code>mode</code> 时是不会有效果的。如果一个 <code>mode</code> 中一个 <code>item</code> 都没有，则 <code>RunLoop</code> 会直接退出，不进入循环。</p>
+<h1 id="5"><a href="#5" class="headerlink" title="#5"></a>#5</h1><p><code>CFRunLoop</code>对外暴露的管理 Mode 接口有2个:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopAddCommonMode</span><br><span class="line">CFRunLoopRunInMode</span><br></pre></td></tr></table></figure></p>
+<p>Mode 暴露的管理 <code>mode item</code> 的接口有下面几个：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopAddSource</span><br><span class="line">CFRunLoopAddObserver</span><br><span class="line">CFRunLoopAddTimer</span><br><span class="line">CFRunLoopRemoveSource</span><br><span class="line">CFRunLoopRemoveObserve</span><br><span class="line">CFRunLoopRemoveTimer</span><br></pre></td></tr></table></figure></p>
+<h1 id="6"><a href="#6" class="headerlink" title="#6"></a>#6</h1><p><code>RunLoop</code> 内部的逻辑大致如下:</p>
+<p><img src="images/RunLoop_1.png" alt=""></p>
+<p>实际上 <code>RunLoop</code> 就是这样一个函数，其内部是一个 <code>do-while</code> 循环。当你调用 <code>CFRunLoopRun()</code> 时，线程就会一直停留在这个循环里；直到超时或被手动停止，该函数才会返回。</p>
+<h1 id="7"><a href="#7" class="headerlink" title="#7"></a>#7</h1><p><code>RunLoop</code> 的核心是基于 <code>mach port</code> 的，其进入休眠时调用的函数是 <code>mach_msg()</code>。</p>
+<p><code>Darwin</code> 是操作系统的核心，其架构：</p>
+<p><img src="images/RunLoop_2.png" alt=""></p>
+<p>在硬件层上面的三个组成部分：<code>Mach</code>、<code>BSD</code>、<code>IOKit</code><br>内核的内环被称作 <code>Mach</code>，其作为一个微内核，仅提供了诸如处理器调度、IPC (进程间通信)等非常少量的基础服务。<br>在 <code>Mach</code> 中，所有的东西都是通过自己的对象实现的，进程、线程和虚拟内存都被称为”对象”。<code>Mach</code> 的对象间不能直接调用，只能通过消息传递的方式实现对象间的通信。”消息”是 <code>Mach</code> 中最基础的概念，消息在两个端口 (port) 之间传递，这就是 <code>Mach</code> 的 <code>IPC (进程间通信)</code> 的核心。</p>
+<h1 id="8"><a href="#8" class="headerlink" title="#8"></a>#8</h1><p>在用户态调用 <code>mach_msg_trap()</code> 时会触发陷阱机制，切换到内核态；内核态中内核实现的 <code>mach_msg()</code> 函数会完成实际的工作，如下图：</p>
+<p><img src="images/RunLoop_3.png" alt=""></p>
+<p><code>RunLoop</code> 的核心就是一个 <code>mach_msg()</code> ，在模拟器里跑起一个 iOS 的 App，然后在 App 静止时点击暂停，主线程调用栈停留在 <code>mach_msg_trap()</code> 。<br><img src="images/RunLoop_4.png" alt=""></p>
+<p>App 启动后 <code>RunLoop</code> 默认注册了5个Mode:</p>
+<ol>
+<li><code>kCFRunLoopDefaultMode</code>: App的默认 Mode，通常主线程是在这个 Mode 下运行的。</li>
+<li><code>UITrackingRunLoopMode</code>: 界面跟踪 Mode，用于 ScrollView 追踪触摸滑动，保证界面滑动时不受其他 Mode 影响。</li>
+<li><code>UIInitializationRunLoopMode</code>: 在刚启动 App 时第进入的第一个 Mode，启动完成后就不再使用。</li>
+<li><code>GSEventReceiveRunLoopMode</code>: 接受系统事件的内部 Mode，通常用不到。</li>
+<li><code>kCFRunLoopCommonModes</code>: 这是一个占位的 Mode，没有实际作用。</li>
+</ol>
+<h1 id="9-autoreleasepool"><a href="#9-autoreleasepool" class="headerlink" title="#9 autoreleasepool"></a>#9 autoreleasepool</h1><p>App启动后，苹果在主线程 <code>RunLoop</code> 里注册了两个 <code>Observer</code>，其回调都是 <code>_wrapRunLoopWithAutoreleasePoolHandler()</code>。<br>第一个 <code>Observer</code> 监视的事件是 Entry(即将进入Loop)，其回调内会调用 _objc_autoreleasePoolPush() 创建自动释放池。其 order 是<code>-2147483647</code>，优先级最高，保证创建释放池发生在其他所有回调之前。<br>第二个 <code>Observer</code> 监视了两个事件： </p>
+<ul>
+<li><code>BeforeWaiting(准备进入休眠)</code> 时调用<code>_objc_autoreleasePoolPop()</code> 和 <code>_objc_autoreleasePoolPush()</code> 释放旧的池并创建新池；</li>
+<li><code>Exit(即将退出Loop)</code> 时调用 <code>_objc_autoreleasePoolPop()</code> 来释放自动释放池。这个 <code>Observer</code> 的 order 是 <code>2147483647</code>，优先级最低，保证其释放池子发生在其他所有回调之后。<br>在主线程执行的代码，通常是写在诸如事件回调、Timer回调内的。这些回调会被 <code>RunLoop</code> 创建好的 <code>AutoreleasePool</code> 环绕着，所以不会出现内存泄漏，开发者也不必显示创建 <code>Pool</code> 了。</li>
+</ul>
+<h1 id="10-定时器"><a href="#10-定时器" class="headerlink" title="#10 定时器"></a>#10 定时器</h1><p><code>NSTimer</code> 其实就是 <code>CFRunLoopTimerRef</code>，他们之间是 <code>toll-free bridged</code> 的。一个 <code>NSTimer</code> 注册到 <code>RunLoop</code> 后，<code>RunLoop</code> 会为其重复的时间点注册好事件。<br><code>CADisplayLink</code> 是一个和屏幕刷新率一致的定时器，如果在两次屏幕刷新之间执行了一个长任务，那其中就会有一帧被跳过去（和 <code>NSTimer</code> 相似），造成界面卡顿的感觉。</p>
+<h1 id="11-网络"><a href="#11-网络" class="headerlink" title="#11 网络"></a>#11 网络</h1><p>关于网络请求的接口自下至上有如下几层:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CFSocket</span><br><span class="line">CFNetwork       -&gt;ASIHttpRequest</span><br><span class="line">NSURLConnection -&gt;AFNetworking</span><br><span class="line">NSURLSession    -&gt;AFNetworking2, Alamofire</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/18/swift-guide-to-map-filter-reduce/" rel="next" title="Swift中Map Filter Reduce的指导">
+                <i class="fa fa-chevron-left"></i> Swift中Map Filter Reduce的指导
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/25/next-for-mobile-at-airbnb/" rel="prev" title="Airbnb：移动开发的下个时代">
+                Airbnb：移动开发的下个时代 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">AprSnow</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0"><span class="nav-number">1.</span> <span class="nav-text">#0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1"><span class="nav-number">2.</span> <span class="nav-text">#1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2"><span class="nav-number">3.</span> <span class="nav-text">#2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3"><span class="nav-number">4.</span> <span class="nav-text">#3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4"><span class="nav-number">5.</span> <span class="nav-text">#4</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5"><span class="nav-number">6.</span> <span class="nav-text">#5</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6"><span class="nav-number">7.</span> <span class="nav-text">#6</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7"><span class="nav-number">8.</span> <span class="nav-text">#7</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8"><span class="nav-number">9.</span> <span class="nav-text">#8</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-autoreleasepool"><span class="nav-number">10.</span> <span class="nav-text">#9 autoreleasepool</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-定时器"><span class="nav-number">11.</span> <span class="nav-text">#10 定时器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-网络"><span class="nav-number">12.</span> <span class="nav-text">#11 网络</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AprSnow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
