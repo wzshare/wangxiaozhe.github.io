@@ -86,14 +86,14 @@
 <meta property="og:site_name" content="Duriaaaan&#39;s Blog">
 <meta property="og:description" content="本文翻译自Swift Guide to Map Filter Reduce #0使用map、filter、reduce操作诸如Array或Dictionary的Swift集合可能是之前不常用的。如果你有函数式语言编程经验，你可能知道这与for-in循环类似。这里是我的一些使用指导。  环境为Xcode 9.3 Swift 4.1">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/04/18/swift-guide-to-map-filter-reduce/images/Map.png">
-<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/04/18/swift-guide-to-map-filter-reduce/images/Filter.png">
-<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/04/18/swift-guide-to-map-filter-reduce/images/Reduce.png">
-<meta property="og:updated_time" content="2018-07-18T14:53:59.000Z">
+<meta property="og:image" content="https://github.com/images/Map.png">
+<meta property="og:image" content="https://github.com/images/Filter.png">
+<meta property="og:image" content="https://github.com/images/Reduce.png">
+<meta property="og:updated_time" content="2018-07-18T15:05:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Swift中Map Filter Reduce的指导">
 <meta name="twitter:description" content="本文翻译自Swift Guide to Map Filter Reduce #0使用map、filter、reduce操作诸如Array或Dictionary的Swift集合可能是之前不常用的。如果你有函数式语言编程经验，你可能知道这与for-in循环类似。这里是我的一些使用指导。  环境为Xcode 9.3 Swift 4.1">
-<meta name="twitter:image" content="https://github.com/wzshare/wzshare.github.io/2018/04/18/swift-guide-to-map-filter-reduce/images/Map.png">
+<meta name="twitter:image" content="https://github.com/images/Map.png">
 
 
 
@@ -340,7 +340,7 @@
 </blockquote>
 <a id="more"></a>
 <h1 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h1><p><code>map</code>表示循环集合，并对集合中每个元素做相同的操作。<code>map</code>方法返回一个包含对每个元素应用<code>mapping</code>或<code>transform</code>方法的数组：</p>
-<p><img src="images/Map.png" alt="Map"></p>
+<p><img src="/images/Map.png" alt="Map"></p>
 <p>我们可以用<code>for-in</code>循环来计算数组中的每个元素：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> values = [<span class="number">2.0</span>,<span class="number">4.0</span>,<span class="number">5.0</span>,<span class="number">7.0</span>]</span><br><span class="line"><span class="keyword">var</span> squares: [<span class="type">Double</span>] = []</span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> values &#123;</span><br><span class="line">  squares.append(value*value)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>例子中声明了一个数组<code>squares</code>，在循环中是比较啰嗦的。我们需要一个<code>squares</code>数组在循环中保存结果。如果我们使用<code>map</code>会是这样：</p>
@@ -358,12 +358,12 @@
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> milesToPoint = [<span class="string">"point1"</span>:<span class="number">120.0</span>,<span class="string">"point2"</span>:<span class="number">50.0</span>,<span class="string">"point3"</span>:<span class="number">70.0</span>]</span><br><span class="line"><span class="keyword">let</span> kmToPoint = milesToPoint.<span class="built_in">map</span> &#123; name,miles <span class="keyword">in</span> miles * <span class="number">1.6093</span> &#125;</span><br></pre></td></tr></table></figure>
 <p>快速提示：如果你对理解参数类型有疑惑，Xcode的代码补全可以帮助你</p>
 <h1 id="Filter"><a href="#Filter" class="headerlink" title="Filter"></a>Filter</h1><p><code>filter</code>对集合循环操作，返回一个数组，数组仅仅包含匹配条件的元素。</p>
-<p><img src="images/Filter.png" alt="Filter"></p>
+<p><img src="/images/Filter.png" alt="Filter"></p>
 <p><code>filter</code>方法有个单参数表示条件。闭包把条件应用在集合中的元素上，条件参数的返回值必须是<code>Bool</code>类型。</p>
 <p>一个应用<code>filter</code>的例子，筛选数组中的偶数：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> digits = [<span class="number">1</span>,<span class="number">4</span>,<span class="number">10</span>,<span class="number">15</span>]</span><br><span class="line"><span class="keyword">let</span> even = digits.<span class="built_in">filter</span> &#123; $<span class="number">0</span> % <span class="number">2</span> == <span class="number">0</span> &#125;</span><br><span class="line"><span class="comment">// [4, 10]</span></span><br></pre></td></tr></table></figure>
 <h1 id="Reduce"><a href="#Reduce" class="headerlink" title="Reduce"></a>Reduce</h1><p><code>reduce</code>把集合中的每个元素结合在一起，返回一个新的值。</p>
-<p><img src="images/Reduce.png" alt="Reduce"></p>
+<p><img src="/images/Reduce.png" alt="Reduce"></p>
 <p><code>reduce</code>方法有两个变量，第一个是初值，第二个是闭包。例如，初值为<code>10</code>，把数组的每个值求和：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> items = [<span class="number">2.0</span>,<span class="number">4.0</span>,<span class="number">5.0</span>,<span class="number">7.0</span>]</span><br><span class="line"><span class="keyword">let</span> total = items.<span class="built_in">reduce</span>(<span class="number">10.0</span>, +)</span><br><span class="line"><span class="comment">// 28.0</span></span><br></pre></td></tr></table></figure>
 <p>这里也可以用 <code>+</code> 操作来缩写：</p>

@@ -86,16 +86,16 @@
 <meta property="og:site_name" content="Duriaaaan&#39;s Blog">
 <meta property="og:description" content="深入理解RunLoop  #0RunLoop 是一种机制，让线程能随时处理事件但并不退出。RunLoop 实际上就是一个对象，这个对象管理了其需要处理的事件和消息，并提供了一个入口函数来执行 Event Loop 的逻辑。线程执行了入口函数后，就会一直处于这个函数内部 “接受消息 -&amp;gt; 等待 -&amp;gt; 处理” 的循环中，直到这个循环结束。">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/images/RunLoop_0.png">
-<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/images/RunLoop_1.png">
-<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/images/RunLoop_2.png">
-<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/images/RunLoop_3.png">
-<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/images/RunLoop_4.png">
-<meta property="og:updated_time" content="2018-07-18T14:58:09.000Z">
+<meta property="og:image" content="https://github.com/images/RunLoop_0.png">
+<meta property="og:image" content="https://github.com/images/RunLoop_1.png">
+<meta property="og:image" content="https://github.com/images/RunLoop_2.png">
+<meta property="og:image" content="https://github.com/images/RunLoop_3.png">
+<meta property="og:image" content="https://github.com/images/RunLoop_4.png">
+<meta property="og:updated_time" content="2018-07-18T15:05:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《深入理解RunLoop》笔记">
 <meta name="twitter:description" content="深入理解RunLoop  #0RunLoop 是一种机制，让线程能随时处理事件但并不退出。RunLoop 实际上就是一个对象，这个对象管理了其需要处理的事件和消息，并提供了一个入口函数来执行 Event Loop 的逻辑。线程执行了入口函数后，就会一直处于这个函数内部 “接受消息 -&amp;gt; 等待 -&amp;gt; 处理” 的循环中，直到这个循环结束。">
-<meta name="twitter:image" content="https://github.com/wzshare/wzshare.github.io/2018/05/09/runloop-mark/images/RunLoop_0.png">
+<meta name="twitter:image" content="https://github.com/images/RunLoop_0.png">
 
 
 
@@ -346,22 +346,22 @@
 <p>线程和 <code>RunLoop</code> 之间是一一对应的，其关系保存在一个全局的 <code>Dictionary</code> 里。线程刚创建时并没有 <code>RunLoop</code>，如果你不主动获取，那它一直都不会有。<code>RunLoop</code> 的创建是发生在第一次获取时，<code>RunLoop</code> 的销毁是发生在线程结束时。你只能在一个线程的内部获取其 <code>RunLoop</code>（主线程除外）。</p>
 <h1 id="3"><a href="#3" class="headerlink" title="#3"></a>#3</h1><p>在 <code>CoreFoundation</code> 里面关于 <code>RunLoop</code> 有5个类:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopRef</span><br><span class="line">CFRunLoopModeRef</span><br><span class="line">CFRunLoopSourceRef</span><br><span class="line">CFRunLoopTimerRef</span><br><span class="line">CFRunLoopObserverRef</span><br></pre></td></tr></table></figure></p>
 <p>关系如下:</p>
-<p><img src="images/RunLoop_0.png" alt=""></p>
+<p><img src="/images/RunLoop_0.png" alt=""></p>
 <p>一个 <code>RunLoop</code> 包含若干个 <code>Mode</code>，每个 <code>Mode</code> 又包含若干个 <code>Source/Timer/Observer</code>。每次调用 <code>RunLoop</code> 的主函数时，只能指定其中一个 <code>Mode</code>，这个<code>Mode</code>被称作 <code>CurrentMode</code>。如果需要切换 <code>Mode</code>，只能退出 <code>Loop</code>，再重新指定一个 <code>Mode</code> 进入。这样做主要是为了分隔开不同组的 <code>Source/Timer/Observer</code>，让其互不影响。</p>
 <h1 id="4"><a href="#4" class="headerlink" title="#4"></a>#4</h1><p><code>CFRunLoopSourceRef</code> 是事件产生的地方。<br><code>CFRunLoopTimerRef</code> 是基于时间的触发器，当其加入到 <code>RunLoop</code> 时，<code>RunLoop</code>会注册对应的时间点，当时间点到时，<code>RunLoop</code>会被唤醒以执行那个回调。<br><code>CFRunLoopObserverRef</code> 是观察者，每个 <code>Observer</code> 都包含了一个回调（函数指针），当 <code>RunLoop</code> 的状态发生变化时，观察者就能通过回调接受到这个变化。</p>
 <p><code>Source/Timer/Observer</code> 被统称为 <code>mode item</code>，一个 <code>item</code> 可以被同时加入多个 <code>mode</code>。但一个 <code>item</code> 被重复加入同一个 <code>mode</code> 时是不会有效果的。如果一个 <code>mode</code> 中一个 <code>item</code> 都没有，则 <code>RunLoop</code> 会直接退出，不进入循环。</p>
 <h1 id="5"><a href="#5" class="headerlink" title="#5"></a>#5</h1><p><code>CFRunLoop</code>对外暴露的管理 Mode 接口有2个:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopAddCommonMode</span><br><span class="line">CFRunLoopRunInMode</span><br></pre></td></tr></table></figure></p>
 <p>Mode 暴露的管理 <code>mode item</code> 的接口有下面几个：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopAddSource</span><br><span class="line">CFRunLoopAddObserver</span><br><span class="line">CFRunLoopAddTimer</span><br><span class="line">CFRunLoopRemoveSource</span><br><span class="line">CFRunLoopRemoveObserve</span><br><span class="line">CFRunLoopRemoveTimer</span><br></pre></td></tr></table></figure></p>
 <h1 id="6"><a href="#6" class="headerlink" title="#6"></a>#6</h1><p><code>RunLoop</code> 内部的逻辑大致如下:</p>
-<p><img src="images/RunLoop_1.png" alt=""></p>
+<p><img src="/images/RunLoop_1.png" alt=""></p>
 <p>实际上 <code>RunLoop</code> 就是这样一个函数，其内部是一个 <code>do-while</code> 循环。当你调用 <code>CFRunLoopRun()</code> 时，线程就会一直停留在这个循环里；直到超时或被手动停止，该函数才会返回。</p>
 <h1 id="7"><a href="#7" class="headerlink" title="#7"></a>#7</h1><p><code>RunLoop</code> 的核心是基于 <code>mach port</code> 的，其进入休眠时调用的函数是 <code>mach_msg()</code>。</p>
 <p><code>Darwin</code> 是操作系统的核心，其架构：</p>
-<p><img src="images/RunLoop_2.png" alt=""></p>
+<p><img src="/images/RunLoop_2.png" alt=""></p>
 <p>在硬件层上面的三个组成部分：<code>Mach</code>、<code>BSD</code>、<code>IOKit</code><br>内核的内环被称作 <code>Mach</code>，其作为一个微内核，仅提供了诸如处理器调度、IPC (进程间通信)等非常少量的基础服务。<br>在 <code>Mach</code> 中，所有的东西都是通过自己的对象实现的，进程、线程和虚拟内存都被称为”对象”。<code>Mach</code> 的对象间不能直接调用，只能通过消息传递的方式实现对象间的通信。”消息”是 <code>Mach</code> 中最基础的概念，消息在两个端口 (port) 之间传递，这就是 <code>Mach</code> 的 <code>IPC (进程间通信)</code> 的核心。</p>
 <h1 id="8"><a href="#8" class="headerlink" title="#8"></a>#8</h1><p>在用户态调用 <code>mach_msg_trap()</code> 时会触发陷阱机制，切换到内核态；内核态中内核实现的 <code>mach_msg()</code> 函数会完成实际的工作，如下图：</p>
-<p><img src="images/RunLoop_3.png" alt=""></p>
-<p><code>RunLoop</code> 的核心就是一个 <code>mach_msg()</code> ，在模拟器里跑起一个 iOS 的 App，然后在 App 静止时点击暂停，主线程调用栈停留在 <code>mach_msg_trap()</code> 。<br><img src="images/RunLoop_4.png" alt=""></p>
+<p><img src="/images/RunLoop_3.png" alt=""></p>
+<p><code>RunLoop</code> 的核心就是一个 <code>mach_msg()</code> ，在模拟器里跑起一个 iOS 的 App，然后在 App 静止时点击暂停，主线程调用栈停留在 <code>mach_msg_trap()</code> 。<br><img src="/images/RunLoop_4.png" alt=""></p>
 <p>App 启动后 <code>RunLoop</code> 默认注册了5个Mode:</p>
 <ol>
 <li><code>kCFRunLoopDefaultMode</code>: App的默认 Mode，通常主线程是在这个 Mode 下运行的。</li>
