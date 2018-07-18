@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文翻译自Swift Guide to Map Filter Reduce #0使用map、filter、reduce操作诸如Array或Dictionary的Swift集合可能是之前不常用的。如果你有函数式语言编程经验，你可能知道这与for-in循环类似。这里是我的一些使用指导。  环境为Xcode 9.3 Swift 4.1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swift中Map Filter Reduce的指导">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/04/18/swift-guide-to-map-filter-reduce/index.html">
+<meta property="og:site_name" content="Duriaaaan&#39;s Blog">
+<meta property="og:description" content="本文翻译自Swift Guide to Map Filter Reduce #0使用map、filter、reduce操作诸如Array或Dictionary的Swift集合可能是之前不常用的。如果你有函数式语言编程经验，你可能知道这与for-in循环类似。这里是我的一些使用指导。  环境为Xcode 9.3 Swift 4.1">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/04/18/swift-guide-to-map-filter-reduce/images/Map.png">
+<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/04/18/swift-guide-to-map-filter-reduce/images/Filter.png">
+<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2018/04/18/swift-guide-to-map-filter-reduce/images/Reduce.png">
+<meta property="og:updated_time" content="2018-07-18T14:53:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Swift中Map Filter Reduce的指导">
+<meta name="twitter:description" content="本文翻译自Swift Guide to Map Filter Reduce #0使用map、filter、reduce操作诸如Array或Dictionary的Swift集合可能是之前不常用的。如果你有函数式语言编程经验，你可能知道这与for-in循环类似。这里是我的一些使用指导。  环境为Xcode 9.3 Swift 4.1">
+<meta name="twitter:image" content="https://github.com/wzshare/wzshare.github.io/2018/04/18/swift-guide-to-map-filter-reduce/images/Map.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2018/04/18/swift-guide-to-map-filter-reduce/"/>
+
+
+
+
+
+  <title>Swift中Map Filter Reduce的指导 | Duriaaaan's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Duriaaaan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2018/04/18/swift-guide-to-map-filter-reduce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AprSnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Duriaaaan's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Swift中Map Filter Reduce的指导</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-18T22:48:25+08:00">
+                2018-04-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文翻译自<a href="https://useyourloaf.com/blog/swift-guide-to-map-filter-reduce/" target="_blank" rel="noopener">Swift Guide to Map Filter Reduce</a></p>
+<h1 id="0"><a href="#0" class="headerlink" title="#0"></a>#0</h1><p>使用<code>map</code>、<code>filter</code>、<code>reduce</code>操作诸如<code>Array</code>或<code>Dictionary</code>的Swift集合可能是之前不常用的。如果你有函数式语言编程经验，你可能知道这与<code>for-in</code>循环类似。这里是我的一些使用指导。</p>
+<blockquote>
+<p>环境为Xcode 9.3 Swift 4.1</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h1><p><code>map</code>表示循环集合，并对集合中每个元素做相同的操作。<code>map</code>方法返回一个包含对每个元素应用<code>mapping</code>或<code>transform</code>方法的数组：</p>
+<p><img src="images/Map.png" alt="Map"></p>
+<p>我们可以用<code>for-in</code>循环来计算数组中的每个元素：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> values = [<span class="number">2.0</span>,<span class="number">4.0</span>,<span class="number">5.0</span>,<span class="number">7.0</span>]</span><br><span class="line"><span class="keyword">var</span> squares: [<span class="type">Double</span>] = []</span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> values &#123;</span><br><span class="line">  squares.append(value*value)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例子中声明了一个数组<code>squares</code>，在循环中是比较啰嗦的。我们需要一个<code>squares</code>数组在循环中保存结果。如果我们使用<code>map</code>会是这样：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> squares2 = values.<span class="built_in">map</span> &#123;$<span class="number">0</span> * $<span class="number">0</span>&#125;</span><br><span class="line"><span class="comment">// [4.0, 16.0, 25.0, 49.0]</span></span><br></pre></td></tr></table></figure>
+<p>这是非常大的改善。在<code>map</code>中我们不需要关注循环，<code>map</code>会去做。结果值<code>squares</code>是一个<code>let</code>或者不可变值，我们不需要申明类型，Swift会推断出来。</p>
+<p>括号中的闭包起初很难追踪值。在闭包中，<code>map</code>方法提供单参数表示集合中的每个值。闭包处理集合中的每个元素并返回结果，<code>map</code>方法把这些结果返回为一个数组。把<code>map</code>方法写的更详细能够更容易理解，如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> squares3 = values.<span class="built_in">map</span>(&#123;</span><br><span class="line">  (value: <span class="type">Double</span>) -&gt; <span class="type">Double</span> <span class="keyword">in</span></span><br><span class="line">  <span class="keyword">return</span> value * value</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这个闭包有个单参数<code>(value: Double)</code>并且返回一个<code>Double</code>，其实<code>Swift</code>可以推断出来。<code>map</code>中有单参数时我们可以省略括号，写在一行时也可以省略<code>return</code>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> squares4 = values.<span class="built_in">map</span> &#123;value <span class="keyword">in</span> value * value&#125;</span><br></pre></td></tr></table></figure>
+<p>关键字<code>in</code>这这里是分隔参数和闭包主体的。如果你想进一步省略，可以用数字参数来缩写：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> squares5 = values.<span class="built_in">map</span> &#123; $<span class="number">0</span> * $<span class="number">0</span> &#125;</span><br></pre></td></tr></table></figure>
+<p>返回值的类型不一定与原集合中的元素类型一致。这里给个<code>map</code>的例子，把<code>integers</code>转为<code>strings</code>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> scores = [<span class="number">0</span>,<span class="number">28</span>,<span class="number">124</span>]</span><br><span class="line"><span class="keyword">let</span> words = scores.<span class="built_in">map</span> &#123; <span class="type">NumberFormatter</span>.localizedString(from: $<span class="number">0</span> <span class="keyword">as</span> <span class="type">NSNumber</span>, number: .spellOut) &#125;</span><br><span class="line"><span class="comment">// ["zero", "twenty-eight", "one hundred twenty-four"]</span></span><br></pre></td></tr></table></figure>
+<p><code>map</code>操作不仅可以操作数组，任何集合类型都可以操作。比如，在<code>Dictionary</code>或者<code>Set</code>中应用<code>map</code>，结果依然是返回一个<code>Array</code>。这里是一个<code>Dictionay</code>的例子：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> milesToPoint = [<span class="string">"point1"</span>:<span class="number">120.0</span>,<span class="string">"point2"</span>:<span class="number">50.0</span>,<span class="string">"point3"</span>:<span class="number">70.0</span>]</span><br><span class="line"><span class="keyword">let</span> kmToPoint = milesToPoint.<span class="built_in">map</span> &#123; name,miles <span class="keyword">in</span> miles * <span class="number">1.6093</span> &#125;</span><br></pre></td></tr></table></figure>
+<p>快速提示：如果你对理解参数类型有疑惑，Xcode的代码补全可以帮助你</p>
+<h1 id="Filter"><a href="#Filter" class="headerlink" title="Filter"></a>Filter</h1><p><code>filter</code>对集合循环操作，返回一个数组，数组仅仅包含匹配条件的元素。</p>
+<p><img src="images/Filter.png" alt="Filter"></p>
+<p><code>filter</code>方法有个单参数表示条件。闭包把条件应用在集合中的元素上，条件参数的返回值必须是<code>Bool</code>类型。</p>
+<p>一个应用<code>filter</code>的例子，筛选数组中的偶数：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> digits = [<span class="number">1</span>,<span class="number">4</span>,<span class="number">10</span>,<span class="number">15</span>]</span><br><span class="line"><span class="keyword">let</span> even = digits.<span class="built_in">filter</span> &#123; $<span class="number">0</span> % <span class="number">2</span> == <span class="number">0</span> &#125;</span><br><span class="line"><span class="comment">// [4, 10]</span></span><br></pre></td></tr></table></figure>
+<h1 id="Reduce"><a href="#Reduce" class="headerlink" title="Reduce"></a>Reduce</h1><p><code>reduce</code>把集合中的每个元素结合在一起，返回一个新的值。</p>
+<p><img src="images/Reduce.png" alt="Reduce"></p>
+<p><code>reduce</code>方法有两个变量，第一个是初值，第二个是闭包。例如，初值为<code>10</code>，把数组的每个值求和：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> items = [<span class="number">2.0</span>,<span class="number">4.0</span>,<span class="number">5.0</span>,<span class="number">7.0</span>]</span><br><span class="line"><span class="keyword">let</span> total = items.<span class="built_in">reduce</span>(<span class="number">10.0</span>, +)</span><br><span class="line"><span class="comment">// 28.0</span></span><br></pre></td></tr></table></figure>
+<p>这里也可以用 <code>+</code> 操作来缩写：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> codes = [<span class="string">"abc"</span>,<span class="string">"def"</span>,<span class="string">"ghi"</span>]</span><br><span class="line"><span class="keyword">let</span> text = codes.<span class="built_in">reduce</span>(<span class="string">""</span>, +)</span><br><span class="line"><span class="comment">// "abcdefghi"</span></span><br></pre></td></tr></table></figure>
+<p>参数是一个闭包，你可以用尾闭包的形式写<code>reduce</code>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> names = [<span class="string">"alan"</span>,<span class="string">"brian"</span>,<span class="string">"charlie"</span>]</span><br><span class="line"><span class="keyword">let</span> csv = names.<span class="built_in">reduce</span>(<span class="string">"==="</span>) &#123;text, name <span class="keyword">in</span> <span class="string">"\(text),\(name)"</span>&#125;</span><br><span class="line"><span class="comment">// "===,alan,brian,charlie"</span></span><br></pre></td></tr></table></figure>
+<h1 id="FlatMap-and-CompactMap"><a href="#FlatMap-and-CompactMap" class="headerlink" title="FlatMap and CompactMap"></a>FlatMap and CompactMap</h1><p><code>flatMap</code>和<code>CompactMap</code>是<code>map</code>的变化，对结果的展开或者紧凑。这里给了三种应用情况：</p>
+<ol>
+<li>在数列上应用<code>flatMap</code>，闭包中返回一个数列</li>
+</ol>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Sequence</span>.flatMap&lt;<span class="type">S</span>&gt;(<span class="number">_</span> transform: (<span class="type">Element</span>) -&gt; <span class="type">S</span>)</span><br><span class="line">-&gt; [<span class="type">S</span>.<span class="type">Element</span>] <span class="keyword">where</span> <span class="type">S</span> : <span class="type">Sequence</span></span><br></pre></td></tr></table></figure>
+<p>这可能是我第一次在<code>Swift</code>中使用<code>flatMap</code>的情景。应用闭包把数列中的每个元素展开的结果：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> results = [[<span class="number">5</span>,<span class="number">2</span>,<span class="number">7</span>], [<span class="number">4</span>,<span class="number">8</span>], [<span class="number">9</span>,<span class="number">1</span>,<span class="number">3</span>]]</span><br><span class="line"><span class="keyword">let</span> allResults = results.flatMap &#123; $<span class="number">0</span> &#125;</span><br><span class="line"><span class="comment">// [5, 2, 7, 4, 8, 9, 1, 3]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> passMarks = results.flatMap &#123; $<span class="number">0</span>.<span class="built_in">filter</span> &#123; $<span class="number">0</span> &gt; <span class="number">5</span>&#125; &#125;</span><br><span class="line"><span class="comment">// [7, 8, 9]</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>在<code>optional</code>上使用<code>flatMap</code></li>
+</ol>
+<p>闭包处理非<code>nil</code>值，返回一个<code>optional</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Optional</span>.flatMap&lt;<span class="type">U</span>&gt;(<span class="number">_</span> transform: (<span class="type">Wrapped</span>) -&gt; <span class="type">U</span>?) -&gt; <span class="type">U</span>?</span><br></pre></td></tr></table></figure>
+<p>如果原<code>optional</code>是<code>nil</code>，那么<code>flatMap</code>返回<code>nil</code>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> input: <span class="type">Int</span>? = <span class="type">Int</span>(<span class="string">"8"</span>)</span><br><span class="line"><span class="keyword">let</span> passMark: <span class="type">Int</span>? = input.flatMap &#123; $<span class="number">0</span> &gt; <span class="number">5</span> ? $<span class="number">0</span> : <span class="literal">nil</span> &#125;</span><br><span class="line"><span class="comment">// 8</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>在数列上使用<code>compactMap</code>闭包，返回一个<code>optional</code></li>
+</ol>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Sequence</span>.compactMap&lt;<span class="type">U</span>&gt;(<span class="number">_</span> transform: (<span class="type">Element</span>) -&gt; <span class="type">U</span>?) -&gt; <span class="type">U</span>?</span><br></pre></td></tr></table></figure>
+<p>注意在<code>Swift 4.1</code>中<code>flatMap</code>的这种使用被重命名为<code>compactMap</code>。这里提供一个简单的方法从数组是剔除<code>nil</code>值：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> keys: [<span class="type">String</span>?] = [<span class="string">"Tom"</span>, <span class="literal">nil</span>, <span class="string">"Peter"</span>, <span class="literal">nil</span>, <span class="string">"Harry"</span>]</span><br><span class="line"><span class="keyword">let</span> validNames = keys.compactMap &#123; $<span class="number">0</span> &#125;</span><br><span class="line">validNames</span><br><span class="line"><span class="comment">// ["Tom", "Peter", "Harry"]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> counts = keys.compactMap &#123; $<span class="number">0</span>?.<span class="built_in">count</span> &#125;</span><br><span class="line">counts</span><br><span class="line"><span class="comment">// [3, 5, 5]</span></span><br></pre></td></tr></table></figure>
+<p>详情参考<a href="https://useyourloaf.com/blog/replacing-flatmap-with-compactmap/" target="_blank" rel="noopener">Replacing flatMap with compactMap.</a></p>
+<h1 id="Chaining"><a href="#Chaining" class="headerlink" title="Chaining"></a>Chaining</h1><p>这些方法都可以链式使用。比如，对一个数组中所有大于等于7的数字求和：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> marks = [<span class="number">4</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">7</span>]</span><br><span class="line"><span class="keyword">let</span> totalPass = marks.<span class="built_in">filter</span>&#123;$<span class="number">0</span> &gt;= <span class="number">7</span>&#125;.<span class="built_in">reduce</span>(<span class="number">0</span>, +)</span><br><span class="line"><span class="comment">// 24</span></span><br></pre></td></tr></table></figure>
+<p>另一个例子，从数组中选出偶数值并对选出的值平方</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> numbers = [<span class="number">20</span>,<span class="number">17</span>,<span class="number">35</span>,<span class="number">4</span>,<span class="number">12</span>]</span><br><span class="line"><span class="keyword">let</span> evenSquares = numbers.<span class="built_in">filter</span>&#123;$<span class="number">0</span> % <span class="number">2</span> == <span class="number">0</span>&#125;.<span class="built_in">map</span>&#123;$<span class="number">0</span> * $<span class="number">0</span>&#125;</span><br><span class="line"><span class="comment">// [400, 16, 144]</span></span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>下次如果你需要对集合循环操作时，尝试是否可以使用<code>map</code>、<code>filter</code>、<code>reduce</code></p>
+<ul>
+<li><code>map</code>返回一个数组，里面每个元素是对原集合每个元素应用统一操作</li>
+<li><code>filter</code>返回一个数组，里面的元素是对原集合的元素应用某个条件筛选后的</li>
+<li><code>reduce</code>返回一个值，该值是给定一个初识值并对原集合每个元素与初值计算后的结果</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/22/Tensorflow-for-iOS/" rel="next" title="Building the TensorFlow iOS libraries from source">
+                <i class="fa fa-chevron-left"></i> Building the TensorFlow iOS libraries from source
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/25/next-for-mobile-at-airbnb/" rel="prev" title="Airbnb：移动开发的下个时代">
+                Airbnb：移动开发的下个时代 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">AprSnow</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0"><span class="nav-number">1.</span> <span class="nav-text">#0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Map"><span class="nav-number">2.</span> <span class="nav-text">Map</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Filter"><span class="nav-number">3.</span> <span class="nav-text">Filter</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reduce"><span class="nav-number">4.</span> <span class="nav-text">Reduce</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#FlatMap-and-CompactMap"><span class="nav-number">5.</span> <span class="nav-text">FlatMap and CompactMap</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Chaining"><span class="nav-number">6.</span> <span class="nav-text">Chaining</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AprSnow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
