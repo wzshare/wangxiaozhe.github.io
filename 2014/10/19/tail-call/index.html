@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="功能描述每天10:30从网站抓取网页内容，提取需要的数据保存在本地。 网络请求使用urllib.request，网页内容解析使用BeautifulSoup，定时任务使用命令crontab。">
+<meta name="description" content="前言今天在重新看python的过程中，提到递归出现栈溢出问题时，讲到尾递归优化。然后在网上查了一些尾递归的资料，因为自己比较熟悉的是C/C++语言，一般遇到递归次数太多造成栈溢出时会把递归写成循环。 概念尾递归是指，在函数返回的时候，仅调用自身本身，不包含其他任何表达式。尾递归函数的特点是在回归过程中不用做任何操作。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="网络抓取房屋交易信息">
-<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/03/12/Get-Home-Info/index.html">
+<meta property="og:title" content="关于尾递归">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2014/10/19/tail-call/index.html">
 <meta property="og:site_name" content="Duriaaaan&#39;s Blog">
-<meta property="og:description" content="功能描述每天10:30从网站抓取网页内容，提取需要的数据保存在本地。 网络请求使用urllib.request，网页内容解析使用BeautifulSoup，定时任务使用命令crontab。">
+<meta property="og:description" content="前言今天在重新看python的过程中，提到递归出现栈溢出问题时，讲到尾递归优化。然后在网上查了一些尾递归的资料，因为自己比较熟悉的是C/C++语言，一般遇到递归次数太多造成栈溢出时会把递归写成循环。 概念尾递归是指，在函数返回的时候，仅调用自身本身，不包含其他任何表达式。尾递归函数的特点是在回归过程中不用做任何操作。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-03-15T15:54:36.000Z">
+<meta property="og:updated_time" content="2018-07-19T14:56:12.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="网络抓取房屋交易信息">
-<meta name="twitter:description" content="功能描述每天10:30从网站抓取网页内容，提取需要的数据保存在本地。 网络请求使用urllib.request，网页内容解析使用BeautifulSoup，定时任务使用命令crontab。">
+<meta name="twitter:title" content="关于尾递归">
+<meta name="twitter:description" content="前言今天在重新看python的过程中，提到递归出现栈溢出问题时，讲到尾递归优化。然后在网上查了一些尾递归的资料，因为自己比较熟悉的是C/C++语言，一般遇到递归次数太多造成栈溢出时会把递归写成循环。 概念尾递归是指，在函数返回的时候，仅调用自身本身，不包含其他任何表达式。尾递归函数的特点是在回归过程中不用做任何操作。">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2018/03/12/Get-Home-Info/"/>
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2014/10/19/tail-call/"/>
 
 
 
 
 
-  <title>网络抓取房屋交易信息 | Duriaaaan's Blog</title>
+  <title>关于尾递归 | Duriaaaan's Blog</title>
   
 
 
@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2018/03/12/Get-Home-Info/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2014/10/19/tail-call/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="AprSnow">
@@ -279,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">网络抓取房屋交易信息</h1>
+          <h1 class="post-title" itemprop="name headline">关于尾递归</h1>
         
 
         <div class="post-meta">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-12T21:22:53+08:00">
-                2018-03-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2014-10-19T12:54:14+08:00">
+                2014-10-19
               </time>
             
 
@@ -329,15 +329,27 @@
       
 
       
-        <h1 id="功能描述"><a href="#功能描述" class="headerlink" title="功能描述"></a>功能描述</h1><p>每天10:30从网站抓取网页内容，提取需要的数据保存在本地。</p>
-<p>网络请求使用<code>urllib.request</code>，网页内容解析使用<code>BeautifulSoup</code>，定时任务使用命令<code>crontab</code>。</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>今天在重新看python的过程中，提到递归出现栈溢出问题时，讲到<strong>尾递归优化</strong>。然后在网上查了一些尾递归的资料，因为自己比较熟悉的是<code>C/C++</code>语言，一般遇到递归次数太多造成栈溢出时会把递归写成循环。</p>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p><strong>尾递归</strong>是指，在函数返回的时候，仅调用自身本身，不包含其他任何表达式。尾递归函数的特点是在回归过程中不用做任何操作。</p>
 <a id="more"></a>
-<h1 id="crontab"><a href="#crontab" class="headerlink" title="crontab"></a>crontab</h1><p><code>crontab</code>是一个守护进程（也就是不间断运行的进程），它根据调度计划执行命令。<br>Mac在休眠状态下，<code>crontab</code>能正常运行。</p>
-<p>命令格式为:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">* * * * * command</span><br><span class="line"><span class="comment">// M H D m d command</span></span><br></pre></td></tr></table></figure></p>
-<p>基本操作：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">crontab -e  <span class="comment">//编辑</span></span><br><span class="line">crontab -l  <span class="comment">//列出所有cron</span></span><br><span class="line">crontab -r  <span class="comment">//删除</span></span><br></pre></td></tr></table></figure></p>
-<p>举例:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> crontab -e</span><br><span class="line">0 8 * * * say hello</span><br><span class="line"><span class="meta">#</span> 每天 08:00 说 hello</span><br></pre></td></tr></table></figure></p>
-<p>注意：<br><em>python命令需要完整的python path，当然也可以添加crontab的<code>$PATH</code>。</em></p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> date</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://www.bjjs.gov.cn/bjjs/fwgl/fdcjy/fwjy/index.shtml"</span></span><br><span class="line">content = urllib.request.urlopen(url).read()</span><br><span class="line">soup = BeautifulSoup(content, <span class="string">"html5lib"</span>)</span><br><span class="line">tables = soup.findAll(<span class="string">'table'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tablesOfHome</span><span class="params">(index)</span>:</span></span><br><span class="line">    arr = list()</span><br><span class="line">    tab = tables[index]</span><br><span class="line">    <span class="keyword">for</span> tr <span class="keyword">in</span> tab.findAll(<span class="string">'tr'</span>):</span><br><span class="line">        <span class="keyword">for</span> td <span class="keyword">in</span> tr.findAll(<span class="string">'td'</span>):</span><br><span class="line">            arr.append(td.getText().strip())</span><br><span class="line">    <span class="keyword">return</span> arr</span><br><span class="line"></span><br><span class="line">onlineHome = tablesOfHome(<span class="number">14</span>) <span class="comment">#可售住宅套数</span></span><br><span class="line">newHome = tablesOfHome(<span class="number">15</span>)    <span class="comment">#新发布住宅套数</span></span><br><span class="line">dealHome = tablesOfHome(<span class="number">17</span>)   <span class="comment">#住宅签约套数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'temp.txt'</span>, <span class="string">'a'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    print(<span class="string">'%s  %-10d  %-7d  %-8d'</span> % (date.today(), int(onlineHome[<span class="number">6</span>]), int(newHome[<span class="number">6</span>]), int(dealHome[<span class="number">6</span>])), file = f)</span><br></pre></td></tr></table></figure>
+<p>比如用阶乘的例子来说明：</p>
+<p>普通递归（C语言）：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">factorial</span><span class="params">(<span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> n * factorial(n - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，每次调用<code>factorial()</code>函数时，需要对其结果乘<code>n</code>，所以每次需要在递归栈中保存上一次调用的一些信息；</p>
+<p>尾递归（C语言）：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">factorial</span><span class="params">(<span class="keyword">int</span> n, <span class="keyword">int</span> add)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">return</span> add;</span><br><span class="line">    <span class="keyword">return</span> factorial(n - <span class="number">1</span>, n * add)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，每次调用时都是调用<code>factorial()</code>函数自身，不包含其他运算过程，其中<code>add</code>是一个累加器，帮助保存中间结果，每次调用后不需要上次的信息，所以在栈中只需要一直保持一个函数的信息就够了，所以理论上可以无限递归不发生溢出。</p>
+<h1 id="怎样尾递归优化"><a href="#怎样尾递归优化" class="headerlink" title="怎样尾递归优化"></a>怎样尾递归优化</h1><p>尾递归其实和语言有很大的相关性，而其优化很多是编译器的优化行为。python的编译器并没有做尾递归优化，java同样也没有。而C语言是支持尾递归的。</p>
+<p>另一类尾递归的是函数式编程语言（<strong>Scheme</strong>、<strong>Haskell</strong>等），有一种说法是「函数式语言没有调用栈的」，其中涉及到的机制比较复杂，可以参考以下的<em>参考链接</em>。</p>
+<p><strong>Tips:</strong></p>
+<ul>
+<li><p>使用递归函数的优点是逻辑简单清晰，缺点是过深的调用会导致栈溢出。</p>
+</li>
+<li><p>针对尾递归优化的语言可以通过尾递归防止栈溢出。尾递归事实上和循环是等价的，没有循环语句的编程语言只能通过尾递归实现循环。</p>
+</li>
+<li><p>Python标准的解释器没有针对尾递归做优化，任何递归函数都存在栈溢出的问题。</p>
+</li>
+</ul>
+<hr>
+<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><p>1、<a href="http://www.zhihu.com/question/21445794" target="_blank" rel="noopener">为什么说“函数式语言是没有调用栈”的，所谓“函数式语言的思维”又是指什么呢？</a><br>2、<a href="https://gist.github.com/jasonlvhit/841e3ffb4431a2ff18c2" target="_blank" rel="noopener">尾递归、Lua、Python、C和编译器优化</a><br>3、<a href="http://www.cnblogs.com/archimedes/p/rescuvie-tailrescuvie.html" target="_blank" rel="noopener">递归与尾递归</a><br>4、<a href="http://blog.zhaojie.me/2009/03/tail-recursion-and-continuation.html" target="_blank" rel="noopener">尾递归与Continuation</a></p>
 
       
     </div>
@@ -362,8 +374,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/25/Runtime-face-to-face/" rel="next" title="初识Runloop">
-                <i class="fa fa-chevron-left"></i> 初识Runloop
+              <a href="/2014/06/24/2048game/" rel="next" title="一个2048游戏">
+                <i class="fa fa-chevron-left"></i> 一个2048游戏
               </a>
             
           </div>
@@ -372,8 +384,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/03/21/About-Autorelease/" rel="prev" title="你所不知道的Autorelease">
-                你所不知道的Autorelease <i class="fa fa-chevron-right"></i>
+              <a href="/2014/12/16/About-Tokenizer-in-cpp/" rel="prev" title="关于Tokenizer库">
+                关于Tokenizer库 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -506,7 +518,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#功能描述"><span class="nav-number">1.</span> <span class="nav-text">功能描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#crontab"><span class="nav-number">2.</span> <span class="nav-text">crontab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#概念"><span class="nav-number">2.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#怎样尾递归优化"><span class="nav-number">3.</span> <span class="nav-text">怎样尾递归优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考："><span class="nav-number">4.</span> <span class="nav-text">参考：</span></a></li></ol></div>
             
 
           </div>
