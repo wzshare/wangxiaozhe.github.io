@@ -86,13 +86,13 @@
 <meta property="og:site_name" content="Duriaaaan&#39;s Blog">
 <meta property="og:description" content="阅读笔记神经病院 Objective-C Runtime 住院第二天——消息发送与转发神经病院 Objective-C Runtime 出院第三天——如何正确使用 Runtime  objc_msgSend[receiver message]会被编译器转化为：12345// self: A pointer that points to the instance of the class that">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2017/06/09/images/message01.jpg">
-<meta property="og:image" content="https://github.com/wzshare/wzshare.github.io/2017/06/09/images/message02.jpg">
-<meta property="og:updated_time" content="2018-07-21T13:17:13.000Z">
+<meta property="og:image" content="https://github.com/images/message01.jpg">
+<meta property="og:image" content="https://github.com/images/message02.jpg">
+<meta property="og:updated_time" content="2018-07-21T13:20:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Runtime engagement">
 <meta name="twitter:description" content="阅读笔记神经病院 Objective-C Runtime 住院第二天——消息发送与转发神经病院 Objective-C Runtime 出院第三天——如何正确使用 Runtime  objc_msgSend[receiver message]会被编译器转化为：12345// self: A pointer that points to the instance of the class that">
-<meta name="twitter:image" content="https://github.com/wzshare/wzshare.github.io/2017/06/09/images/message01.jpg">
+<meta name="twitter:image" content="https://github.com/images/message01.jpg">
 
 
 
@@ -345,7 +345,7 @@
 <p>3.确定不是给<code>nil</code>发消息之后，在该<code>class</code>的缓存中查找方法对应的<code>IMP</code>实现。</p>
 <p>如果找到，就跳转进去执行。<br>如果没有找到，就在方法分发表里面继续查找，一直找到<code>NSObject</code>为止。</p>
 <p>4.如果还没有找到，那就需要开始消息转发阶段了。至此，发送消息<code>Messaging</code>阶段完成。这一阶段主要完成的是通过<code>select()</code>快速查找IMP的过程。</p>
-<p><img src="../images/message01.jpg" alt=""></p>
+<p><img src="/images/message01.jpg" alt=""></p>
 <p>消息发送<code>Messaging</code>阶段<br><code>lookUpImpOrForward</code>函数逻辑</p>
 <ul>
 <li>尝试从类的<code>cache</code>中获取IMP</li>
@@ -362,7 +362,7 @@
 <li>在执行<code>_objc_msgForward</code>之后会调用<code>__objc_forward_handler</code>函数。</li>
 <li>这一步是替消息找备援接收者，如果这一步返回的是<code>nil</code>，那么补救措施就完全的失效了，<code>Runtime</code>系统会向对象发送<code>methodSignatureForSelector:</code>消息，</li>
 </ul>
-<p>消息发送和转发的全过程：<br><img src="../images/message02.jpg" alt=""></p>
+<p>消息发送和转发的全过程：<br><img src="/images/message02.jpg" alt=""></p>
 <h1 id="Category"><a href="#Category" class="headerlink" title="Category"></a>Category</h1><p>OC在初始化的时候，会去加载<code>map_images</code>，<code>map_images</code>最终会调用<code>objc-runtime-new.mm</code>里面的<code>_read_images</code>方法。<code>_read_images</code>方法里面会去初始化内存中的<code>map</code>, 这个时候将会<code>load</code>所有的类，协议，<code>Category</code>。<code>NSOBject</code>的<code>+load</code>方法就是这个时候调用的。<br>加载完所有的<code>category</code>之后，就开始处理这些类别。<br>处理完之后的结果<br>1)、把<code>category</code>的实例方法、协议以及属性添加到类上<br>2)、把<code>category</code>的类方法和协议添加到类的<code>metaclass</code>上<br>先去调用<code>addUnattachedCategoryForClass</code>函数，申请内存，分配空间。<code>remethodizeClass</code>这个方法里面会调用<code>attachCategories</code>方法。<code>remethodizeClass</code>方法里面会用头插法，把新加的方法从头插入方法链表中。我们可以在Category里面覆盖原有的方法，因为头插法，新的方法在链表的前面，会优先被遍历到。</p>
 <h1 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h1><h2 id="实现多继承Multiple-Inheritance"><a href="#实现多继承Multiple-Inheritance" class="headerlink" title="实现多继承Multiple Inheritance"></a>实现多继承Multiple Inheritance</h2><p>在OC程序中可以借用消息转发机制来实现多继承的功能。</p>
 <p>通过<code>forwardingTargetForSelector:</code>方法，一个类可以做到继承多个类的效果，只需要在这一步将消息转发给正确的类对象就可以模拟多继承的效果。利用转发消息来实现的是“假”继承，<code>respondsToSelector:</code>和 <code>isKindOfClass:</code>不会考虑转发链。</p>
