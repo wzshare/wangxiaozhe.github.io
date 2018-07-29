@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Week 24 June 11 to June 17  Algorithm：[Leetcode - easy] 344. Reverse String 123456// takes a string as input and returns the string reversed.func reverseString1(_ s: String) -&amp;gt; String &amp;#123;    ret">
+<meta name="description" content="本月聚焦了 block 与 GCD 的一些用法，同时阅读了《Effective Objective-C 2.0》一书的后面几个章节。特别需要注意的是 block 何时在栈内何时在堆中。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="六月总结">
 <meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/06/28/Summary-of-June-2018/index.html">
 <meta property="og:site_name" content="Duriaaaan&#39;s Blog">
-<meta property="og:description" content="Week 24 June 11 to June 17  Algorithm：[Leetcode - easy] 344. Reverse String 123456// takes a string as input and returns the string reversed.func reverseString1(_ s: String) -&amp;gt; String &amp;#123;    ret">
+<meta property="og:description" content="本月聚焦了 block 与 GCD 的一些用法，同时阅读了《Effective Objective-C 2.0》一书的后面几个章节。特别需要注意的是 block 何时在栈内何时在堆中。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-07-01T14:56:47.000Z">
+<meta property="og:updated_time" content="2018-07-29T02:53:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="六月总结">
-<meta name="twitter:description" content="Week 24 June 11 to June 17  Algorithm：[Leetcode - easy] 344. Reverse String 123456// takes a string as input and returns the string reversed.func reverseString1(_ s: String) -&amp;gt; String &amp;#123;    ret">
+<meta name="twitter:description" content="本月聚焦了 block 与 GCD 的一些用法，同时阅读了《Effective Objective-C 2.0》一书的后面几个章节。特别需要注意的是 block 何时在栈内何时在堆中。">
 
 
 
@@ -329,12 +329,13 @@
       
 
       
-        <h1 id="Week-24"><a href="#Week-24" class="headerlink" title="Week 24"></a>Week 24</h1><blockquote>
+        <p>本月聚焦了 <code>block</code> 与 <code>GCD</code> 的一些用法，同时阅读了《Effective Objective-C 2.0》一书的后面几个章节。特别需要注意的是 <code>block</code> 何时在栈内何时在堆中。</p>
+<a id="more"></a>
+<h1 id="Week-24"><a href="#Week-24" class="headerlink" title="Week 24"></a>Week 24</h1><blockquote>
 <p>June 11 to June 17</p>
 </blockquote>
 <h2 id="Algorithm："><a href="#Algorithm：" class="headerlink" title="Algorithm："></a>Algorithm：</h2><p>[Leetcode - easy] 344. Reverse String</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// takes a string as input and returns the string reversed.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">reverseString1</span><span class="params">(<span class="number">_</span> s: String)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> s.<span class="built_in">reduce</span>(<span class="string">""</span>, &#123; x, y <span class="keyword">in</span></span><br><span class="line">        <span class="type">String</span>(y) + x</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
 <h2 id="Review："><a href="#Review：" class="headerlink" title="Review："></a>Review：</h2><p><a href="http://www.friday.com/bbum/2009/08/29/blocks-tips-tricks/" target="_blank" rel="noopener">^ Blocks Tips &amp; Tricks</a></p>
 <p><strong>When declaring Blocks based API, always declare functions and methods to take only one block and always make that block the last argument.</strong><br>声明bolck作为API时，总是声明方法和函数的最后一个参数为block，并保持只有一个block。</p>
 <p><strong>Blocks are created on the stack. Careful.</strong><br>注意：blcok在栈中创建。</p>
@@ -343,7 +344,7 @@
 <p><strong>When should you copy or retain a block? In general, you shouldn’t need to copy or retain a block.</strong><br>什么时候需要copy或者retain一个blcok？一般来说，不需要copy或者retain一个block。</p>
 <p><strong>Blocks are Objective-C Objects</strong><br>block是Objective-C对象</p>
 <p><strong>Blocks can be recursive</strong><br>block可以递归</p>
-<p><strong>First copy of a Block moves it to heap, the rest are cheap</strong><br>block第一个copy时会移动到堆</p>
+<p><strong>First copy of a Block moves it to heap, the rest are cheap</strong><br>block第一次copy时会移动到堆</p>
 <h2 id="Tip："><a href="#Tip：" class="headerlink" title="Tip："></a>Tip：</h2><p>Swift</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">reduce</span>&lt;Result&gt;<span class="params">(<span class="number">_</span> initialResult: Result, <span class="number">_</span> nextPartialResult: <span class="params">(Result, Element)</span></span></span> <span class="keyword">throws</span> -&gt; <span class="type">Result</span>) <span class="keyword">rethrows</span> -&gt; <span class="type">Result</span></span><br></pre></td></tr></table></figure>
 <p>Returns the result of combining the elements of the sequence using the given closure.<br>Use the <code>reduce(_:_:)</code> method to produce a single value from the elements of an entire sequence.  </p>
