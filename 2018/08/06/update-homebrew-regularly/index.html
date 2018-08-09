@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="前言今天在重新看python的过程中，提到递归出现栈溢出问题时，讲到尾递归优化。然后在网上查了一些尾递归的资料，因为自己比较熟悉的是C/C++语言，一般遇到递归次数太多造成栈溢出时会把递归写成循环。 概念尾递归是指，在函数返回的时候，仅调用自身本身，不包含其他任何表达式。尾递归函数的特点是在回归过程中不用做任何操作。">
+<meta name="description" content="前言Homebrew 是使用 Mac OS 的一件利器，Homebrew 可以安装 Apple 没有预装但非常需要的东西。Homebrew 会将软件包安装到独立目录，并将其文件软链接至 /usr/local。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于尾递归">
-<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2014/10/19/tail-call/index.html">
+<meta property="og:title" content="定期更新 Homebrew">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/08/06/update-homebrew-regularly/index.html">
 <meta property="og:site_name" content="Duriaaaan&#39;s Blog">
-<meta property="og:description" content="前言今天在重新看python的过程中，提到递归出现栈溢出问题时，讲到尾递归优化。然后在网上查了一些尾递归的资料，因为自己比较熟悉的是C/C++语言，一般遇到递归次数太多造成栈溢出时会把递归写成循环。 概念尾递归是指，在函数返回的时候，仅调用自身本身，不包含其他任何表达式。尾递归函数的特点是在回归过程中不用做任何操作。">
+<meta property="og:description" content="前言Homebrew 是使用 Mac OS 的一件利器，Homebrew 可以安装 Apple 没有预装但非常需要的东西。Homebrew 会将软件包安装到独立目录，并将其文件软链接至 /usr/local。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-07-19T14:56:12.000Z">
+<meta property="og:updated_time" content="2018-08-09T13:58:08.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于尾递归">
-<meta name="twitter:description" content="前言今天在重新看python的过程中，提到递归出现栈溢出问题时，讲到尾递归优化。然后在网上查了一些尾递归的资料，因为自己比较熟悉的是C/C++语言，一般遇到递归次数太多造成栈溢出时会把递归写成循环。 概念尾递归是指，在函数返回的时候，仅调用自身本身，不包含其他任何表达式。尾递归函数的特点是在回归过程中不用做任何操作。">
+<meta name="twitter:title" content="定期更新 Homebrew">
+<meta name="twitter:description" content="前言Homebrew 是使用 Mac OS 的一件利器，Homebrew 可以安装 Apple 没有预装但非常需要的东西。Homebrew 会将软件包安装到独立目录，并将其文件软链接至 /usr/local。">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2014/10/19/tail-call/"/>
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2018/08/06/update-homebrew-regularly/"/>
 
 
 
 
 
-  <title>关于尾递归 | Duriaaaan's Blog</title>
+  <title>定期更新 Homebrew | Duriaaaan's Blog</title>
   
 
 
@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2014/10/19/tail-call/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2018/08/06/update-homebrew-regularly/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="AprSnow">
@@ -279,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">关于尾递归</h1>
+          <h1 class="post-title" itemprop="name headline">定期更新 Homebrew</h1>
         
 
         <div class="post-meta">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2014-10-19T12:54:14+08:00">
-                2014-10-19
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-06T21:56:17+08:00">
+                2018-08-06
               </time>
             
 
@@ -329,27 +329,18 @@
       
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>今天在重新看python的过程中，提到递归出现栈溢出问题时，讲到<strong>尾递归优化</strong>。然后在网上查了一些尾递归的资料，因为自己比较熟悉的是<code>C/C++</code>语言，一般遇到递归次数太多造成栈溢出时会把递归写成循环。</p>
-<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p><strong>尾递归</strong>是指，在函数返回的时候，仅调用自身本身，不包含其他任何表达式。尾递归函数的特点是在回归过程中不用做任何操作。</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Homebrew</code> 是使用 <code>Mac OS</code> 的一件利器，<code>Homebrew</code> 可以安装 <code>Apple</code> 没有预装但非常需要的东西。<code>Homebrew</code> 会将软件包安装到独立目录，并将其文件软链接至 <code>/usr/local</code>。</p>
 <a id="more"></a>
-<p>比如用阶乘的例子来说明：</p>
-<p>普通递归（C语言）：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">factorial</span><span class="params">(<span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> n * factorial(n - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>可以看到，每次调用<code>factorial()</code>函数时，需要对其结果乘<code>n</code>，所以每次需要在递归栈中保存上一次调用的一些信息；</p>
-<p>尾递归（C语言）：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">factorial</span><span class="params">(<span class="keyword">int</span> n, <span class="keyword">int</span> add)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">return</span> add;</span><br><span class="line">    <span class="keyword">return</span> factorial(n - <span class="number">1</span>, n * add)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>可以看到，每次调用时都是调用<code>factorial()</code>函数自身，不包含其他运算过程，其中<code>add</code>是一个累加器，帮助保存中间结果，每次调用后不需要上次的信息，所以在栈中只需要一直保持一个函数的信息就够了，所以理论上可以无限递归不发生溢出。</p>
-<h1 id="怎样尾递归优化"><a href="#怎样尾递归优化" class="headerlink" title="怎样尾递归优化"></a>怎样尾递归优化</h1><p>尾递归其实和语言有很大的相关性，而其优化很多是编译器的优化行为。python的编译器并没有做尾递归优化，java同样也没有。而C语言是支持尾递归的。</p>
-<p>另一类尾递归的是函数式编程语言（<strong>Scheme</strong>、<strong>Haskell</strong>等），有一种说法是「函数式语言没有调用栈的」，其中涉及到的机制比较复杂，可以参考以下的<em>参考链接</em>。</p>
-<p><strong>Tips:</strong></p>
-<ul>
-<li><p>使用递归函数的优点是逻辑简单清晰，缺点是过深的调用会导致栈溢出。</p>
-</li>
-<li><p>针对尾递归优化的语言可以通过尾递归防止栈溢出。尾递归事实上和循环是等价的，没有循环语句的编程语言只能通过尾递归实现循环。</p>
-</li>
-<li><p>Python标准的解释器没有针对尾递归做优化，任何递归函数都存在栈溢出的问题。</p>
-</li>
-</ul>
-<hr>
-<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><p>1、<a href="http://www.zhihu.com/question/21445794" target="_blank" rel="noopener">为什么说“函数式语言是没有调用栈”的，所谓“函数式语言的思维”又是指什么呢？</a><br>2、<a href="https://gist.github.com/jasonlvhit/841e3ffb4431a2ff18c2" target="_blank" rel="noopener">尾递归、Lua、Python、C和编译器优化</a><br>3、<a href="http://www.cnblogs.com/archimedes/p/rescuvie-tailrescuvie.html" target="_blank" rel="noopener">递归与尾递归</a><br>4、<a href="http://blog.zhaojie.me/2009/03/tail-recursion-and-continuation.html" target="_blank" rel="noopener">尾递归与Continuation</a></p>
+<p>这一切只需要一条指令：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</span><br></pre></td></tr></table></figure></p>
+<h1 id="是否要定期更新"><a href="#是否要定期更新" class="headerlink" title="是否要定期更新"></a>是否要定期更新</h1><p>软件保持最新肯定是好的，但是一些软件因为某些原因没有更新到最新，如果一味地更新 <code>Homebrew</code> 所有安装包可能带来依赖的不支持。所以我的意见是每个月定期查看一下，有选择性地更新。</p>
+<h1 id="如何更新"><a href="#如何更新" class="headerlink" title="如何更新"></a>如何更新</h1><p>更新 Homebrew 自己：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew update</span><br></pre></td></tr></table></figure></p>
+<p>查看哪些安装包需要更新：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew outdated</span><br></pre></td></tr></table></figure></p>
+<p>更新：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew upgrade             # 更新所有的包</span><br><span class="line">brew upgrade $FORMULA    # 更新指定的包</span><br></pre></td></tr></table></figure></p>
+<p>清理旧版本：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew cleanup             # 清理所有包的旧版本</span><br><span class="line">brew cleanup $FORMULA    # 清理指定包的旧版本</span><br><span class="line">brew cleanup -n          # 查看可清理的旧版本包，不执行实际操作</span><br></pre></td></tr></table></figure></p>
+<p>锁定不想更新的包：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew pin $FORMULA      # 锁定某个包</span><br><span class="line">brew unpin $FORMULA    # 取消锁定</span><br></pre></td></tr></table></figure></p>
+<p>查看安装包的相关信息：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew info $FORMULA    # 显示某个包的信息</span><br><span class="line">brew info             # 显示安装了包数量，文件数量，和总占用空间</span><br><span class="line">brew deps --installed --tree # 查看已安装的包的依赖，树形显示</span><br></pre></td></tr></table></figure></p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>列出已安装包<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew list</span><br></pre></td></tr></table></figure></p>
+<p>删除<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew rm $FORMULA                # 删除某个包</span><br><span class="line">brew uninstall --force $FORMULA # 删除所有版本</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -374,8 +365,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2014/06/24/2048game/" rel="next" title="一个2048游戏">
-                <i class="fa fa-chevron-left"></i> 一个2048游戏
+              <a href="/2018/07/29/Summary-of-July-2018/" rel="next" title="七月总结">
+                <i class="fa fa-chevron-left"></i> 七月总结
               </a>
             
           </div>
@@ -383,10 +374,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2014/12/16/About-Tokenizer-in-cpp/" rel="prev" title="关于Tokenizer库">
-                关于Tokenizer库 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -518,7 +505,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#概念"><span class="nav-number">2.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#怎样尾递归优化"><span class="nav-number">3.</span> <span class="nav-text">怎样尾递归优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考："><span class="nav-number">4.</span> <span class="nav-text">参考：</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#是否要定期更新"><span class="nav-number">2.</span> <span class="nav-text">是否要定期更新</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何更新"><span class="nav-number">3.</span> <span class="nav-text">如何更新</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a></li></ol></div>
             
 
           </div>
