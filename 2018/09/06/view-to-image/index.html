@@ -79,17 +79,19 @@
 
 
 
-<meta name="description" content="0 导言在一些单词查找时需要建立hash表来增加查找效率，当然也可以直接用trie树，但是trie不能保证所有情况比hash表效率高，况且trie相对空间用的多。 在建立hash表时，必然用到hash函数，下面介绍几种常用的字符串hash函数。 BKDR Hash Function最强大，最易用的字符串哈希函数之一是BKDRHash。 1234567891011// BKDR Hash Funct">
+<meta name="description" content="引子最近遇到一个需求，需要把一个 UIView 转换为一个 UIIamge，这里用到了 UiKit 的上下文，还需要了解 Core Graphics 的一些内容，所以总结一下。 renderInContext通过 UIGraphicsBeginImageContextWithOptions 这个方法可以进入上下文，UIGraphicsGetCurrentContext 这个方法可以获取当前的内容，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="常用的字符串 hash 函数">
-<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2015/03/07/string-hash-function/index.html">
+<meta property="og:title" content="view to image">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/09/06/view-to-image/index.html">
 <meta property="og:site_name" content="AprSnow&#39;s Blog">
-<meta property="og:description" content="0 导言在一些单词查找时需要建立hash表来增加查找效率，当然也可以直接用trie树，但是trie不能保证所有情况比hash表效率高，况且trie相对空间用的多。 在建立hash表时，必然用到hash函数，下面介绍几种常用的字符串hash函数。 BKDR Hash Function最强大，最易用的字符串哈希函数之一是BKDRHash。 1234567891011// BKDR Hash Funct">
+<meta property="og:description" content="引子最近遇到一个需求，需要把一个 UIView 转换为一个 UIIamge，这里用到了 UiKit 的上下文，还需要了解 Core Graphics 的一些内容，所以总结一下。 renderInContext通过 UIGraphicsBeginImageContextWithOptions 这个方法可以进入上下文，UIGraphicsGetCurrentContext 这个方法可以获取当前的内容，">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-10-17T15:27:20.000Z">
+<meta property="og:image" content="https://github.com/images/snap.png">
+<meta property="og:updated_time" content="2018-10-17T15:33:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="常用的字符串 hash 函数">
-<meta name="twitter:description" content="0 导言在一些单词查找时需要建立hash表来增加查找效率，当然也可以直接用trie树，但是trie不能保证所有情况比hash表效率高，况且trie相对空间用的多。 在建立hash表时，必然用到hash函数，下面介绍几种常用的字符串hash函数。 BKDR Hash Function最强大，最易用的字符串哈希函数之一是BKDRHash。 1234567891011// BKDR Hash Funct">
+<meta name="twitter:title" content="view to image">
+<meta name="twitter:description" content="引子最近遇到一个需求，需要把一个 UIView 转换为一个 UIIamge，这里用到了 UiKit 的上下文，还需要了解 Core Graphics 的一些内容，所以总结一下。 renderInContext通过 UIGraphicsBeginImageContextWithOptions 这个方法可以进入上下文，UIGraphicsGetCurrentContext 这个方法可以获取当前的内容，">
+<meta name="twitter:image" content="https://github.com/images/snap.png">
 
 
 
@@ -119,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2015/03/07/string-hash-function/"/>
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2018/09/06/view-to-image/"/>
 
 
 
 
 
-  <title>常用的字符串 hash 函数 | AprSnow's Blog</title>
+  <title>view to image | AprSnow's Blog</title>
   
 
 
@@ -262,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2015/03/07/string-hash-function/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2018/09/06/view-to-image/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="AprSnow">
@@ -279,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">常用的字符串 hash 函数</h1>
+          <h1 class="post-title" itemprop="name headline">view to image</h1>
         
 
         <div class="post-meta">
@@ -291,8 +293,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-03-07T22:58:46+08:00">
-                2015-03-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-06T23:32:01+08:00">
+                2018-09-06
               </time>
             
 
@@ -314,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/C/" itemprop="url" rel="index">
-                    <span itemprop="name">C++</span>
+                  <a href="/categories/Objective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Objective-C</span>
                   </a>
                 </span>
 
@@ -351,23 +353,15 @@
       
 
       
-        <h1 id="0-导言"><a href="#0-导言" class="headerlink" title="0 导言"></a>0 导言</h1><p>在一些单词查找时需要建立<strong>hash</strong>表来增加查找效率，当然也可以直接用<strong>trie</strong>树，但是trie不能保证所有情况比hash表效率高，况且trie相对空间用的多。</p>
-<p>在建立hash表时，必然用到hash函数，下面介绍几种常用的<strong>字符串hash函数</strong>。</p>
-<h1 id="BKDR-Hash-Function"><a href="#BKDR-Hash-Function" class="headerlink" title="BKDR Hash Function"></a>BKDR Hash Function</h1><p>最强大，最易用的字符串哈希函数之一是BKDRHash。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// BKDR Hash Function</span></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="title">BKDRHash</span><span class="params">(<span class="keyword">char</span> *str)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> seed = <span class="number">131</span>;<span class="comment">//31 131 1313 13131 131313 etc..</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> hash = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(*str)</span><br><span class="line">	&#123;</span><br><span class="line">		hash = hash * seed + (*str++);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> (hash &amp; <span class="number">0x7FFFFFFF</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="AP-Hash-Function"><a href="#AP-Hash-Function" class="headerlink" title="AP Hash Function"></a>AP Hash Function</h1><p>另一种常用的字符串哈希函数是APHash。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AP Hash Function</span></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="title">APHash</span><span class="params">(<span class="keyword">char</span> *str)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> hash = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="keyword">for</span>(i = <span class="number">0</span>; *str; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>((i &amp; <span class="number">1</span>) == <span class="number">0</span>)</span><br><span class="line">			hash ^= ((hash &lt;&lt; <span class="number">7</span>) ^ (*str++) ^ (hash &gt;&gt; <span class="number">3</span>));</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			hash ^= (~((hash &lt;&lt; <span class="number">11</span>) ^ (*str++) ^ (hash &gt;&gt; <span class="number">5</span>)));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> (hash &amp; <span class="number">0x7FFFFFFF</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h1><p><strong>MD5</strong>是一种被广泛使用的密码散列函数，可以产生出一个<code>128</code>位（16字节）的散列值（<strong>hash value</strong>），用于确保信息传输完整一致。</p>
-<p>1996年后被证实存在弱点，可以被加以破解，对于需要高度安全性的数据，专家一般建议改用其他算法，如<code>SHA-1</code>。2004年，证实MD5算法无法防止碰撞，因此无法适用于安全性认证，如<code>SSL</code>公开密钥认证或是数字签章等用途。</p>
-<p>MD5用法如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;openssl/md5.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">char</span> *<span class="title">MD5</span><span class="params">(<span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> *d, <span class="keyword">unsigned</span> <span class="keyword">long</span> n,</span></span></span><br><span class="line"><span class="function"><span class="params">                  <span class="keyword">unsigned</span> <span class="keyword">char</span> *md)</span></span>;</span><br></pre></td></tr></table></figure></p>
-<h1 id="SHA-1"><a href="#SHA-1" class="headerlink" title="SHA-1"></a>SHA-1</h1><p>安全哈希算法（<strong>Secure Hash Algorithm</strong>）主要适用于数字签名标准 （Digital Signature Standard DSS）里面定义的数字签名算法（Digital Signature Algorithm DSA）。对于长度小于2^64位的消息，<code>SHA1</code>会产生一个<strong>160位</strong>的消息摘要。当接收到消息的时候，这个消息摘要可以用来验证数据的完整性。在传输的过程中，数据很可能会发生变化，那么这时候就会产生不同的消息摘要。 </p>
-<p><code>SHA1</code>有如下特性：</p>
-<ul>
-<li>不可以从消息摘要中复原信息；</li>
-<li>两个不同的消息不会产生同样的消息摘要。</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;openssl/sha.h&gt;</span></span></span><br></pre></td></tr></table></figure>
-<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p><strong>Blizzard hash algorithm</strong><br>这个算法是非常高效的，被称为<strong>One-Way Hash</strong><br><a href="http://www.programering.com/a/MDOyADMwATE.html" target="_blank" rel="noopener">Blizzard hash algorithm</a></p>
+        <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>最近遇到一个需求，需要把一个 <code>UIView</code> 转换为一个 <code>UIIamge</code>，这里用到了 <code>UiKit</code> 的上下文，还需要了解 <code>Core Graphics</code> 的一些内容，所以总结一下。</p>
+<h1 id="renderInContext"><a href="#renderInContext" class="headerlink" title="renderInContext"></a>renderInContext</h1><p>通过 <code>UIGraphicsBeginImageContextWithOptions</code> <code>这个方法可以进入上下文，UIGraphicsGetCurrentContext</code> 这个方法可以获取当前的内容，通过 <code>UIGraphicsGetImageFromCurrentImageContext</code> 方法可以把当前的内容转换为 <code>UIImage</code> ，这里用到了 <code>renderInContext</code> 方法。</p>
+<p><code>renderInContext</code> 方法用来渲染当前的内容。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UIImage</span> *)imageWithView:(<span class="built_in">UIView</span> *)view</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(view.bounds.size, view.opaque, <span class="number">0.0</span>f);</span><br><span class="line">    [view.layer renderInContext:<span class="built_in">UIGraphicsGetCurrentContext</span>()];</span><br><span class="line">    <span class="built_in">UIImage</span> * snapshotImage = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    <span class="keyword">return</span> snapshotImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="drawViewHierarchyInRect"><a href="#drawViewHierarchyInRect" class="headerlink" title="drawViewHierarchyInRect"></a>drawViewHierarchyInRect</h1><p>在 <code>iOS7.0</code> 之后引入了一个新的方法 <code>drawViewHierarchyInRect:afterScreenUpdates:</code>，这个方法的速度比 <code>renderInContext</code> 快很多，根据参考的文章里测试，大约快了 <code>15</code> 倍。</p>
+<p><img src="/images/snap.png" alt=""></p>
+<p>但是 <code>drawViewHierarchyInRect:afterScreenUpdates:</code> 需要当前 <code>view</code> 已经渲染在界面上，所以不能直接用在 <code>viewDidLoad</code> 中。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UIImage</span> *)imageWithView:(<span class="built_in">UIView</span> *)view</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(view.bounds.size, <span class="literal">NO</span>, [<span class="built_in">UIScreen</span> mainScreen].scale);</span><br><span class="line">    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:<span class="literal">NO</span>];</span><br><span class="line">    <span class="built_in">UIImage</span> *snapshotImage = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    <span class="keyword">return</span> snapshotImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://damir.me/ios7-blurring-techniques/" target="_blank" rel="noopener">iOS 7 blurring techniques</a></p>
 
       
     </div>
@@ -392,8 +386,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/01/01/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2018/08/10/message-send-and-forward/" rel="next" title="消息发送与转发">
+                <i class="fa fa-chevron-left"></i> 消息发送与转发
               </a>
             
           </div>
@@ -401,10 +395,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/05/28/Summary-for-Git/" rel="prev" title="Git 使用总结">
-                Git 使用总结 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -536,7 +526,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0-导言"><span class="nav-number">1.</span> <span class="nav-text">0 导言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BKDR-Hash-Function"><span class="nav-number">2.</span> <span class="nav-text">BKDR Hash Function</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AP-Hash-Function"><span class="nav-number">3.</span> <span class="nav-text">AP Hash Function</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MD5"><span class="nav-number">4.</span> <span class="nav-text">MD5</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SHA-1"><span class="nav-number">5.</span> <span class="nav-text">SHA-1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他"><span class="nav-number">6.</span> <span class="nav-text">其他</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引子"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#renderInContext"><span class="nav-number">2.</span> <span class="nav-text">renderInContext</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#drawViewHierarchyInRect"><span class="nav-number">3.</span> <span class="nav-text">drawViewHierarchyInRect</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
