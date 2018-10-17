@@ -81,14 +81,14 @@
 
 <meta name="description" content="前言retain 和 release 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。Autorelease 有时是一个”神器”，只要用[obj autorelease] ，很多 bug 迎刃而解。Autorelease 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？ 本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="你所不知道的Autorelease">
+<meta property="og:title" content="你所不知道的 Autorelease">
 <meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/03/21/About-Autorelease/index.html">
 <meta property="og:site_name" content="AprSnow&#39;s Blog">
 <meta property="og:description" content="前言retain 和 release 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。Autorelease 有时是一个”神器”，只要用[obj autorelease] ，很多 bug 迎刃而解。Autorelease 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？ 本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习笔记">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-03-21T15:01:41.000Z">
+<meta property="og:updated_time" content="2018-10-17T15:24:23.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="你所不知道的Autorelease">
+<meta name="twitter:title" content="你所不知道的 Autorelease">
 <meta name="twitter:description" content="前言retain 和 release 是 MFC 模式开发下，每个初级 iOSer 的心中痛，多少次 bug 都是因为内存管理不当引起的。Autorelease 有时是一个”神器”，只要用[obj autorelease] ，很多 bug 迎刃而解。Autorelease 背后的机制是什么？是如何管理内存的？编译器又做了哪些操作？ 本文收集了一些大神的博客，加上自己平时的一些理解，特此记录学习笔记">
 
 
@@ -125,7 +125,7 @@
 
 
 
-  <title>你所不知道的Autorelease | AprSnow's Blog</title>
+  <title>你所不知道的 Autorelease | AprSnow's Blog</title>
   
 
 
@@ -279,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">你所不知道的Autorelease</h1>
+          <h1 class="post-title" itemprop="name headline">你所不知道的 Autorelease</h1>
         
 
         <div class="post-meta">
@@ -301,6 +301,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Objective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Objective-C</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -504,10 +526,10 @@
               
               
               <div class="site-state-item site-state-categories">
-                
-                  <span class="site-state-item-count">1</span>
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">categories</span>
-                
+                </a>
               </div>
             
 

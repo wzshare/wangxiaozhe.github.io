@@ -81,7 +81,7 @@
 
 <meta name="description" content="神经病院 Objective-C Runtime 入院第一天—— isa 和 Class 阅读笔记  前言Runtime 是一套底层的 C 语言 API，是 iOS 系统的核心之一。开发者在编码过程中，可以给任意一个对象发送消息，在编译阶段只是确定了要向接收者发送这条消息，而接受者将要如何响应和处理这条消息，那就要看运行时来决定了。 C语言中，在编译期，函数的调用就会决定调用哪个函数。而OC的函">
 <meta property="og:type" content="article">
-<meta property="og:title" content="初识Runloop">
+<meta property="og:title" content="初识 Runloop">
 <meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2017/05/25/Runtime-face-to-face/index.html">
 <meta property="og:site_name" content="AprSnow&#39;s Blog">
 <meta property="og:description" content="神经病院 Objective-C Runtime 入院第一天—— isa 和 Class 阅读笔记  前言Runtime 是一套底层的 C 语言 API，是 iOS 系统的核心之一。开发者在编码过程中，可以给任意一个对象发送消息，在编译阶段只是确定了要向接收者发送这条消息，而接受者将要如何响应和处理这条消息，那就要看运行时来决定了。 C语言中，在编译期，函数的调用就会决定调用哪个函数。而OC的函">
@@ -92,9 +92,9 @@
 <meta property="og:image" content="https://github.com/images/runtime04.jpg">
 <meta property="og:image" content="https://github.com/images/runtime05.jpg">
 <meta property="og:image" content="https://github.com/images/runtime06.jpg">
-<meta property="og:updated_time" content="2018-07-19T14:48:53.000Z">
+<meta property="og:updated_time" content="2018-10-17T14:59:57.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="初识Runloop">
+<meta name="twitter:title" content="初识 Runloop">
 <meta name="twitter:description" content="神经病院 Objective-C Runtime 入院第一天—— isa 和 Class 阅读笔记  前言Runtime 是一套底层的 C 语言 API，是 iOS 系统的核心之一。开发者在编码过程中，可以给任意一个对象发送消息，在编译阶段只是确定了要向接收者发送这条消息，而接受者将要如何响应和处理这条消息，那就要看运行时来决定了。 C语言中，在编译期，函数的调用就会决定调用哪个函数。而OC的函">
 <meta name="twitter:image" content="https://github.com/images/runtime01.jpg">
 
@@ -132,7 +132,7 @@
 
 
 
-  <title>初识Runloop | AprSnow's Blog</title>
+  <title>初识 Runloop | AprSnow's Blog</title>
   
 
 
@@ -286,7 +286,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">初识Runloop</h1>
+          <h1 class="post-title" itemprop="name headline">初识 Runloop</h1>
         
 
         <div class="post-meta">
@@ -308,6 +308,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Objective-C/" itemprop="url" rel="index">
+                    <span itemprop="name">Objective-C</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -434,8 +456,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/22/About-Atomic/" rel="next" title="从atomic说起">
-                <i class="fa fa-chevron-left"></i> 从atomic说起
+              <a href="/2017/03/22/About-Atomic/" rel="next" title="从 atomic 说起">
+                <i class="fa fa-chevron-left"></i> 从 atomic 说起
               </a>
             
           </div>
@@ -444,8 +466,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/09/Runtime-engagement/" rel="prev" title="Runtime engagement">
-                Runtime engagement <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/09/Runtime-engagement/" rel="prev" title="约会 Runtime">
+                约会 Runtime <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -533,10 +555,10 @@
               
               
               <div class="site-state-item site-state-categories">
-                
-                  <span class="site-state-item-count">1</span>
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">categories</span>
-                
+                </a>
               </div>
             
 
