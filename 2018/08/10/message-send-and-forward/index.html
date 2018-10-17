@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文总结了 runtime 中的消息发送与转发过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="消息发送与转发">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/08/10/message-send-and-forward/index.html">
+<meta property="og:site_name" content="AprSnow&#39;s Blog">
+<meta property="og:description" content="本文总结了 runtime 中的消息发送与转发过程。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://github.com/images/metaclass.png">
+<meta property="og:image" content="https://github.com/images/messageforwarding.png">
+<meta property="og:updated_time" content="2018-10-17T14:32:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="消息发送与转发">
+<meta name="twitter:description" content="本文总结了 runtime 中的消息发送与转发过程。">
+<meta name="twitter:image" content="https://github.com/images/metaclass.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2018/08/10/message-send-and-forward/"/>
+
+
+
+
+
+  <title>消息发送与转发 | AprSnow's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">AprSnow's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2018/08/10/message-send-and-forward/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AprSnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AprSnow's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">消息发送与转发</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-10T20:22:15+08:00">
+                2018-08-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文总结了 <code>runtime</code> 中的消息发送与转发过程。</p>
+<a id="more"></a>
+<h1 id="objc-msgSend"><a href="#objc-msgSend" class="headerlink" title="objc_msgSend"></a>objc_msgSend</h1><p>调用一个方法的时候，<code>runtime</code> 层会将这个调用翻译成<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objc_msgSend(id self, SEL op, ...)</span><br></pre></td></tr></table></figure></p>
+<p>比如，一条语句 <code>[receiver message];</code> 会由编译器转化为以下的纯 <code>C</code> 调用：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objc_msgSend(receiver, @selector(message));</span><br></pre></td></tr></table></figure></p>
+<p><code>objc_msgSend</code> 的伪代码为：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">id</span> objc_msgSend(<span class="keyword">id</span> <span class="keyword">self</span>, SEL _cmd, ...) &#123;</span><br><span class="line">	Class c = object_getClass(<span class="keyword">self</span>);</span><br><span class="line">	IMP imp = cache_lookup(c, _cmd);</span><br><span class="line">	<span class="keyword">if</span>(!imp)</span><br><span class="line">		imp = class_getMethodImplementation(c, _cmd);</span><br><span class="line">	<span class="keyword">return</span> imp(<span class="keyword">self</span>, _cmd, ...);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当向一般对象发送消息时，调用 <code>objc_msgSend</code>；当向 <code>super</code> 发送消息时，调用的是 <code>objc_msgSendSuper</code>； 如果返回值是一个结构体，则会调用 <code>objc_msgSend_stret</code> 或 <code>objc_msgSendSuper_stret</code>。</p>
+<h1 id="消息分发"><a href="#消息分发" class="headerlink" title="消息分发"></a>消息分发</h1><p><code>objc_msgSend</code> 的消息分发分为以下几个步骤：</p>
+<ul>
+<li>判断 <code>receiver</code> 是否为 <code>nil</code>，也就是 <code>objc_msgSend</code> 的第一个参数 <code>self</code>，也就是要调用的那个方法所属对象</li>
+<li>从缓存里寻找，找到了则分发，否则</li>
+<li>利用 <code>objc-class.mm</code> 中 <code>_class_lookupMethodAndLoadCache3</code> 方法去寻找 <code>selector</code><ul>
+<li>如果支持 <code>GC</code>，忽略掉非 <code>GC</code> 环境的方法（<code>retain</code> 等）</li>
+<li>从本 <code>class</code> 的 <code>method list</code> 寻找 <code>selector</code>，如果找到，填充到缓存中，并返回 <code>selector</code>，否则</li>
+<li>寻找父类的 <code>method list</code>，并依次往上寻找，直到找到 <code>selector</code>，填充到缓存中，并返回 <code>selector</code>，否则</li>
+<li>调用 <code>_class_resolveMethod</code>，如果可以动态 <code>resolve</code> 一个 <code>selector</code>，不缓存，方法返回，否则</li>
+<li>转发这个 <code>selector</code>，否则</li>
+</ul>
+</li>
+<li>报错，抛出异常</li>
+</ul>
+<p>类的定义里就有 <code>cache</code> 字段，类的所有缓存都存在 <code>metaclass</code> 上，所以每个类都只有一份方法缓存，而不是每一个类的 <code>object</code> 都保存一份。<br>即便是从父类取到的方法，也会存在类本身的方法缓存里。而当用一个父类对象去调用那个方法的时候，也会在父类的 <code>metaclass</code> 里缓存一份。<br>在调用 <code>_class_lookupMethodAndLoadCache3</code> 之前，已经是从缓存无法找到 <code>selector</code> 了，所以这个方法避免了再去扫描缓存查找方法的过程，而是直接从方法列表找起。</p>
+<h1 id="动态添加方法"><a href="#动态添加方法" class="headerlink" title="动态添加方法"></a>动态添加方法</h1><p>允许用户在此时为该 <code>Class</code> 动态添加实现。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _class_resolveMethod(Class cls, SEL sel, <span class="keyword">id</span> inst)</span><br></pre></td></tr></table></figure></p>
+<p>函数原码为：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _class_resolveMethod(Class cls, SEL sel, id inst)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (! cls-&gt;isMetaClass()) &#123;</span><br><span class="line">        <span class="comment">// try [cls resolveInstanceMethod:sel]</span></span><br><span class="line">        _class_resolveInstanceMethod(cls, sel, inst);</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// try [nonMetaClass resolveClassMethod:sel]</span></span><br><span class="line">        <span class="comment">// and [cls resolveInstanceMethod:sel]</span></span><br><span class="line">        _class_resolveClassMethod(cls, sel, inst);</span><br><span class="line">        <span class="keyword">if</span> (!lookUpImpOrNil(cls, sel, inst, </span><br><span class="line">                            NO<span class="comment">/*initialize*/</span>, YES<span class="comment">/*cache*/</span>, NO<span class="comment">/*resolver*/</span>)) </span><br><span class="line">        &#123;</span><br><span class="line">            _class_resolveInstanceMethod(cls, sel, inst);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此方法是动态方法解析的入口，会间接地发送 <code>+resolveInstanceMethod</code> 或 <code>+resolveClassMethod</code> 消息。通过对 <code>isa</code> 指向的判断，从而分辨出如果是对象方法，则进入 <code>+resolveInstanceMethod</code> 方法，如果是类方法，则进入 <code>+resolveClassMethod</code> 方法。</p>
+<p>动态添加实例方法：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> dynamicInstanceMethod(<span class="keyword">id</span> <span class="keyword">self</span>, SEL _cmd) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@" &gt;&gt; dynamic Instance Method"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">TestMessage</span></span></span><br><span class="line">+ (<span class="built_in">BOOL</span>)resolveInstanceMethod:(SEL)sel &#123;</span><br><span class="line">    <span class="keyword">if</span> (sel == <span class="keyword">@selector</span>(noneMethod))</span><br><span class="line">    &#123;</span><br><span class="line">        class_addMethod([<span class="keyword">self</span> <span class="keyword">class</span>], sel, (IMP)dynamicInstanceMethod, <span class="string">"v@:"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> resolveInstanceMethod:sel];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<p>动态添加类方法：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> dynamicClassMethod(<span class="keyword">id</span> <span class="keyword">self</span>, SEL _cmd)&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@" &gt;&gt; dynamic Class Method"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">TestMessage</span></span></span><br><span class="line">+ (<span class="built_in">BOOL</span>)resolveClassMethod:(SEL)sel&#123;</span><br><span class="line">    <span class="keyword">if</span> (sel == <span class="keyword">@selector</span>(noneMethod)) &#123;</span><br><span class="line">        Class metaClass = objc_getMetaClass([<span class="built_in">NSStringFromClass</span>(<span class="keyword">self</span>) UTF8String]);</span><br><span class="line">        class_addMethod(metaClass, <span class="keyword">@selector</span>(noneMethod), (IMP)dynamicClassMethod, <span class="string">"v@:"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> [<span class="keyword">super</span> resolveClassMethod:sel];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<p>注意类方法需要添加到 <code>Meta Class</code> 中。关于 <code>class</code> 和 <code>meta class</code> 的关系可以参考下图：<br><img src="/images/metaclass.png" alt=""></p>
+<h1 id="消息转发机制-message-forwarding"><a href="#消息转发机制-message-forwarding" class="headerlink" title="消息转发机制(message forwarding)"></a>消息转发机制(message forwarding)</h1><p>当对象接受到无法解读的消息后，就会启动消息转发机制。当向一个对象发送一条消息，但它并没有实现的时候，<code>_objc_msgForward</code> 会尝试做消息转发。</p>
+<p>消息转发分为两个阶段</p>
+<ul>
+<li>先征询接收者所属都类，看其是否能动态添加方法</li>
+<li>完整的消息转发机制<ul>
+<li>查看是否有备援接收者 <code>replacement receiver</code>，否则</li>
+<li>把消息的全部细节封装到 <code>NSInvocation</code> 对象中，再给接收者最后一次机会</li>
+</ul>
+</li>
+</ul>
+<h1 id="备援接收者"><a href="#备援接收者" class="headerlink" title="备援接收者"></a>备援接收者</h1><p>尝试找到一个能响应该消息的对象。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">id</span>)forwardingTargetForSelector:(SEL)selector;</span><br></pre></td></tr></table></figure></p>
+<h1 id="完整的消息转发"><a href="#完整的消息转发" class="headerlink" title="完整的消息转发"></a>完整的消息转发</h1><p>先调用 <code>methodSignatureForSelector:</code> 方法，尝试获得一个方法签名。如果获取不到，则直接调用 <code>doesNotRecognizeSelector</code> 抛出异常。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSMethodSignature</span> *)methodSignatureForSelector:(SEL)aSelector</span><br></pre></td></tr></table></figure></p>
+<p>然后创建 <code>NSInvocation</code> 对象，调用<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)forwardInvocation:(<span class="built_in">NSInvocation</span> *)invocation;</span><br></pre></td></tr></table></figure></p>
+<p>代码：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSMethodSignature</span> *)methodSignatureForSelector:(SEL)aSelector &#123;</span><br><span class="line">    <span class="keyword">if</span> (aSelector == <span class="keyword">@selector</span>(noneMethod)) &#123;</span><br><span class="line">        <span class="keyword">return</span> [<span class="built_in">NSMethodSignature</span> signatureWithObjCTypes:<span class="string">"v@:"</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> methodSignatureForSelector:aSelector];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)forwardInvocation:(<span class="built_in">NSInvocation</span> *)anInvocation &#123;</span><br><span class="line">    SEL selector = [anInvocation selector];</span><br><span class="line">    MyClass *myclass = [MyClass new];</span><br><span class="line">    <span class="keyword">if</span> ([myclass respondsToSelector:selector]) &#123;</span><br><span class="line">        [anInvocation invokeWithTarget:myclass];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="消息转发总结"><a href="#消息转发总结" class="headerlink" title="消息转发总结"></a>消息转发总结</h1><p><img src="/images/messageforwarding.png" alt=""></p>
+<h1 id="非常值得读的文章"><a href="#非常值得读的文章" class="headerlink" title="非常值得读的文章"></a>非常值得读的文章</h1><ul>
+<li><a href="https://blog.ibireme.com/2013/11/26/objective-c-messaging/" target="_blank" rel="noopener">Objective-C 中的消息与消息转发</a></li>
+<li><a href="https://halfrost.com/objc_runtime_objc_msgsend/" target="_blank" rel="noopener">神经病院 Objective-C Runtime 住院第二天——消息发送与转发</a></li>
+<li><a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/" target="_blank" rel="noopener">Objective-C 消息发送与转发机制原理</a></li>
+<li><a href="https://iosdevp.github.io/blog/2016/07/10/Objective-C%20Runtime%E4%B9%8B%E5%8A%A8%E6%80%81%E6%96%B9%E6%B3%95%E8%A7%A3%E6%9E%90%E5%92%8C%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91.html" target="_blank" rel="noopener">Objective-C Runtime之动态方法解析和消息转发</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/06/update-homebrew-regularly/" rel="next" title="定期更新 Homebrew">
+                <i class="fa fa-chevron-left"></i> 定期更新 Homebrew
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">AprSnow</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#objc-msgSend"><span class="nav-number">1.</span> <span class="nav-text">objc_msgSend</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#消息分发"><span class="nav-number">2.</span> <span class="nav-text">消息分发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态添加方法"><span class="nav-number">3.</span> <span class="nav-text">动态添加方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#消息转发机制-message-forwarding"><span class="nav-number">4.</span> <span class="nav-text">消息转发机制(message forwarding)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#备援接收者"><span class="nav-number">5.</span> <span class="nav-text">备援接收者</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完整的消息转发"><span class="nav-number">6.</span> <span class="nav-text">完整的消息转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#消息转发总结"><span class="nav-number">7.</span> <span class="nav-text">消息转发总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#非常值得读的文章"><span class="nav-number">8.</span> <span class="nav-text">非常值得读的文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AprSnow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

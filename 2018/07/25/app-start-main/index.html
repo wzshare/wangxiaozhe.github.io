@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="iOS App 启动过程（三），本文介绍 main() 函数之后的过程以及 controller 与 view 的生命周期。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS App 启动过程：main 及生命周期">
+<meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/07/25/app-start-main/index.html">
+<meta property="og:site_name" content="AprSnow&#39;s Blog">
+<meta property="og:description" content="iOS App 启动过程（三），本文介绍 main() 函数之后的过程以及 controller 与 view 的生命周期。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-10-17T14:43:21.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS App 启动过程：main 及生命周期">
+<meta name="twitter:description" content="iOS App 启动过程（三），本文介绍 main() 函数之后的过程以及 controller 与 view 的生命周期。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/wzshare/wzshare.github.io/2018/07/25/app-start-main/"/>
+
+
+
+
+
+  <title>iOS App 启动过程：main 及生命周期 | AprSnow's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">AprSnow's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/wzshare/wzshare.github.io/2018/07/25/app-start-main/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AprSnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AprSnow's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS App 启动过程：main 及生命周期</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-25T22:40:01+08:00">
+                2018-07-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>iOS App 启动过程（三），本文介绍 <code>main()</code> 函数之后的过程以及 <code>controller</code> 与 <code>view</code> 的生命周期。</p>
+<a id="more"></a>
+<h1 id="main函数后"><a href="#main函数后" class="headerlink" title="main函数后"></a>main函数后</h1><p>进入 <code>mian()</code> 之后需要设置 <code>AppDelegate</code> 为应用代理，代理会在 App 启动之后调用：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[AppDelegate application:didFinishLaunchingWithOptions:] <span class="comment">//程序完成加载</span></span><br><span class="line">[AppDelegate applicationDidBecomeActive:] <span class="comment">//程序被激活</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="点击Home键时"><a href="#点击Home键时" class="headerlink" title="点击Home键时"></a>点击Home键时</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[AppDelegate applicationWillResignActive:] <span class="comment">//程序取消激活状态</span></span><br><span class="line">[AppDelegate applicationDidEnterBackground:] <span class="comment">// 程序进入后台</span></span><br></pre></td></tr></table></figure>
+<h2 id="点击APP时"><a href="#点击APP时" class="headerlink" title="点击APP时"></a>点击APP时</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[AppDelegate applicationWillEnterForeground:] <span class="comment">// 程序进入前台</span></span><br><span class="line">[AppDelegate applicationDidBecomeActive:] <span class="comment">// 程序被激活</span></span><br></pre></td></tr></table></figure>
+<h1 id="UIViewController-的生命周期"><a href="#UIViewController-的生命周期" class="headerlink" title="UIViewController 的生命周期"></a>UIViewController 的生命周期</h1><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">initWithCoder:</span><br><span class="line">awakeFromNib</span><br><span class="line">loadView</span><br><span class="line">viewDidLoad</span><br><span class="line">viewWillAppear:</span><br><span class="line">viewWillLayoutSubviews</span><br><span class="line">viewDidLayoutSubviews</span><br><span class="line">viewDidAppear:</span><br><span class="line">viewWillDisappear:</span><br><span class="line">viewDidDisappear:</span><br><span class="line">dealloc</span><br></pre></td></tr></table></figure>
+<h2 id="initWithNibName-bundle"><a href="#initWithNibName-bundle" class="headerlink" title="initWithNibName:bundle:"></a>initWithNibName:bundle:</h2><p>非 <code>StoryBoard</code> 创建 <code>UIViewController</code> 会调用这个方法。不要在这里做 <code>View</code> 相关操作，<code>View</code> 在 <code>loadView</code> 方法中才初始化。</p>
+<h2 id="initWithCoder"><a href="#initWithCoder" class="headerlink" title="initWithCoder:"></a>initWithCoder:</h2><p>使用 <code>StoryBoard</code> 进行视图管理，<code>StoryBoard</code> 会自动初始化 <code>UIViewController</code>，方法 <code>initWithNibName:bundle</code> 不会被调用，<code>initWithCoder</code> 会被调用。</p>
+<h2 id="loadView"><a href="#loadView" class="headerlink" title="loadView"></a>loadView</h2><p><code>loadView</code> 方法在 <code>UIViewController</code> 对象的 <code>view</code> 被访问且为空的时候调用。这是它与 <code>awakeFromNib</code> 方法的一个区别。在重写 <code>loadView</code> 方法的时候，不要调用父类的方法。<code>self.view</code> 是在 <code>loadView</code> 方法中创建并建立联系的，不要调用 <code>[super loadView]</code>，要将自定义的 <code>view</code> 赋值给 <code>self.view</code>。如果该控制器没有 <code>xib</code> 文件，重写了 <code>loadView</code> 但没有做任何事情(也就是 <code>self.view</code>为空)，在 <code>viewDidLoad</code> 中还使用了 self.view(<code>self.view</code> 为空时会调用 <code>loadView</code>)，这样会造成死循环。</p>
+<h2 id="指定构造函数"><a href="#指定构造函数" class="headerlink" title="指定构造函数"></a>指定构造函数</h2><p><code>UIViewController</code> 有两个 <code>Designated Initializer</code><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">initWithNibName: bundle:</span><br><span class="line">initWithCoder:</span><br></pre></td></tr></table></figure></p>
+<h1 id="UIView-的生命周期"><a href="#UIView-的生命周期" class="headerlink" title="UIView 的生命周期"></a>UIView 的生命周期</h1><h2 id="当创建-view-时"><a href="#当创建-view-时" class="headerlink" title="当创建 view 时"></a>当创建 view 时</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">willMoveToSuperview:</span><br><span class="line">didMoveToSuperview</span><br><span class="line">willMoveToWindow:</span><br><span class="line">didMoveToWindow</span><br><span class="line">layoutSubviews</span><br><span class="line">drawRect:</span><br></pre></td></tr></table></figure>
+<h2 id="当view销毁时"><a href="#当view销毁时" class="headerlink" title="当view销毁时"></a>当view销毁时</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">willMoveToWindow:</span><br><span class="line">didMoveToWindow</span><br><span class="line">willMoveToSuperview:</span><br><span class="line">didMoveToSuperview</span><br><span class="line">removeFromSuperview</span><br><span class="line">dealloc</span><br></pre></td></tr></table></figure>
+<h2 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h2><p>只会执行一次的方法有 <code>removeFromSuperview</code>、<code>dealloc</code> 两个方法，可以在这两个方法中执行释放内存、移除观察者、定时器等。</p>
+<p><code>willRemoveSubview</code> 是在 <code>dealloc</code> 后面执行的。如果有多个子视图，<code>willRemoveSubview</code> 会循环执行，直到移除所有子视图。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)willMoveToSuperview:(<span class="keyword">nullable</span> <span class="built_in">UIView</span> *)newSuperview;</span><br><span class="line">- (<span class="keyword">void</span>)willMoveToWindow:(<span class="keyword">nullable</span> <span class="built_in">UIWindow</span> *)newWindow;</span><br></pre></td></tr></table></figure>
+<p>这两个方法可以根据参数判断，<code>nil</code> 则为销毁，否则为创建；</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)didMoveToSuperview;</span><br><span class="line">- (<span class="keyword">void</span>)didMoveToWindow;</span><br></pre></td></tr></table></figure>
+<p>这两个方法可以根据 <code>self.superview</code> 判断，<code>nil</code> 则为销毁，否则为创建。</p>
+<h2 id="layoutSubviews-的触发条件"><a href="#layoutSubviews-的触发条件" class="headerlink" title="layoutSubviews 的触发条件"></a>layoutSubviews 的触发条件</h2><ol>
+<li><code>init</code> 初始化不会触发 <code>layoutSubviews</code>，<code>initWithFrame</code> 初始化时，当 <code>rect</code> 的值不为 <code>CGRectZero</code> 时会触发。</li>
+<li><code>addSubview</code> 会触发 <code>layoutSubviews</code>。</li>
+<li>设置 <code>view</code> 的 Frame 会触发 <code>layoutSubviews</code>。</li>
+<li>滚动一个 <code>UIScrollView</code> 会触发 <code>layoutSubviews</code>。</li>
+<li>旋转 <code>Screen</code> 会触发父 <code>UIView</code> 上的 <code>layoutSubviews</code>。</li>
+</ol>
+<p><code>setNeedsLayout</code>，标记为需要重新布局，不立即刷新，在下一轮 <code>runloop</code> 结束前刷新，<code>layoutSubviews</code> 一定会被调用。<br><code>layoutIfNeeded</code>，如果有需要刷新的标记，立即调用 <code>layoutSubviews</code>；如果没有标记，不会调用 <code>layoutSubviews</code>。</p>
+<h2 id="指定构造函数-1"><a href="#指定构造函数-1" class="headerlink" title="指定构造函数"></a>指定构造函数</h2><p><code>UIView</code> 有两个 <code>Designated Initializer</code><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">initWithFrame:</span><br><span class="line">initWithCoder:</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/18/app-start-exec/" rel="next" title="iOS App 启动过程：从 exec 到 main">
+                <i class="fa fa-chevron-left"></i> iOS App 启动过程：从 exec 到 main
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/29/Summary-of-July-2018/" rel="prev" title="七月总结">
+                七月总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">AprSnow</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#main函数后"><span class="nav-number">1.</span> <span class="nav-text">main函数后</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#点击Home键时"><span class="nav-number">1.1.</span> <span class="nav-text">点击Home键时</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#点击APP时"><span class="nav-number">1.2.</span> <span class="nav-text">点击APP时</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UIViewController-的生命周期"><span class="nav-number">2.</span> <span class="nav-text">UIViewController 的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#initWithNibName-bundle"><span class="nav-number">2.1.</span> <span class="nav-text">initWithNibName:bundle:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#initWithCoder"><span class="nav-number">2.2.</span> <span class="nav-text">initWithCoder:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#loadView"><span class="nav-number">2.3.</span> <span class="nav-text">loadView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指定构造函数"><span class="nav-number">2.4.</span> <span class="nav-text">指定构造函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UIView-的生命周期"><span class="nav-number">3.</span> <span class="nav-text">UIView 的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#当创建-view-时"><span class="nav-number">3.1.</span> <span class="nav-text">当创建 view 时</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#当view销毁时"><span class="nav-number">3.2.</span> <span class="nav-text">当view销毁时</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意："><span class="nav-number">3.3.</span> <span class="nav-text">注意：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#layoutSubviews-的触发条件"><span class="nav-number">3.4.</span> <span class="nav-text">layoutSubviews 的触发条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指定构造函数-1"><span class="nav-number">3.5.</span> <span class="nav-text">指定构造函数</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AprSnow</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
