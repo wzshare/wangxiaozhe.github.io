@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="性能先参考一张 ibireme 大神的图： 自旋锁自旋锁不会引起调用者睡眠，如果自旋锁已经被别的执行单元保持，调用者就一直循环在那里看是否该自旋锁的保持者已经释放了锁。自旋锁适合于保持时间非常短的情况，自旋锁保持期间是抢占失效的。 内核保证 spin_lock() 和 spin_unlock() 之间的临界区代码在任意时刻只会由一个 CPU 进行访问，并且当前 CPU 访问期间不会发生进程切换，">
+<meta name="description" content="本文介绍了 iOS 各种加锁方法。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="自旋锁与互斥锁">
 <meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/09/21/spin-lock/index.html">
 <meta property="og:site_name" content="AprSnow&#39;s Blog">
-<meta property="og:description" content="性能先参考一张 ibireme 大神的图： 自旋锁自旋锁不会引起调用者睡眠，如果自旋锁已经被别的执行单元保持，调用者就一直循环在那里看是否该自旋锁的保持者已经释放了锁。自旋锁适合于保持时间非常短的情况，自旋锁保持期间是抢占失效的。 内核保证 spin_lock() 和 spin_unlock() 之间的临界区代码在任意时刻只会由一个 CPU 进行访问，并且当前 CPU 访问期间不会发生进程切换，">
+<meta property="og:description" content="本文介绍了 iOS 各种加锁方法。">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://github.com/images/lock_benchmark.png">
-<meta property="og:updated_time" content="2018-11-11T14:40:58.000Z">
+<meta property="og:updated_time" content="2018-11-11T14:51:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自旋锁与互斥锁">
-<meta name="twitter:description" content="性能先参考一张 ibireme 大神的图： 自旋锁自旋锁不会引起调用者睡眠，如果自旋锁已经被别的执行单元保持，调用者就一直循环在那里看是否该自旋锁的保持者已经释放了锁。自旋锁适合于保持时间非常短的情况，自旋锁保持期间是抢占失效的。 内核保证 spin_lock() 和 spin_unlock() 之间的临界区代码在任意时刻只会由一个 CPU 进行访问，并且当前 CPU 访问期间不会发生进程切换，">
+<meta name="twitter:description" content="本文介绍了 iOS 各种加锁方法。">
 <meta name="twitter:image" content="https://github.com/images/lock_benchmark.png">
 
 
@@ -353,7 +353,8 @@
       
 
       
-        <a id="more"></a>
+        <p>本文介绍了 <code>iOS</code> 各种加锁方法。</p>
+<a id="more"></a>
 <h1 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h1><p>先参考一张 <code>ibireme</code> 大神的图：<br><img src="/images/lock_benchmark.png" alt=""></p>
 <h1 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h1><p>自旋锁不会引起调用者睡眠，如果自旋锁已经被别的执行单元保持，调用者就一直循环在那里看是否该自旋锁的保持者已经释放了锁。自旋锁适合于保持时间非常短的情况，自旋锁保持期间是抢占失效的。</p>
 <p>内核保证 <code>spin_lock()</code> 和 <code>spin_unlock()</code> 之间的临界区代码在任意时刻只会由一个 <code>CPU</code> 进行访问，并且当前 <code>CPU</code> 访问期间不会发生进程切换，当前进程也不会进入睡眠。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spin_lock();</span><br><span class="line">...临界区...</span><br><span class="line">spin_unlock();</span><br></pre></td></tr></table></figure></p>

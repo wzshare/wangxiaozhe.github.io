@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="引子最近遇到一个需求，需要把一个 UIView 转换为一个 UIIamge，这里用到了 UiKit 的上下文，还需要了解 Core Graphics 的一些内容，所以总结一下。 renderInContext通过 UIGraphicsBeginImageContextWithOptions 这个方法可以进入上下文，UIGraphicsGetCurrentContext 这个方法可以获取当前的内容，">
+<meta name="description" content="引子最近遇到一个需求，需要把一个 UIView 转换为一个 UIIamge，这里用到了 UiKit 的上下文，还需要了解 Core Graphics 的一些内容，所以总结一下。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="view to image">
 <meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/09/06/view-to-image/index.html">
 <meta property="og:site_name" content="AprSnow&#39;s Blog">
-<meta property="og:description" content="引子最近遇到一个需求，需要把一个 UIView 转换为一个 UIIamge，这里用到了 UiKit 的上下文，还需要了解 Core Graphics 的一些内容，所以总结一下。 renderInContext通过 UIGraphicsBeginImageContextWithOptions 这个方法可以进入上下文，UIGraphicsGetCurrentContext 这个方法可以获取当前的内容，">
+<meta property="og:description" content="引子最近遇到一个需求，需要把一个 UIView 转换为一个 UIIamge，这里用到了 UiKit 的上下文，还需要了解 Core Graphics 的一些内容，所以总结一下。">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://github.com/images/snap.png">
-<meta property="og:updated_time" content="2018-10-17T15:33:36.000Z">
+<meta property="og:updated_time" content="2018-11-11T14:52:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="view to image">
-<meta name="twitter:description" content="引子最近遇到一个需求，需要把一个 UIView 转换为一个 UIIamge，这里用到了 UiKit 的上下文，还需要了解 Core Graphics 的一些内容，所以总结一下。 renderInContext通过 UIGraphicsBeginImageContextWithOptions 这个方法可以进入上下文，UIGraphicsGetCurrentContext 这个方法可以获取当前的内容，">
+<meta name="twitter:description" content="引子最近遇到一个需求，需要把一个 UIView 转换为一个 UIIamge，这里用到了 UiKit 的上下文，还需要了解 Core Graphics 的一些内容，所以总结一下。">
 <meta name="twitter:image" content="https://github.com/images/snap.png">
 
 
@@ -354,6 +354,7 @@
 
       
         <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>最近遇到一个需求，需要把一个 <code>UIView</code> 转换为一个 <code>UIIamge</code>，这里用到了 <code>UiKit</code> 的上下文，还需要了解 <code>Core Graphics</code> 的一些内容，所以总结一下。</p>
+<a id="more"></a>
 <h1 id="renderInContext"><a href="#renderInContext" class="headerlink" title="renderInContext"></a>renderInContext</h1><p>通过 <code>UIGraphicsBeginImageContextWithOptions</code> <code>这个方法可以进入上下文，UIGraphicsGetCurrentContext</code> 这个方法可以获取当前的内容，通过 <code>UIGraphicsGetImageFromCurrentImageContext</code> 方法可以把当前的内容转换为 <code>UIImage</code> ，这里用到了 <code>renderInContext</code> 方法。</p>
 <p><code>renderInContext</code> 方法用来渲染当前的内容。</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UIImage</span> *)imageWithView:(<span class="built_in">UIView</span> *)view</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(view.bounds.size, view.opaque, <span class="number">0.0</span>f);</span><br><span class="line">    [view.layer renderInContext:<span class="built_in">UIGraphicsGetCurrentContext</span>()];</span><br><span class="line">    <span class="built_in">UIImage</span> * snapshotImage = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    <span class="keyword">return</span> snapshotImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
