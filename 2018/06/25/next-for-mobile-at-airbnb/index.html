@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="本文翻译自What’s Next for Mobile at Airbnb  这是我们关于React Native的系列文章)的第五篇，描述我们在React Native上的经验和我们下一步在Airbnb移动端上的工作。  Exciting Times Ahead在尝试React Native时，我们也同时加快在原生上的努力。今天，我们在产品中有了大量令人惊艳的项目。这些项目的灵感来自于我们在学习">
+<meta name="description" content="本文翻译自What’s Next for Mobile at Airbnb  这是我们关于React Native的系列文章)的第五篇，描述我们在React Native上的经验和我们下一步在Airbnb移动端上的工作。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Airbnb：移动开发的下个时代">
 <meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2018/06/25/next-for-mobile-at-airbnb/index.html">
 <meta property="og:site_name" content="AprSnow&#39;s Blog">
-<meta property="og:description" content="本文翻译自What’s Next for Mobile at Airbnb  这是我们关于React Native的系列文章)的第五篇，描述我们在React Native上的经验和我们下一步在Airbnb移动端上的工作。  Exciting Times Ahead在尝试React Native时，我们也同时加快在原生上的努力。今天，我们在产品中有了大量令人惊艳的项目。这些项目的灵感来自于我们在学习">
+<meta property="og:description" content="本文翻译自What’s Next for Mobile at Airbnb  这是我们关于React Native的系列文章)的第五篇，描述我们在React Native上的经验和我们下一步在Airbnb移动端上的工作。">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://github.com/images/2018071001.png">
 <meta property="og:image" content="https://github.com/images/2018071002.png">
-<meta property="og:updated_time" content="2018-10-17T15:26:16.000Z">
+<meta property="og:updated_time" content="2018-12-06T10:57:02.429Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Airbnb：移动开发的下个时代">
-<meta name="twitter:description" content="本文翻译自What’s Next for Mobile at Airbnb  这是我们关于React Native的系列文章)的第五篇，描述我们在React Native上的经验和我们下一步在Airbnb移动端上的工作。  Exciting Times Ahead在尝试React Native时，我们也同时加快在原生上的努力。今天，我们在产品中有了大量令人惊艳的项目。这些项目的灵感来自于我们在学习">
+<meta name="twitter:description" content="本文翻译自What’s Next for Mobile at Airbnb  这是我们关于React Native的系列文章)的第五篇，描述我们在React Native上的经验和我们下一步在Airbnb移动端上的工作。">
 <meta name="twitter:image" content="https://github.com/images/2018071001.png">
 
 
@@ -358,8 +358,8 @@
 <blockquote>
 <p>这是我们关于React Native的<a href="[https://medium.com/airbnb-engineering/react-native-at-airbnb-f95aa460be1c](https://medium.com/airbnb-engineering/react-native-at-airbnb-f95aa460be1c">系列文章</a>)的第五篇，描述我们在<code>React Native</code>上的经验和我们下一步在Airbnb移动端上的工作。</p>
 </blockquote>
-<h1 id="Exciting-Times-Ahead"><a href="#Exciting-Times-Ahead" class="headerlink" title="Exciting Times Ahead"></a>Exciting Times Ahead</h1><p>在尝试<code>React Native</code>时，我们也同时加快在原生上的努力。今天，我们在产品中有了大量令人惊艳的项目。这些项目的灵感来自于我们在学习<code>React Native</code>时的经验。</p>
 <a id="more"></a>
+<h1 id="Exciting-Times-Ahead"><a href="#Exciting-Times-Ahead" class="headerlink" title="Exciting Times Ahead"></a>Exciting Times Ahead</h1><p>在尝试<code>React Native</code>时，我们也同时加快在原生上的努力。今天，我们在产品中有了大量令人惊艳的项目。这些项目的灵感来自于我们在学习<code>React Native</code>时的经验。</p>
 <h2 id="服务驱动渲染（Server-Driven-Rendering）"><a href="#服务驱动渲染（Server-Driven-Rendering）" class="headerlink" title="服务驱动渲染（Server-Driven Rendering）"></a>服务驱动渲染（Server-Driven Rendering）</h2><p>虽然我们不再使用<code>React Native</code>，但我们仍然看到了只写一份产品代码的价值。我们仍然十分依赖我们统一的设计语言系统（design language system , <a href="https://airbnb.design/building-a-visual-language/" target="_blank" rel="noopener">DLS</a>），很多界面在 Android 和 iOS 中看起来是一样的。</p>
 <p>一些团队尝试并开始为强大的<code>server-driven rendering</code>框架达成一致。在这些框架中，server发送数据到设备来描述渲染的组件、界面配置和发生的交互行为。不同移动平台解析数据并渲染原生界面或者完全使用DLS的组件。</p>
 <p>大量使用<code>Server-driven rendering</code>带来了一些挑战，这里是我们的一些解决方案：</p>

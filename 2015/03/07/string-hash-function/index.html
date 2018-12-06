@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="0 导言在一些单词查找时需要建立hash表来增加查找效率，当然也可以直接用trie树，但是trie不能保证所有情况比hash表效率高，况且trie相对空间用的多。 在建立hash表时，必然用到hash函数，下面介绍几种常用的字符串hash函数。 BKDR Hash Function最强大，最易用的字符串哈希函数之一是BKDRHash。 1234567891011// BKDR Hash Funct">
+<meta name="description" content="0 导言在一些单词查找时需要建立hash表来增加查找效率，当然也可以直接用trie树，但是trie不能保证所有情况比hash表效率高，况且trie相对空间用的多。 在建立hash表时，必然用到hash函数，下面介绍几种常用的字符串hash函数。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="常用的字符串 hash 函数">
 <meta property="og:url" content="https://github.com/wzshare/wzshare.github.io/2015/03/07/string-hash-function/index.html">
 <meta property="og:site_name" content="AprSnow&#39;s Blog">
-<meta property="og:description" content="0 导言在一些单词查找时需要建立hash表来增加查找效率，当然也可以直接用trie树，但是trie不能保证所有情况比hash表效率高，况且trie相对空间用的多。 在建立hash表时，必然用到hash函数，下面介绍几种常用的字符串hash函数。 BKDR Hash Function最强大，最易用的字符串哈希函数之一是BKDRHash。 1234567891011// BKDR Hash Funct">
+<meta property="og:description" content="0 导言在一些单词查找时需要建立hash表来增加查找效率，当然也可以直接用trie树，但是trie不能保证所有情况比hash表效率高，况且trie相对空间用的多。 在建立hash表时，必然用到hash函数，下面介绍几种常用的字符串hash函数。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-10-17T15:27:20.000Z">
+<meta property="og:updated_time" content="2018-12-06T10:56:00.636Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用的字符串 hash 函数">
-<meta name="twitter:description" content="0 导言在一些单词查找时需要建立hash表来增加查找效率，当然也可以直接用trie树，但是trie不能保证所有情况比hash表效率高，况且trie相对空间用的多。 在建立hash表时，必然用到hash函数，下面介绍几种常用的字符串hash函数。 BKDR Hash Function最强大，最易用的字符串哈希函数之一是BKDRHash。 1234567891011// BKDR Hash Funct">
+<meta name="twitter:description" content="0 导言在一些单词查找时需要建立hash表来增加查找效率，当然也可以直接用trie树，但是trie不能保证所有情况比hash表效率高，况且trie相对空间用的多。 在建立hash表时，必然用到hash函数，下面介绍几种常用的字符串hash函数。">
 
 
 
@@ -353,6 +353,7 @@
       
         <h1 id="0-导言"><a href="#0-导言" class="headerlink" title="0 导言"></a>0 导言</h1><p>在一些单词查找时需要建立<strong>hash</strong>表来增加查找效率，当然也可以直接用<strong>trie</strong>树，但是trie不能保证所有情况比hash表效率高，况且trie相对空间用的多。</p>
 <p>在建立hash表时，必然用到hash函数，下面介绍几种常用的<strong>字符串hash函数</strong>。</p>
+<a id="more"></a>
 <h1 id="BKDR-Hash-Function"><a href="#BKDR-Hash-Function" class="headerlink" title="BKDR Hash Function"></a>BKDR Hash Function</h1><p>最强大，最易用的字符串哈希函数之一是BKDRHash。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// BKDR Hash Function</span></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="title">BKDRHash</span><span class="params">(<span class="keyword">char</span> *str)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> seed = <span class="number">131</span>;<span class="comment">//31 131 1313 13131 131313 etc..</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> hash = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(*str)</span><br><span class="line">	&#123;</span><br><span class="line">		hash = hash * seed + (*str++);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> (hash &amp; <span class="number">0x7FFFFFFF</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="AP-Hash-Function"><a href="#AP-Hash-Function" class="headerlink" title="AP Hash Function"></a>AP Hash Function</h1><p>另一种常用的字符串哈希函数是APHash。</p>
